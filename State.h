@@ -8,9 +8,9 @@ class StateManager;
 
 class State
 {
-protected:
-	std::vector<sf::VertexArray> components;
 public:
+	std::vector<sf::VertexArray> components;
+
 	StateManager* stateManager;
 
 	virtual void render();

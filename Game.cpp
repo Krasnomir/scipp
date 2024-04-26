@@ -31,7 +31,7 @@ void Game::render()
 {
 	this->window->clear(sf::Color::Blue);
 
-	for (sf::VertexArray va : this->components)
+	for (sf::VertexArray va : this->stateManager->currentState->components)
 	{
 		this->window->draw(va);
 	}
@@ -57,23 +57,6 @@ void Game::initWindow()
 	this->window->setFramerateLimit(30);
 }
 
-void Game::initComponents() 
-{
-	sf::VertexArray triangle(sf::TriangleStrip, 4);
-
-	triangle[0].position = sf::Vector2f(0.f, 0.f);
-	triangle[1].position = sf::Vector2f(0.f, 200.f);
-	triangle[2].position = sf::Vector2f(200.f, 0.f);
-	triangle[2].position = sf::Vector2f(200.f, 200.f);
-
-	triangle[0].color = sf::Color::Yellow;
-	triangle[1].color = sf::Color::Green;
-	triangle[2].color = sf::Color::Red;
-	triangle[3].color = sf::Color::Magenta;
-
-	this->components.push_back(triangle);
-}
-
 void Game::initStates()
 {
 	this->stateManager = new StateManager(this);
@@ -83,7 +66,6 @@ void Game::initStates()
 void Game::init() 
 {
 	this->initStates();
-	this->initComponents();
 	this->initWindow();
 }
 

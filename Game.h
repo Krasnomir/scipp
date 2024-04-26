@@ -22,7 +22,6 @@ class Game
 	void run();									// gameLoop
 	void initStates();
 	void initWindow();							// Tworzenie okna
-	void initComponents();
 	void init();								// Odpala wszystkie inne funkcje inicjalizuj¹ce
 public:
 	Game();
