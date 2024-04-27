@@ -1,10 +1,11 @@
 #include "StateManager.h"
 #include "State.h"
-#include "TestState.h"
+#include "InitState.h"
+#include "Entity.h"
 
 #include <iostream>
 
-void TestState::init()
+void InitState::init()
 {
 	sf::VertexArray triangle(sf::TriangleStrip, 4);
 
@@ -18,10 +19,15 @@ void TestState::init()
 	triangle[2].color = sf::Color::Red;
 	triangle[3].color = sf::Color::Magenta;
 
-	this->components.push_back(triangle);
+	Entity entity(triangle);
+	
+	entity.setPosition(200.f, 200.f);
+	entity.setRotation(30.f);
+
+	this->components.push_back(entity);
 }
 
-TestState::TestState(StateManager* stateManager) : State(stateManager)
+InitState::InitState(StateManager* stateManager) : State(stateManager)
 {
 
 }

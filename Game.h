@@ -10,10 +10,8 @@ class Game
 {
 	sf::Clock clock;							// liczenie deltaTime
 	sf::RenderWindow *window = nullptr;			// glowne okno
-	
-	std::vector<sf::VertexArray> components;	// elementy renderowane podczas gry na ekranie
 
-	StateManager* stateManager = nullptr;
+	StateManager* stateManager = nullptr;		// tworzy, usuwa i zamienia stany/sceny
 
 	void handleEvents(sf::Event event); 
 	void pollEvents();							// metoda ktora przelatuje przez wszystkie aktywne eventy i przesyla je do metody "handleEvents()"

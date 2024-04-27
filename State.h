@@ -4,12 +4,14 @@
 
 #include <vector>
 
+#include "Entity.h"
+
 class StateManager;
 
 class State
 {
 public:
-	std::vector<sf::VertexArray> components;
+	std::vector<Entity> components;
 
 	StateManager* stateManager;
 

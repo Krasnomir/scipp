@@ -1,7 +1,8 @@
 #include "Game.h"
 #include "StateManager.h"
 #include "State.h"
-#include "TestState.h"
+#include "InitState.h"
+#include "Entity.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -31,9 +32,9 @@ void Game::render()
 {
 	this->window->clear(sf::Color::Blue);
 
-	for (sf::VertexArray va : this->stateManager->currentState->components)
+	for (Entity e : this->stateManager->currentState->components)
 	{
-		this->window->draw(va);
+		this->window->draw(e);
 	}
 
 	this->window->display();
@@ -60,7 +61,7 @@ void Game::initWindow()
 void Game::initStates()
 {
 	this->stateManager = new StateManager(this);
-	this->stateManager->changeState(new TestState(this->stateManager));
+	this->stateManager->changeState(new InitState(this->stateManager));
 }
 
 void Game::init() 
