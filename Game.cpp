@@ -24,7 +24,7 @@ void Game::pollEvents()
 
 void Game::update(sf::Time elapsed)
 {
-	this->stateManager->currentState->update();
+	this->stateManager->currentState->update(elapsed);
 	// std::cout << elapsed.asMilliseconds() << "\n";
 }
 
@@ -55,7 +55,7 @@ void Game::run()
 void Game::initWindow() 
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(800, 600), "scipp");
-	this->window->setFramerateLimit(30);
+	this->window->setFramerateLimit(60);
 }
 
 void Game::initStates()

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 #include <vector>
 
@@ -16,7 +17,7 @@ public:
 	StateManager* stateManager;
 
 	virtual void render();
-	virtual void update();
+	virtual void update(sf::Time elapsed);
 	virtual void init();
 
 	State(StateManager* _stateManager);

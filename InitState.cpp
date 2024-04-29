@@ -27,6 +27,15 @@ void InitState::init()
 	this->components.push_back(entity);
 }
 
+void InitState::update(sf::Time elapsed)
+{
+	for (auto& entity : this->components)
+	{
+		int degPerSec = 45;
+		entity.rotate(degPerSec * (elapsed.asMilliseconds() / 1000.f));
+	}
+}
+
 InitState::InitState(StateManager* stateManager) : State(stateManager)
 {
 

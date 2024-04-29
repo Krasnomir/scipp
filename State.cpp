@@ -8,7 +8,7 @@ void State::render()
 
 }
 
-void State::update()
+void State::update(sf::Time elapsed)
 {
 
 }
