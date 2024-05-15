@@ -5,11 +5,15 @@
 
 class StateManager
 {
-	Game* game = nullptr;
 public:
+	Game* game = nullptr;
+
 	State* currentState = nullptr;
 
 	void changeState(State* state);
 
 	StateManager(Game* _game);
+
+	
 };
+

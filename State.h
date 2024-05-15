@@ -14,6 +14,8 @@ class State
 public:
 	std::vector<Entity> components;
 
+	sf::View viewPort;
+
 	StateManager* stateManager;
 
 	virtual void render();

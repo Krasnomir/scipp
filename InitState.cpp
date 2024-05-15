@@ -15,9 +15,9 @@ void InitState::addTriangle(sf::Vector2f pos)
 	triangle[1].position = sf::Vector2f(0.f, 100.f);
 	triangle[2].position = sf::Vector2f(100.f, 0.f);
 
-	triangle[0].color = sf::Color::Red;
-	triangle[1].color = sf::Color::Yellow;
-	triangle[2].color = sf::Color::Green;
+	triangle[0].color = sf::Color::Black;
+	triangle[1].color = sf::Color::White;
+	triangle[2].color = sf::Color::Red;
 
 	Entity entity(triangle);
 
@@ -29,9 +29,14 @@ void InitState::addTriangle(sf::Vector2f pos)
 	this->components.push_back(entity);
 }
 
+#include "Camera.hpp"
+
+Camera cam;
+
+
 void InitState::init()
 {
-	int rate = 50;
+	int rate = 5;
 
 	for (int i = 0; i < 800; i += rate)
 	{
@@ -40,6 +45,15 @@ void InitState::init()
 			this->addTriangle(sf::Vector2f(i, j));
 		}
 	}
+
+	this->viewPort.setViewport({ 0.5, 0.5, 0.5, 0.5 });
+	this->viewPort.setSize({ 800, 600});
+	this->viewPort.setCenter({ 400, 300 });
+	//this->stateManager->game->window->setView(this->viewPort);
+	cam.setScreenViewport({ 0.5f, 0.5f, 0.5f, 0.5f });
+	cam.setSize({ 1600, 1200 });
+	cam.setPosition({400, 300});
+	cam.apply();
 }
 
 void InitState::update(sf::Time elapsed)

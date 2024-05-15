@@ -6,8 +6,14 @@
 
 class StateManager;
 
+namespace Scipp {
+	extern StateManager* globalManager;
+}
+
 class Game
 {
+public:
+
 	sf::Clock clock;							// liczenie deltaTime
 	sf::RenderWindow *window = nullptr;			// glowne okno
 
@@ -21,6 +27,7 @@ class Game
 	void initStates();
 	void initWindow();							// Tworzenie okna
 	void init();								// Odpala wszystkie inne funkcje inicjalizuj¹ce
-public:
 	Game();
+	
+	friend class Camera;
 };

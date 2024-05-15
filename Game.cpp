@@ -8,6 +8,12 @@
 
 #include <iostream>
 
+namespace Scipp {
+	StateManager* globalManager = nullptr;
+
+	
+}
+
 void Game::handleEvents(sf::Event event)
 {
 	if (event.type == sf::Event::Closed)
@@ -58,16 +64,20 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
+
 void Game::initStates()
 {
 	this->stateManager = new StateManager(this);
+	Scipp::globalManager = this->stateManager;
+
+
 	this->stateManager->changeState(new InitState(this->stateManager));
 }
 
 void Game::init() 
 {
-	this->initStates();
 	this->initWindow();
+	this->initStates();
 }
 
 Game::Game() 
