@@ -18,7 +18,7 @@ void State::init()
 
 }
 
-State::State(StateManager* _stateManager)
+State::State()
 {
-    this->stateManager = _stateManager;
+
 }

@@ -9,9 +9,8 @@
 #include <iostream>
 
 namespace Scipp {
+	Game* globalGame = nullptr;
 	StateManager* globalManager = nullptr;
-
-	
 }
 
 void Game::handleEvents(sf::Event event)
@@ -67,15 +66,17 @@ void Game::initWindow()
 
 void Game::initStates()
 {
-	this->stateManager = new StateManager(this);
+	this->stateManager = new StateManager();
 	Scipp::globalManager = this->stateManager;
 
 
-	this->stateManager->changeState(new InitState(this->stateManager));
+	this->stateManager->changeState(new InitState());
 }
 
 void Game::init() 
 {
+	Scipp::globalGame = this;
+
 	this->initWindow();
 	this->initStates();
 }

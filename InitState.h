@@ -15,5 +15,5 @@ class InitState : public State
 public:
 	void addTriangle(sf::Vector2f pos);
 
-	InitState(StateManager* stateManager);
+	InitState();
 };

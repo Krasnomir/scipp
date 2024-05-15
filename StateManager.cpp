@@ -14,7 +14,7 @@ void StateManager::changeState(State* state)
 	this->currentState->init();
 }
 
-StateManager::StateManager(Game *_game)
+StateManager::StateManager()
 {
-	this->game = _game;
+
 }

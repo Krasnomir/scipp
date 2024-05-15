@@ -9,7 +9,7 @@ Camera::Camera()
 }
 
 Camera Camera::getDefaultCamera() {
-	sf::View tempView = Scipp::globalManager->game->window->getDefaultView();
+	sf::View tempView = Scipp::globalGame->window->getDefaultView();
 	return Camera(tempView.getSize(), tempView.getCenter(), tempView.getViewport());
 }
 
@@ -58,7 +58,7 @@ void Camera::setPosition(const sf::Vector2f& position)
 
 
 void Camera::apply() {
-	Scipp::globalManager->game->window->setView(M_viewPort);
+	Scipp::globalGame->window->setView(M_viewPort);
 }
 
 Camera::~Camera()

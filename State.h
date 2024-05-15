@@ -16,11 +16,9 @@ public:
 
 	sf::View viewPort;
 
-	StateManager* stateManager;
-
 	virtual void render();
 	virtual void update(sf::Time elapsed);
 	virtual void init();
 
-	State(StateManager* _stateManager);
+	State();
 };

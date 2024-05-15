@@ -6,10 +6,6 @@
 
 class StateManager;
 
-namespace Scipp {
-	extern StateManager* globalManager;
-}
-
 class Game
 {
 public:
@@ -31,3 +27,8 @@ public:
 	
 	friend class Camera;
 };
+
+namespace Scipp {
+	extern Game* globalGame;
+	extern StateManager* globalManager;
+}

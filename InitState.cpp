@@ -36,13 +36,13 @@ Camera cam;
 
 void InitState::init()
 {
-	int rate = 5;
+	int rate = 10;
 
 	for (int i = 0; i < 800; i += rate)
 	{
 		for (int j = 0; j < 600; j += rate)
 		{
-			this->addTriangle(sf::Vector2f(i, j));
+			this->addTriangle(sf::Vector2f(float(i), float(j)));
 		}
 	}
 
@@ -66,7 +66,7 @@ void InitState::update(sf::Time elapsed)
 	}
 }
 
-InitState::InitState(StateManager* stateManager) : State(stateManager)
+InitState::InitState() : State()
 {
 
 }
