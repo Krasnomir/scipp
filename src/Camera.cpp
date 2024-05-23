@@ -1,7 +1,6 @@
-#include "Camera.hpp"
-#include "Game.h"
-#include "StateManager.h"
-
+#include <Camera.hpp>
+#include <Game.h>
+#include <StateManager.h>
 
 Camera::Camera()
 {

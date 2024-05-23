@@ -1,8 +1,8 @@
-#include "Game.h"
-#include "StateManager.h"
-#include "State.h"
-#include "InitState.h"
-#include "Entity.h"
+#include <Game.h>
+#include <StateManager.h>
+#include <State.h>
+#include <InitState.h>
+#include <Scriptable/Entity.hpp>
 
 #include <SFML/Graphics.hpp>
 
@@ -15,10 +15,7 @@ namespace Scipp {
 
 void Game::handleEvents(sf::Event event)
 {
-	if (event.type == sf::Event::Closed)
-	{
-		this->window->close();
-	}
+	
 }
 
 void Game::pollEvents()
@@ -37,16 +34,51 @@ void Game::render()
 {
 	this->window->clear(sf::Color::Blue);
 
-	for (Entity e : this->stateManager->currentState->components)
-	{
-		this->window->draw(e);
-	}
-
+	
 	this->window->display();
 }
 
+
+struct DebugComponent : public Scriptable::Component
+{
+	void beforeRender(const EventData* data) 
+	{
+		printf("before render component called\n");
+
+	}
+
+    void afterRender(const EventData* data)
+	{
+		printf("after render component called\n");
+	} 
+};
+
+struct DebugEntity : public Scriptable::Entity
+{
+	void beforeRender(const EventData* data) 
+	{
+		printf("before render entity called\n");
+
+	}
+
+    void afterRender(const EventData* data)
+	{
+		printf("after render entity called\n");
+	} 
+};
+
 void Game::run() 
 {
+	{
+		DebugEntity TestEntity;
+		TestEntity.addComponent<DebugComponent>();
+
+		TestEntity.evokeAll("beforeRender", nullptr);
+		TestEntity.evokeAll("afterRender", nullptr);
+		
+	}
+
+	
 	while (this->window->isOpen()) 
 	{
 		sf::Time elapsed = this->clock.restart();

@@ -13,6 +13,7 @@ void State::update(sf::Time elapsed)
 
 }
 
+
 void State::init()
 {
 

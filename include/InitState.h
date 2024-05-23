@@ -1,7 +1,7 @@
 #pragma once
 
-#include "State.h"
-#include "Entity.h"
+#include <State.h>
+#include <Scriptable/Entity.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -13,7 +13,6 @@ class InitState : public State
 	void init();
 	void update(sf::Time elapsed);
 public:
-	void addTriangle(sf::Vector2f pos);
 
 	InitState();
 };

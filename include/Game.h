@@ -22,7 +22,7 @@ public:
 	void run();									// gameLoop
 	void initStates();
 	void initWindow();							// Tworzenie okna
-	void init();								// Odpala wszystkie inne funkcje inicjalizuj¹ce
+	void init();								// Odpala wszystkie inne funkcje inicjalizujï¿½ce
 	Game();
 	
 	friend class Camera;

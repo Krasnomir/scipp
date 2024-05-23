@@ -4,7 +4,7 @@
 
 void StateManager::changeState(State* state)
 {
-	// Jesli by³ poprzedni stan, to go usun¹æ
+	// Jesli byl poprzedni stan, to go usun
 	if (this->currentState != 0)
 	{
 		delete this->currentState;

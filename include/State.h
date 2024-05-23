@@ -3,22 +3,31 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+
+
 #include <vector>
 
-#include "Entity.h"
+#include <Camera.hpp>
+#include <Scriptable/Entity.hpp>
 
 class StateManager;
 
-class State
+class State : public Scriptable::EventObject
 {
 public:
-	std::vector<Entity> components;
-
-	sf::View viewPort;
-
+	State();
 	virtual void render();
 	virtual void update(sf::Time elapsed);
 	virtual void init();
 
-	State();
+	// TODO: void addEntity(const std::string& entityName, const Scriptable::Entity& entity); 
+	// TODO: void deleteEntity(const std::string& entityName);	
+
+private:
+
+	//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
+	std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
+
+	Camera M_RenderCamera;
+	
 };
