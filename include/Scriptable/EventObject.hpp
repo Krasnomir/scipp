@@ -10,16 +10,16 @@
 #include <SFML/Graphics.hpp>
 
 namespace Scriptable{
+    struct EventData {
+        sf::RenderWindow* renderTarget;
+    };
+
     class EventObject {
         public:
 
             EventObject();
 
             ~EventObject() = default;
-
-            struct EventData{
-                sf::RenderWindow* renderTarget;
-            };
 
             typedef std::function<void(const EventData*)> Event_t;
 

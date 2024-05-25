@@ -3,8 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-
-
 #include <vector>
 
 #include <Camera.hpp>
@@ -20,14 +18,16 @@ public:
 	virtual void update(sf::Time elapsed);
 	virtual void init();
 
+	virtual void evokeAll(const std::string& eventName, const Scriptable::EventData* data);
+
 	// TODO: void addEntity(const std::string& entityName, const Scriptable::Entity& entity); 
 	// TODO: void deleteEntity(const std::string& entityName);	
 
 private:
+	std::shared_mutex M_entityMapLock;
 
 	//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 	std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
 
 	Camera M_RenderCamera;
-	
 };

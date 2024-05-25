@@ -15,7 +15,10 @@ namespace Scipp {
 
 void Game::handleEvents(sf::Event event)
 {
-	
+	if (event.type == sf::Event::Closed)
+	{
+		this->window->close();
+	}
 }
 
 void Game::pollEvents()
@@ -26,28 +29,31 @@ void Game::pollEvents()
 
 void Game::update(sf::Time elapsed)
 {
-	this->stateManager->currentState->update(elapsed);
+	Scipp::globalManager->currentState->update(elapsed);
 	// std::cout << elapsed.asMilliseconds() << "\n";
 }
 
 void Game::render()
 {
-	this->window->clear(sf::Color::Blue);
+	Scipp::globalManager->currentState->evokeAll("beforeRender", nullptr);
 
-	
+	this->window->clear(sf::Color::Blue);
+	Scipp::globalManager->currentState->render();
 	this->window->display();
+
+	Scipp::globalManager->currentState->evokeAll("afterRender", nullptr);
 }
 
 
 struct DebugComponent : public Scriptable::Component
 {
-	void beforeRender(const EventData* data) 
+	void beforeRender(const Scriptable::EventData* data) 
 	{
 		printf("before render component called\n");
 
 	}
 
-    void afterRender(const EventData* data)
+    void afterRender(const Scriptable::EventData* data)
 	{
 		printf("after render component called\n");
 	} 
@@ -55,13 +61,13 @@ struct DebugComponent : public Scriptable::Component
 
 struct DebugEntity : public Scriptable::Entity
 {
-	void beforeRender(const EventData* data) 
+	void beforeRender(const Scriptable::EventData* data)
 	{
 		printf("before render entity called\n");
 
 	}
 
-    void afterRender(const EventData* data)
+    void afterRender(const Scriptable::EventData* data)
 	{
 		printf("after render entity called\n");
 	} 
