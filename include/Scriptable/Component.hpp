@@ -12,7 +12,6 @@ namespace Scriptable{
 
             ~Component();
 
-
         private:
     };
 

@@ -11,13 +11,22 @@
 
 namespace Scriptable{
     struct EventData {
-        sf::RenderWindow* renderTarget;
+        //time since last frame
+        sf::Time deltaTime;
+        sf::Event sfmlEvent;
+
+        sf::RenderWindow* targetWindow;
+        class State* currentState;
+
     };
+
 
     class EventObject {
         public:
 
             EventObject();
+
+            explicit operator sf::ConvexShape() = delete;
 
             ~EventObject() = default;
 
@@ -26,7 +35,19 @@ namespace Scriptable{
             
             virtual inline void beforeRender(const EventData* data) {}
 
-            virtual inline void afterRender(const EventData* data) {}
+            virtual inline void onRender(const EventData* data) {}
+
+            virtual inline void onWindowClosed(const EventData* data) {}
+
+            virtual inline void onMouseMoved(const EventData* data) {}
+
+            virtual inline void onMouseButtonPressed(const EventData* data) {}
+
+            virtual inline void onMouseButtonReleased(const EventData* data) {}
+
+            virtual inline void onKeyPressed(const EventData* data) {}
+
+            virtual inline void onKeyReleased(const EventData* data) {}
 
             // adds callback to bound events
             void bindEvent(const std::string& eventName, Event_t callback);

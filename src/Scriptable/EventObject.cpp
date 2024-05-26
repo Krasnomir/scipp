@@ -3,9 +3,14 @@
 namespace Scriptable{
     EventObject::EventObject()
     {
-        //binds the virtual onUpdate method
         bindEvent("beforeRender", std::bind(&EventObject::beforeRender, this, std::placeholders::_1));
-        bindEvent("afterRender", std::bind(&EventObject::afterRender, this, std::placeholders::_1));
+        bindEvent("onRender", std::bind(&EventObject::onRender, this, std::placeholders::_1));
+        bindEvent("onWindowClosed", std::bind(&EventObject::onWindowClosed, this, std::placeholders::_1));
+        bindEvent("onMouseMoved", std::bind(&EventObject::onMouseMoved, this, std::placeholders::_1));
+        bindEvent("onMouseButtonPressed", std::bind(&EventObject::onMouseButtonPressed, this, std::placeholders::_1));
+        bindEvent("onMouseButtonReleased", std::bind(&EventObject::onMouseButtonReleased, this, std::placeholders::_1));
+        bindEvent("onKeyPressed", std::bind(&EventObject::onKeyPressed, this, std::placeholders::_1));
+        bindEvent("onKeyReleased", std::bind(&EventObject::onKeyReleased, this, std::placeholders::_1));
     }
 
     void EventObject::bindEvent(const std::string& eventName, Event_t callback)

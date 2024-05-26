@@ -1,97 +1,147 @@
 #include <Game.h>
 #include <StateManager.h>
-#include <State.h>
+#include <Scriptable/State.hpp>
 #include <InitState.h>
 #include <Scriptable/Entity.hpp>
 
 #include <SFML/Graphics.hpp>
+#include <Scriptable/EventObject.hpp>
+#include <Scriptable/Components/SFMLRenderComponent.hpp>
+
 
 #include <iostream>
 
 namespace Scipp {
 	Game* globalGame = nullptr;
-	StateManager* globalManager = nullptr;
 }
 
-void Game::handleEvents(sf::Event event)
+void Game::handleEvent(sf::Event event)
 {
-	if (event.type == sf::Event::Closed)
-	{
-		this->window->close();
+	M_eventData.sfmlEvent = event;
+
+	switch(event.type){
+		case sf::Event::Closed:
+		{
+			stateManager.currentState->evokeAll("onWindowClosed", &M_eventData);
+			break;
+		}
+
+		case sf::Event::MouseMoved:
+		{
+			stateManager.currentState->evokeAll("onMouseMoved", &M_eventData);
+			break;
+		}
+
+		case sf::Event::KeyPressed:
+		{
+			stateManager.currentState->evokeAll("onKeyPressed", &M_eventData);
+			break;
+		}
+
+		case sf::Event::KeyReleased:
+		{
+			stateManager.currentState->evokeAll("onKeyReleased", &M_eventData);
+			break;
+		}
+
+		case sf::Event::MouseButtonPressed:
+		{
+			stateManager.currentState->evokeAll("onMouseButtonPressed", &M_eventData);
+			break;
+		}
+
+		case sf::Event::MouseButtonReleased:
+		{
+			stateManager.currentState->evokeAll("onMouseButtonReleased", &M_eventData);
+			break;
+		}
+
+		default:
+		{
+			//unhandled events
+			break;
+		}
 	}
 }
 
 void Game::pollEvents()
 {
 	sf::Event event;
-	while (this->window->pollEvent(event)) handleEvents(event);
-}
+	while (this->window->pollEvent(event)) handleEvent(event);
 
-void Game::update(sf::Time elapsed)
-{
-	Scipp::globalManager->currentState->update(elapsed);
-	// std::cout << elapsed.asMilliseconds() << "\n";
-}
 
-void Game::render()
-{
-	Scipp::globalManager->currentState->evokeAll("beforeRender", nullptr);
-
-	this->window->clear(sf::Color::Blue);
-	Scipp::globalManager->currentState->render();
-	this->window->display();
-
-	Scipp::globalManager->currentState->evokeAll("afterRender", nullptr);
 }
 
 
-struct DebugComponent : public Scriptable::Component
-{
-	void beforeRender(const Scriptable::EventData* data) 
-	{
-		printf("before render component called\n");
-
-	}
-
-    void afterRender(const Scriptable::EventData* data)
-	{
-		printf("after render component called\n");
-	} 
-};
 
 struct DebugEntity : public Scriptable::Entity
 {
+	sf::Texture tTexture;
+
+	DebugEntity(){
+		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f> ({{0,0}, {100,0}, {100, 100}, {0, 100}}));
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin({50, 50});
+		tTexture.loadFromFile("test.png");
+		
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->setTexture(&tTexture);
+
+	}
+
 	void beforeRender(const Scriptable::EventData* data)
 	{
-		printf("before render entity called\n");
 
 	}
 
     void afterRender(const Scriptable::EventData* data)
 	{
-		printf("after render entity called\n");
+
 	} 
+
+	void onMouseMoved(const Scriptable::EventData* data)
+	{
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->setPosition(data->sfmlEvent.mouseMove.x, data->sfmlEvent.mouseMove.y);
+	}
+
+	void onKeyPressed(const Scriptable::EventData* data)
+	{
+		auto* renderComponent = getComponent<Scriptable::Components::SFMLRenderComponent>();
+		if(data->sfmlEvent.key.code == sf::Keyboard::Key::E){
+			renderComponent->rotate(360 / 10.f);
+		}
+		else if(data->sfmlEvent.key.code == sf::Keyboard::Key::Q){
+			renderComponent->rotate(-360 / 10.f);
+		}
+
+	}
 };
 
 void Game::run() 
 {
-	{
-		DebugEntity TestEntity;
-		TestEntity.addComponent<DebugComponent>();
-
-		TestEntity.evokeAll("beforeRender", nullptr);
-		TestEntity.evokeAll("afterRender", nullptr);
-		
-	}
-
-	
 	while (this->window->isOpen()) 
 	{
-		sf::Time elapsed = this->clock.restart();
+		deltaTime = M_clock.restart();
 
-		this->pollEvents();
-		this->update(elapsed);
-		this->render();
+		M_eventData.currentState = stateManager.currentState;
+		M_eventData.targetWindow = window;
+		M_eventData.deltaTime = deltaTime;
+
+		//handle sfml events
+		{
+			this->pollEvents();
+		}		
+
+		//before render	
+		{
+			stateManager.currentState->evokeAll("beforeRender", &M_eventData);
+			window->clear();
+		}
+
+		//render
+		{
+			stateManager.currentState->evokeAll("onRender", &M_eventData);
+			window->display();
+		}
+
 	}
 }
 
@@ -104,11 +154,7 @@ void Game::initWindow()
 
 void Game::initStates()
 {
-	this->stateManager = new StateManager();
-	Scipp::globalManager = this->stateManager;
-
-
-	this->stateManager->changeState(new InitState());
+	stateManager.changeState(new InitState());
 }
 
 void Game::init() 
@@ -117,10 +163,14 @@ void Game::init()
 
 	this->initWindow();
 	this->initStates();
+
+	stateManager.currentState->addEntity<DebugEntity>("test1");
+	
 }
 
 Game::Game() 
 {
 	this->init();
+	
 	this->run();
 }

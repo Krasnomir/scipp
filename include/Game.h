@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <StateManager.h>
 
 #include <vector>
 
@@ -9,26 +10,31 @@ class StateManager;
 class Game
 {
 public:
+	sf::Time deltaTime;
 
-	sf::Clock clock;							// liczenie deltaTime
 	sf::RenderWindow *window = nullptr;			// glowne okno
 
-	StateManager* stateManager = nullptr;		// tworzy, usuwa i zamienia stany/sceny
+	StateManager stateManager; // tworzy, usuwa i zamienia stany/sceny
 
-	void handleEvents(sf::Event event); 
-	void pollEvents();							// metoda ktora przelatuje przez wszystkie aktywne eventy i przesyla je do metody "handleEvents()"
-	void update(sf::Time time);
-	void render();								// renderowanie elementow z "components"
+	void init();								// Odpala wszystkie inne funkcje inicjalizuj�ce
+
+	void pollEvents();							// metoda ktora przelatuje przez wszystkie aktywne eventy i przesyla je do metody "handleEvent()"
+
 	void run();									// gameLoop
 	void initStates();
 	void initWindow();							// Tworzenie okna
-	void init();								// Odpala wszystkie inne funkcje inicjalizuj�ce
+
 	Game();
 	
 	friend class Camera;
+
+private:
+	void handleEvent(sf::Event event); 
+	sf::Clock M_clock;							// liczenie deltaTime
+	Scriptable::EventData M_eventData; 
+
 };
 
 namespace Scipp {
 	extern Game* globalGame;
-	extern StateManager* globalManager;
 }

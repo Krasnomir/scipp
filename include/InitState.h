@@ -1,6 +1,6 @@
 #pragma once
 
-#include <State.h>
+#include <Scriptable/State.hpp>
 #include <Scriptable/Entity.hpp>
 
 #include <SFML/Graphics.hpp>
@@ -8,11 +8,13 @@
 
 #include <vector>
 
-class InitState : public State
+class InitState : public Scriptable::State
 {
-	void init();
-	void update(sf::Time elapsed);
-public:
+	public:
+		InitState() = default;
 
-	InitState();
+		void onRender(const Scriptable::EventData* data);
+
+		void onWindowClosed(const Scriptable::EventData* data);
+
 };

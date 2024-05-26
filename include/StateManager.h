@@ -1,13 +1,13 @@
 #pragma once
 
-#include <State.h>
+#include <Scriptable/State.hpp>
 
 class StateManager
 {
 public:
-	State* currentState = nullptr;
+	Scriptable::State* currentState = nullptr;
 
-	void changeState(State* state);
+	void changeState(Scriptable::State* state);
 
 	StateManager();
 };

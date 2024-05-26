@@ -5,13 +5,31 @@
 #include <Scriptable/Component.hpp>
 
 namespace Scriptable
-{
+{	
 	class Entity : public EventObject
 	{
 	public:
 		Entity();
 
 		~Entity();
+
+		template<DerivedComponent T>
+		T* getComponent(){
+			if(!hasComponent<T>()) return nullptr;
+
+			std::shared_lock<std::shared_mutex> readLock(M_ComponentLock);
+
+			for(auto * component : M_Components)
+			{
+				try
+				{
+					return dynamic_cast<T*>(component); // this will throw an exception when component is derived from T
+				}
+				catch(...) {}
+			}
+
+			return nullptr;
+		}
 
 		template<DerivedComponent T>
 		bool deleteComponent()
@@ -39,7 +57,7 @@ namespace Scriptable
 		}
 
 		template<DerivedComponent T>
-		inline bool hasComponent()
+		inline bool hasComponent() const
 		{
 			std::shared_lock<std::shared_mutex> readLock(M_ComponentLock);
 
@@ -55,8 +73,8 @@ namespace Scriptable
 			}
 
 			return false;
-		}
-
+		} 
+	
 
 		//has to be declared in a header file because its a template 
 		//creates an object of type T with no arguments
@@ -98,9 +116,12 @@ namespace Scriptable
 		//Directly inserts component pointer into M_components, does not check for errors or race conditions (unsafe)
 		void M_insertComponent_nolock(Component* component);
 
-		std::shared_mutex M_ComponentLock;
+		mutable std::shared_mutex M_ComponentLock;
 
 		std::vector<Component*> M_Components;
 		
 	};
+
+	template<class T>
+    concept DerivedEntity = std::is_base_of_v<Entity, T>;
 }

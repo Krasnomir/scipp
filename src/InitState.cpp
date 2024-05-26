@@ -1,5 +1,5 @@
 #include <StateManager.h>
-#include <State.h>
+#include <Scriptable/State.hpp>
 #include <InitState.h>
 #include <Scriptable/Entity.hpp>
 
@@ -9,18 +9,13 @@
 
 #include <Camera.hpp>
 
-
-void InitState::init()
+		
+void InitState::onRender(const Scriptable::EventData* data)
 {
-	
+    
 }
 
-void InitState::update(sf::Time elapsed)
+void InitState::onWindowClosed(const Scriptable::EventData* data)
 {
-	
-}
-
-InitState::InitState() : State()
-{
-	
+    data->targetWindow->close();
 }

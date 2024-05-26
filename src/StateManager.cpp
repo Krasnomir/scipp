@@ -1,8 +1,8 @@
 #include "Game.h"
 #include "StateManager.h"
-#include "State.h"
+#include <Scriptable/State.hpp>
 
-void StateManager::changeState(State* state)
+void StateManager::changeState(Scriptable::State* state)
 {
 	// Jesli byl poprzedni stan, to go usun
 	if (this->currentState != 0)
@@ -11,7 +11,7 @@ void StateManager::changeState(State* state)
 	}
 
 	this->currentState = state;
-	this->currentState->init();
+
 }
 
 StateManager::StateManager()
