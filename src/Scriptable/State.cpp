@@ -50,6 +50,12 @@ namespace Scriptable{
 		return nullptr;
 	}
 
+	void State::initCamera()
+	{
+		M_camera = Camera(sf::Vector2f(800, 600), sf::Vector2f(400, 300));
+		M_camera.apply();
+	}
+
 	State::~State()
 	{
 		std::unique_lock<std::shared_mutex> entityWriteLock(M_entityMapLock);

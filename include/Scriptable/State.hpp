@@ -19,6 +19,10 @@ namespace Scriptable{
 
 		~State();
 
+		Camera M_camera;
+
+		void initCamera();
+
 		virtual void evokeAll(const std::string& eventName, const Scriptable::EventData* data);
 
 		//returns 0 on fail

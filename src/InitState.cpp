@@ -19,3 +19,9 @@ void InitState::onWindowClosed(const Scriptable::EventData* data)
 {
     data->targetWindow->close();
 }
+
+
+InitState::InitState()
+{
+    initCamera();
+}

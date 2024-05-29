@@ -12,6 +12,7 @@ public:
 	~Camera();
 
 	sf::Vector2f getSize() const;
+	float getRotation() const;
 	sf::Vector2f getCenter() const;
 	sf::FloatRect getScreenViewport() const;
 		
@@ -19,6 +20,7 @@ public:
 	
 	void setSize(const sf::Vector2f& size);
 	void setPosition(const sf::Vector2f& position);
+	void setRotation(const float rotation);
 
 	void apply();
 
@@ -28,8 +30,6 @@ private:
 	sf::View M_viewPort;
 
 	friend class InitState;
-
-
 };
 
 

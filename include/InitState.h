@@ -11,7 +11,7 @@
 class InitState : public Scriptable::State
 {
 	public:
-		InitState() = default;
+		InitState();
 
 		void onRender(const Scriptable::EventData* data);
 
