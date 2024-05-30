@@ -79,11 +79,11 @@ struct DebugEntity : public Scriptable::Entity
 	sf::Texture tTexture;
 
 	DebugEntity(){
-		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f> ({{0,0}, {100,0}, {100, 100}, {0, 100}}));
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin({50, 50});
-		tTexture.loadFromFile("test.png");
+		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f> ({{0,0}, {0,100}, {100, 0}, {100, 100}}));
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin(getComponent<Scriptable::Components::SFMLRenderComponent>()->center());
+		//tTexture.loadFromFile("test.png");
 		
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->setTexture(&tTexture);
+		//getComponent<Scriptable::Components::SFMLRenderComponent>()->setTexture(&tTexture);
 
 	}
 
@@ -115,6 +115,22 @@ struct DebugEntity : public Scriptable::Entity
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {
 			float currentRotation = Scipp::globalGame->stateManager.currentState->M_camera.getRotation();
 			Scipp::globalGame->stateManager.currentState->M_camera.setRotation(currentRotation + 1.0f);
+			Scipp::globalGame->stateManager.currentState->M_camera.apply();
+		}
+		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::W) {
+			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(0.f, -10.f));
+			Scipp::globalGame->stateManager.currentState->M_camera.apply();
+		}
+		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::A) {
+			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(-10.f, 0.f));
+			Scipp::globalGame->stateManager.currentState->M_camera.apply();
+		}
+		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::S) {
+			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(0.f, 10.f));
+			Scipp::globalGame->stateManager.currentState->M_camera.apply();
+		}
+		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::D) {
+			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(10.f, 0.f));
 			Scipp::globalGame->stateManager.currentState->M_camera.apply();
 		}
 	}

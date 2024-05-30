@@ -22,6 +22,8 @@ public:
 	void setPosition(const sf::Vector2f& position);
 	void setRotation(const float rotation);
 
+	void move(const sf::Vector2f& offset);
+
 	void apply();
 
 	static Camera getDefaultCamera();

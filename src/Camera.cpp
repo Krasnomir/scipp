@@ -71,6 +71,11 @@ void Camera::setRotation(const float rotation)
 	M_viewPort.setRotation(rotation);
 }
 
+void Camera::move(const sf::Vector2f& offset)
+{
+	M_viewPort.move(offset);
+}
+
 void Camera::apply() {
 	Scipp::globalGame->window->setView(M_viewPort);
 }
