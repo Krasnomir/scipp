@@ -79,7 +79,7 @@ struct DebugEntity : public Scriptable::Entity
 	sf::Texture tTexture;
 
 	DebugEntity(){
-		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f> ({{0,0}, {0,100}, {100, 0}, {100, 100}}));
+		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
 		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin(getComponent<Scriptable::Components::SFMLRenderComponent>()->center());
 		//tTexture.loadFromFile("test.png");
 		
