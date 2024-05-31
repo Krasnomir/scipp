@@ -99,6 +99,7 @@ struct DebugEntity : public Scriptable::Entity
 
 	void onMouseMoved(const Scriptable::EventData* data)
 	{
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->setPosition(Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera());
 		//getComponent<Scriptable::Components::SFMLRenderComponent>()->setPosition((float) data->sfmlEvent.mouseMove.x, (float) data->sfmlEvent.mouseMove.y);
 	}
 
@@ -114,7 +115,7 @@ struct DebugEntity : public Scriptable::Entity
 		}
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {
 			float currentRotation = Scipp::globalGame->stateManager.currentState->M_camera.getRotation();
-			Scipp::globalGame->stateManager.currentState->M_camera.setRotation(currentRotation + 1.0f);
+			Scipp::globalGame->stateManager.currentState->M_camera.setRotation(currentRotation + 5.0f);
 			Scipp::globalGame->stateManager.currentState->M_camera.apply();
 		}
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::W) {

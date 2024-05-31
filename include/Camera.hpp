@@ -12,6 +12,7 @@ public:
 	~Camera();
 
 	sf::Vector2f getSize() const;
+	sf::Vector2f getPosition() const;
 	float getRotation() const;
 	sf::Vector2f getCenter() const;
 	sf::FloatRect getScreenViewport() const;
@@ -26,9 +27,13 @@ public:
 
 	void apply();
 
+	sf::Vector2f getMousePositionRelativeToCamera();
+
 	static Camera getDefaultCamera();
 
 private:
+	sf::Vector2f M_position;
+
 	sf::View M_viewPort;
 
 	friend class InitState;
