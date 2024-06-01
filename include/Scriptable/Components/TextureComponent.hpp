@@ -11,6 +11,8 @@ namespace Scriptable::Components {
     class TextureComponent : public Component {
     public:
         TextureComponent(int i);
+        TextureComponent();
+        
         ~TextureComponent() = default;
     };
 }

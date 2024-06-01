@@ -17,7 +17,7 @@ namespace Scriptable{
 	public:
 		State();
 
-		~State();
+		virtual ~State();
 
 		Camera M_camera;
 

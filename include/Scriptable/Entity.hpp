@@ -11,7 +11,7 @@ namespace Scriptable
 	public:
 		Entity();
 
-		~Entity();
+		virtual ~Entity();
 
 		template<DerivedComponent T>
 		T* getComponent(){
@@ -65,9 +65,8 @@ namespace Scriptable
 			{
 				try
 				{
-					dynamic_cast<T*>(component); // this will throw an exception when component is derived from T
-
-					return true;
+					T* ptr = dynamic_cast<T*>(component); 
+					if(ptr) return true;	
 				}
 				catch(...) {}
 			}

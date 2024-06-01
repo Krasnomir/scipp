@@ -10,7 +10,7 @@ namespace Scriptable{
 
             //some component-specific functions
 
-            ~Component();
+            virtual ~Component();
 
         private:
     };

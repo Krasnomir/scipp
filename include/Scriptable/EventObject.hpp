@@ -28,7 +28,7 @@ namespace Scriptable{
 
             explicit operator sf::ConvexShape() = delete;
 
-            ~EventObject() = default;
+            virtual ~EventObject() = default;
 
             typedef std::function<void(const EventData*)> Event_t;
 

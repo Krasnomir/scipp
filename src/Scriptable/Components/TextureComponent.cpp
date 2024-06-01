@@ -8,7 +8,11 @@
 namespace Scriptable::Components
 {
     TextureComponent::TextureComponent(int i) {
-        std::cout << "test";
+        std::cout << "test" << std::endl;
+    }
+
+    TextureComponent::TextureComponent(){
+        abort();
     }
 }
 
