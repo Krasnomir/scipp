@@ -2,9 +2,10 @@
 #define __RENDER_COMPONENT 1
 
 #include <Scriptable/Component.hpp>
-#include <vector>
-
 #include <SFML/Graphics.hpp>
+
+#include <vector>
+#include <unordered_map> 
 
 namespace Scriptable::Components{
 
@@ -20,11 +21,15 @@ namespace Scriptable::Components{
 
         void onRender(const EventData* data);
 
+        void addCostume(int id, sf::Texture texture);
+        void loadCostume(int id);
     private:
         int m_verticesCount;
 
         sf::VertexArray m_vertices;
         sf::Texture m_texture;
+
+        std::unordered_map<int, sf::Texture> m_costumes;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     };

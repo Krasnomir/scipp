@@ -1,8 +1,9 @@
 #include <Scriptable/Component.hpp>
 #include <Scriptable/Components/SFMLRenderComponent.hpp>
-#include <vector>
 #include <SFML/Graphics.hpp>
 
+#include <vector>
+#include <unordered_map>
 #include <iostream>
 
 namespace Scriptable::Components
@@ -12,7 +13,8 @@ namespace Scriptable::Components
         m_verticesCount = (int) points.size();
 
         for(size_t i = 0; i < points.size(); i++){
-            m_vertices[i] = points[i];
+            m_vertices[i].position = points[i];
+            m_vertices[i].texCoords = points[i];
         }
     }
 
@@ -37,6 +39,14 @@ namespace Scriptable::Components
 
     void SFMLRenderComponent::onRender(const EventData* data){
         data->targetWindow->draw(*this);
+    }
+
+    void SFMLRenderComponent::addCostume(int id, sf::Texture texture) {
+        m_costumes[id] = texture;
+    }
+
+    void SFMLRenderComponent::loadCostume(int id) {
+        m_texture = m_costumes[id];
     }
 }
 

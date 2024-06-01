@@ -7,8 +7,8 @@
 #include <SFML/Graphics.hpp>
 #include <Scriptable/EventObject.hpp>
 #include <Scriptable/Components/SFMLRenderComponent.hpp>
-#include <Scriptable/Components/TextureComponent.hpp>
 
+#include <string>
 #include <iostream>
 
 namespace Scipp {
@@ -68,26 +68,23 @@ void Game::pollEvents()
 {
 	sf::Event event;
 	while (this->window->pollEvent(event)) handleEvent(event);
-
-
 }
 
 
 
 struct DebugEntity : public Scriptable::Entity
 {
-	sf::Texture tTexture;
-
 	DebugEntity(){
+		sf::Texture tex1;
+		sf::Texture tex2;
+		tex1.loadFromFile("drewno.jpg");
+		tex2.loadFromFile("de.jpg");
+
 		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
-		
-		addComponent<Scriptable::Components::TextureComponent>(0);
-
 		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin(getComponent<Scriptable::Components::SFMLRenderComponent>()->center());
-		//tTexture.loadFromFile("test.png");
-		
-		//getComponent<Scriptable::Components::SFMLRenderComponent>()->setTexture(&tTexture);
-
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume(0, tex1);
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume(1, tex2);
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume(0);
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -110,10 +107,11 @@ struct DebugEntity : public Scriptable::Entity
 	{
 		auto* renderComponent = getComponent<Scriptable::Components::SFMLRenderComponent>();
 		if(data->sfmlEvent.key.code == sf::Keyboard::Key::E){
+			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume(0);
 			renderComponent->rotate(360 / 10.f);
 		}
 		else if(data->sfmlEvent.key.code == sf::Keyboard::Key::Q){
-
+			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume(1);
 			renderComponent->rotate(-360 / 10.f);
 		}
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {
