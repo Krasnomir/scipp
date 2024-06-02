@@ -44,6 +44,8 @@ namespace Scriptable::Components
     }
 
     void SFMLRenderComponent::addCostume(std::string name, std::string path, sf::IntRect area) {
+        std::unique_lock<std::shared_mutex> writeLock(m_costumesLock);
+
         sf::Texture tex;
         tex.loadFromFile(path, area);
 
@@ -51,6 +53,8 @@ namespace Scriptable::Components
     }
 
     void SFMLRenderComponent::addCostume(std::string name, std::string path) {
+        std::unique_lock<std::shared_mutex> writeLock(m_costumesLock);
+
         sf::Texture tex;
         tex.loadFromFile(path);
 
@@ -58,6 +62,8 @@ namespace Scriptable::Components
     }
 
     void SFMLRenderComponent::loadCostume(std::string name) {
+        std::shared_lock<std::shared_mutex> readLock(m_costumesLock);
+
         m_texture = m_costumes[name];
     }
 }

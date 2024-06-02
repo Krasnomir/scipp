@@ -29,6 +29,7 @@ namespace Scriptable::Components{
         sf::VertexArray m_vertices;
         sf::Texture m_texture;
 
+        mutable std::shared_mutex m_costumesLock;
         std::unordered_map<std::string, sf::Texture> m_costumes;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
