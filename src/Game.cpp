@@ -82,9 +82,9 @@ struct DebugEntity : public Scriptable::Entity
 
 		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
 		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin(getComponent<Scriptable::Components::SFMLRenderComponent>()->center());
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume(0, tex1);
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume(1, tex2);
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume(0);
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume("test", "de.jpg");
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume("test2", "drewno.jpg", sf::IntRect(0, 0, 20, 20));
+		getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume("test");
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -107,11 +107,11 @@ struct DebugEntity : public Scriptable::Entity
 	{
 		auto* renderComponent = getComponent<Scriptable::Components::SFMLRenderComponent>();
 		if(data->sfmlEvent.key.code == sf::Keyboard::Key::E){
-			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume(0);
+			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume("test");
 			renderComponent->rotate(360 / 10.f);
 		}
 		else if(data->sfmlEvent.key.code == sf::Keyboard::Key::Q){
-			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume(1);
+			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume("test2");
 			renderComponent->rotate(-360 / 10.f);
 		}
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {

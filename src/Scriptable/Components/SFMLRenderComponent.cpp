@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <vector>
+#include <string>
 #include <unordered_map>
 #include <iostream>
 
@@ -41,12 +42,22 @@ namespace Scriptable::Components
         data->targetWindow->draw(*this);
     }
 
-    void SFMLRenderComponent::addCostume(int id, sf::Texture texture) {
-        m_costumes[id] = texture;
+    void SFMLRenderComponent::addCostume(std::string name, std::string path, sf::IntRect area) {
+        sf::Texture tex;
+        tex.loadFromFile(path, area);
+
+        m_costumes[name] = tex;
     }
 
-    void SFMLRenderComponent::loadCostume(int id) {
-        m_texture = m_costumes[id];
+    void SFMLRenderComponent::addCostume(std::string name, std::string path) {
+        sf::Texture tex;
+        tex.loadFromFile(path);
+
+        m_costumes[name] = tex;
+    }
+
+    void SFMLRenderComponent::loadCostume(std::string name) {
+        m_texture = m_costumes[name];
     }
 }
 

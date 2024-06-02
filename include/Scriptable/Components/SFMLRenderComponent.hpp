@@ -4,6 +4,7 @@
 #include <Scriptable/Component.hpp>
 #include <SFML/Graphics.hpp>
 
+#include <string>
 #include <vector>
 #include <unordered_map> 
 
@@ -21,15 +22,16 @@ namespace Scriptable::Components{
 
         void onRender(const EventData* data);
 
-        void addCostume(int id, sf::Texture texture);
-        void loadCostume(int id);
+        void addCostume(std::string name, std::string path, sf::IntRect area);
+        void addCostume(std::string name, std::string path);
+        void loadCostume(std::string name);
     private:
         int m_verticesCount;
 
         sf::VertexArray m_vertices;
         sf::Texture m_texture;
 
-        std::unordered_map<int, sf::Texture> m_costumes;
+        std::unordered_map<std::string, sf::Texture> m_costumes;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     };
