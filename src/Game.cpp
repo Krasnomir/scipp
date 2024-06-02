@@ -1,12 +1,12 @@
-#include <Game.h>
-#include <StateManager.h>
+#include <Game.hpp>
+#include <StateManager.hpp>
 #include <Scriptable/State.hpp>
-#include <InitState.h>
+#include <InitState.hpp>
 #include <Scriptable/Entity.hpp>
-
-#include <SFML/Graphics.hpp>
 #include <Scriptable/EventObject.hpp>
 #include <Scriptable/Components/SFMLRenderComponent.hpp>
+
+#include <SFML/Graphics.hpp>
 
 #include <string>
 #include <iostream>
@@ -69,8 +69,6 @@ void Game::pollEvents()
 	sf::Event event;
 	while (this->window->pollEvent(event)) handleEvent(event);
 }
-
-
 
 struct DebugEntity : public Scriptable::Entity
 {
@@ -165,6 +163,10 @@ void Game::run()
 			window->display();
 		}
 
+		//after render
+		{
+			stateManager.currentState->evokeAll("afterRender", &M_eventData);
+		}
 	}
 }
 
@@ -188,7 +190,6 @@ void Game::init()
 	this->initStates();
 
 	stateManager.currentState->addEntity<DebugEntity>("test1");
-	
 }
 
 Game::Game() 

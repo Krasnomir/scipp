@@ -12,8 +12,6 @@ namespace Scriptable::Components{
 
     class SFMLRenderComponent : public Component, public sf::Drawable, public sf::Transformable {
     public:
-        //SFMLRenderComponent() = default;
-
         //WARNING: This function requires input in the format of SFML triangleStrip
         SFMLRenderComponent(const std::vector<sf::Vector2f>& triangleStripPoints);
         ~SFMLRenderComponent() = default;
@@ -36,6 +34,5 @@ namespace Scriptable::Components{
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     };
 }
-
 
 #endif

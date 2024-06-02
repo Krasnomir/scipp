@@ -1,13 +1,12 @@
-#include <StateManager.h>
+#include <StateManager.hpp>
 #include <Scriptable/State.hpp>
-#include <InitState.h>
+#include <InitState.hpp>
 #include <Scriptable/Entity.hpp>
+#include <Camera.hpp>
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
-
-#include <Camera.hpp>
 
 		
 void InitState::onRender(const Scriptable::EventData* data)

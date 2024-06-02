@@ -1,5 +1,6 @@
 #include <Scriptable/Component.hpp>
 #include <Scriptable/Components/SFMLRenderComponent.hpp>
+
 #include <SFML/Graphics.hpp>
 
 #include <vector>

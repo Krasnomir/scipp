@@ -1,9 +1,8 @@
 #include <Camera.hpp>
-#include <Game.h>
-#include <StateManager.h>
+#include <Game.hpp>
+#include <StateManager.hpp>
 
 #include <iostream>
-
 #include <cmath>
 #include <math.h>
 
@@ -108,4 +107,5 @@ sf::Vector2f Camera::getMousePositionRelativeToCamera() {
 
 Camera::~Camera()
 {
+
 }
