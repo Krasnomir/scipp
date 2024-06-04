@@ -1,5 +1,5 @@
 #include <Input/Input.hpp>
-#include <Game.hpp>
+#include <Game.h>
 
 namespace Input{
     sf::Vector2i GetMouseScreenPosition(){

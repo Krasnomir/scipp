@@ -1,7 +1,6 @@
-#include <Scriptable/Entity.hpp>
-
 #include <SFML/Graphics.hpp>
 
+#include <Scriptable/Entity.hpp>
 namespace Scriptable{
 	Entity::Entity(){}
 
@@ -23,10 +22,15 @@ namespace Scriptable{
         for(auto * component : M_Components){
             component->evokeEvents(eventName, data);
         }
+
     }
+
 
     void Entity::M_insertComponent_nolock(Component* component)
     {
         M_Components.push_back(component);
     }
+
+
+
 }

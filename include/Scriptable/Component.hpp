@@ -5,12 +5,14 @@
 
 namespace Scriptable{
     class Component : public EventObject {
-    public:
-        Component();
+        public:
+            Component();
 
-        //some component-specific functions
+            //some component-specific functions
 
-        virtual ~Component();
+            virtual ~Component();
+
+        private:
     };
 
     template<class T>

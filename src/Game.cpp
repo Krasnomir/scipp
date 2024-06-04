@@ -1,14 +1,14 @@
-#include <Game.hpp>
-#include <StateManager.hpp>
+#include <Game.h>
+#include <StateManager.h>
 #include <Scriptable/State.hpp>
-#include <InitState.hpp>
+#include <InitState.h>
 #include <Scriptable/Entity.hpp>
-#include <Scriptable/EventObject.hpp>
-#include <Scriptable/Components/SFMLRenderComponent.hpp>
 
 #include <SFML/Graphics.hpp>
+#include <Scriptable/EventObject.hpp>
+#include <Scriptable/Components/RenderComponent.hpp>
+#include <Scriptable/Components/TextureComponent.hpp>
 
-#include <string>
 #include <iostream>
 
 namespace Scipp {
@@ -68,21 +68,26 @@ void Game::pollEvents()
 {
 	sf::Event event;
 	while (this->window->pollEvent(event)) handleEvent(event);
+
+
 }
+
+
 
 struct DebugEntity : public Scriptable::Entity
 {
-	DebugEntity(){
-		sf::Texture tex1;
-		sf::Texture tex2;
-		tex1.loadFromFile("drewno.jpg");
-		tex2.loadFromFile("de.jpg");
+	sf::Texture tTexture;
 
-		addComponent<Scriptable::Components::SFMLRenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->setOrigin(getComponent<Scriptable::Components::SFMLRenderComponent>()->center());
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume("test", "de.jpg");
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->addCostume("test2", "drewno.jpg", sf::IntRect(0, 0, 20, 20));
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume("test");
+	DebugEntity(){
+		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
+		
+		addComponent<Scriptable::Components::TextureComponent>(0);
+
+		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		//tTexture.loadFromFile("test.png");
+		
+		//getComponent<Scriptable::Components::RenderComponent>()->setTexture(&tTexture);
+
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -97,19 +102,18 @@ struct DebugEntity : public Scriptable::Entity
 
 	void onMouseMoved(const Scriptable::EventData* data)
 	{
-		getComponent<Scriptable::Components::SFMLRenderComponent>()->setPosition(Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera());
-		//getComponent<Scriptable::Components::SFMLRenderComponent>()->setPosition((float) data->sfmlEvent.mouseMove.x, (float) data->sfmlEvent.mouseMove.y);
+		getComponent<Scriptable::Components::RenderComponent>()->setPosition(Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera());
+		//getComponent<Scriptable::Components::RenderComponent>()->setPosition((float) data->sfmlEvent.mouseMove.x, (float) data->sfmlEvent.mouseMove.y);
 	}
 
 	void onKeyPressed(const Scriptable::EventData* data)
 	{
-		auto* renderComponent = getComponent<Scriptable::Components::SFMLRenderComponent>();
+		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 		if(data->sfmlEvent.key.code == sf::Keyboard::Key::E){
-			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume("test");
 			renderComponent->rotate(360 / 10.f);
 		}
 		else if(data->sfmlEvent.key.code == sf::Keyboard::Key::Q){
-			getComponent<Scriptable::Components::SFMLRenderComponent>()->loadCostume("test2");
+
 			renderComponent->rotate(-360 / 10.f);
 		}
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {
@@ -163,10 +167,6 @@ void Game::run()
 			window->display();
 		}
 
-		//after render
-		{
-			stateManager.currentState->evokeAll("afterRender", &M_eventData);
-		}
 	}
 }
 
@@ -190,6 +190,7 @@ void Game::init()
 	this->initStates();
 
 	stateManager.currentState->addEntity<DebugEntity>("test1");
+	
 }
 
 Game::Game() 

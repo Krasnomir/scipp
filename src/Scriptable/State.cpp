@@ -1,5 +1,5 @@
 #include <Scriptable/State.hpp>
-#include <StateManager.hpp>
+#include "StateManager.h"
 
 #include <iostream>
 
@@ -69,5 +69,8 @@ namespace Scriptable{
 
 	}
 
-	State::State() {}
+	State::State()
+	{
+		
+	}
 }

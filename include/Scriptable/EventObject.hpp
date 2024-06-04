@@ -1,14 +1,13 @@
 #ifndef __event_object
 #define __event_object 1
 
-#include <SFML/Graphics.hpp>
-
 #include <string>
 #include <unordered_map>
 #include <functional>
 #include <stdint.h>
 #include <mutex>
 #include <shared_mutex>
+#include <SFML/Graphics.hpp>
 
 namespace Scriptable{
     struct EventData {
@@ -18,46 +17,51 @@ namespace Scriptable{
 
         sf::RenderWindow* targetWindow;
         class State* currentState;
+
     };
+
 
     class EventObject {
-    public:
-        EventObject();
+        public:
 
-        explicit operator sf::ConvexShape() = delete;
+            EventObject();
 
-        virtual ~EventObject() = default;
+            explicit operator sf::ConvexShape() = delete;
 
-        typedef std::function<void(const EventData*)> Event_t;
+            virtual ~EventObject() = default;
+
+            typedef std::function<void(const EventData*)> Event_t;
+
             
-        virtual inline void beforeRender(const EventData* data) {}
+            virtual inline void beforeRender(const EventData* data) {}
 
-        virtual inline void onRender(const EventData* data) {}
+            virtual inline void onRender(const EventData* data) {}
 
-        virtual inline void onWindowClosed(const EventData* data) {}
+            virtual inline void onWindowClosed(const EventData* data) {}
 
-        virtual inline void onMouseMoved(const EventData* data) {}
+            virtual inline void onMouseMoved(const EventData* data) {}
 
-        virtual inline void onMouseButtonPressed(const EventData* data) {}
+            virtual inline void onMouseButtonPressed(const EventData* data) {}
 
-        virtual inline void onMouseButtonReleased(const EventData* data) {}
+            virtual inline void onMouseButtonReleased(const EventData* data) {}
 
-        virtual inline void onKeyPressed(const EventData* data) {}
+            virtual inline void onKeyPressed(const EventData* data) {}
 
-        virtual inline void onKeyReleased(const EventData* data) {}
+            virtual inline void onKeyReleased(const EventData* data) {}
 
-        // adds callback to bound events
-        void bindEvent(const std::string& eventName, Event_t callback);
+            // adds callback to bound events
+            void bindEvent(const std::string& eventName, Event_t callback);
 
-        // call all bound events with the name of eventName
-        void evokeEvents(const std::string& eventName, const EventData* data);
+            // call all bound events with the name of eventName
+            void evokeEvents(const std::string& eventName, const EventData* data);
 
-    protected:
-        std::shared_mutex M_boundEventLock;
+        protected:
+            std::shared_mutex M_boundEventLock;
 
-        //bound events
-        std::unordered_map<std::string, std::vector<Event_t>> M_boundEvents;
-    };
+            //bound events
+            std::unordered_map<std::string, std::vector<Event_t>> M_boundEvents;
+
+        };
 }
 
 #endif

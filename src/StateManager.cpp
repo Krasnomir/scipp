@@ -1,5 +1,5 @@
-#include <Game.hpp>
-#include <StateManager.hpp>
+#include "Game.h"
+#include "StateManager.h"
 #include <Scriptable/State.hpp>
 
 void StateManager::changeState(Scriptable::State* state)

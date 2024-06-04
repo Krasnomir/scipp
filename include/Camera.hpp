@@ -1,7 +1,7 @@
 #ifndef _CAMERA_HPP
 #define _CAMERA_HPP 1
 
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 
 class Camera {
 public:
@@ -38,5 +38,6 @@ private:
 
 	friend class InitState;
 };
+
 
 #endif

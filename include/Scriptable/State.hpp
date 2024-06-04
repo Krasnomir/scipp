@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Camera.hpp>
-#include <Scriptable/Entity.hpp>
-
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
 #include <vector>
+
+#include <Camera.hpp>
+#include <Scriptable/Entity.hpp>
 
 class StateManager;
 

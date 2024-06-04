@@ -1,9 +1,8 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <Scriptable/EventObject.hpp>
 #include <Scriptable/Component.hpp>
-
-#include <SFML/Graphics.hpp>
 
 namespace Scriptable
 {	
@@ -119,6 +118,7 @@ namespace Scriptable
 		mutable std::shared_mutex M_ComponentLock;
 
 		std::vector<Component*> M_Components;
+		
 	};
 
 	template<class T>
