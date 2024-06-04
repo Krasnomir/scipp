@@ -1,8 +1,11 @@
 #include <Scriptable/Component.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
-#include <vector>
+
 #include <SFML/Graphics.hpp>
 
+#include <vector>
+#include <string>
+#include <unordered_map>
 #include <iostream>
 
 namespace Scriptable::Components
@@ -12,7 +15,8 @@ namespace Scriptable::Components
         m_verticesCount = (int) points.size();
 
         for(size_t i = 0; i < points.size(); i++){
-            m_vertices[i] = points[i];
+            m_vertices[i].position = points[i];
+            m_vertices[i].texCoords = points[i];
         }
     }
 
@@ -37,6 +41,30 @@ namespace Scriptable::Components
 
     void RenderComponent::onRender(const EventData* data){
         data->targetWindow->draw(*this);
+    }
+
+    void RenderComponent::addCostume(std::string name, std::string path, sf::IntRect area) {
+        std::unique_lock<std::shared_mutex> writeLock(m_costumesLock);
+
+        sf::Texture tex;
+        tex.loadFromFile(path, area);
+
+        m_costumes[name] = tex;
+    }
+
+    void RenderComponent::addCostume(std::string name, std::string path) {
+        std::unique_lock<std::shared_mutex> writeLock(m_costumesLock);
+
+        sf::Texture tex;
+        tex.loadFromFile(path);
+
+        m_costumes[name] = tex;
+    }
+
+    void RenderComponent::loadCostume(std::string name) {
+        std::shared_lock<std::shared_mutex> readLock(m_costumesLock);
+
+        m_texture = m_costumes[name];
     }
 }
 

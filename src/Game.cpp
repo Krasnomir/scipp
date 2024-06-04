@@ -1,14 +1,14 @@
-#include <Game.h>
-#include <StateManager.h>
+#include <Game.hpp>
+#include <StateManager.hpp>
 #include <Scriptable/State.hpp>
-#include <InitState.h>
+#include <InitState.hpp>
 #include <Scriptable/Entity.hpp>
-
-#include <SFML/Graphics.hpp>
 #include <Scriptable/EventObject.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
-#include <Scriptable/Components/TextureComponent.hpp>
 
+#include <SFML/Graphics.hpp>
+
+#include <string>
 #include <iostream>
 
 namespace Scipp {
@@ -68,26 +68,21 @@ void Game::pollEvents()
 {
 	sf::Event event;
 	while (this->window->pollEvent(event)) handleEvent(event);
-
-
 }
-
-
 
 struct DebugEntity : public Scriptable::Entity
 {
-	sf::Texture tTexture;
-
 	DebugEntity(){
+		sf::Texture tex1;
+		sf::Texture tex2;
+		tex1.loadFromFile("drewno.jpg");
+		tex2.loadFromFile("de.jpg");
+
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
-		
-		addComponent<Scriptable::Components::TextureComponent>(0);
-
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		//tTexture.loadFromFile("test.png");
-		
-		//getComponent<Scriptable::Components::RenderComponent>()->setTexture(&tTexture);
-
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "de.jpg");
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test2", "drewno.jpg", sf::IntRect(0, 0, 20, 20));
+		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -110,10 +105,11 @@ struct DebugEntity : public Scriptable::Entity
 	{
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 		if(data->sfmlEvent.key.code == sf::Keyboard::Key::E){
+			getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 			renderComponent->rotate(360 / 10.f);
 		}
 		else if(data->sfmlEvent.key.code == sf::Keyboard::Key::Q){
-
+			getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test2");
 			renderComponent->rotate(-360 / 10.f);
 		}
 		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {
@@ -167,6 +163,10 @@ void Game::run()
 			window->display();
 		}
 
+		//after render
+		{
+			stateManager.currentState->evokeAll("afterRender", &M_eventData);
+		}
 	}
 }
 
@@ -190,7 +190,6 @@ void Game::init()
 	this->initStates();
 
 	stateManager.currentState->addEntity<DebugEntity>("test1");
-	
 }
 
 Game::Game() 
