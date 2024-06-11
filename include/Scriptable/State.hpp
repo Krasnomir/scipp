@@ -36,7 +36,7 @@ namespace Scriptable{
 
 		template<Scriptable::DerivedEntity T, class ... Args>
 		inline bool addEntity(const std::string& entityName, Args ... args){
-			std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock);
+			// std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock); temporary disabled
 			
 			if(M_entityMap.contains(entityName)) return false; // fails if there is already a entity with specified name
 

@@ -70,71 +70,132 @@ void Game::pollEvents()
 	while (this->window->pollEvent(event)) handleEvent(event);
 }
 
-struct DebugEntity : public Scriptable::Entity
-{
-	DebugEntity(){
-		sf::Texture tex1;
-		sf::Texture tex2;
-		tex1.loadFromFile("drewno.jpg");
-		tex2.loadFromFile("de.jpg");
+#include <math.h>
 
-		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,0}, {0,100}, {100, 0}, {100, 100}, {200, 50}, {150, 150} }));
+//temporary
+double getAngle(double x1, double y1, double x2, double y2) {
+    // Calculate the difference in x and y coordinates
+    double deltaX = x2 - x1;
+    double deltaY = y2 - y1;
+    
+    // Calculate the angle in radians
+    double angleRadians = atan2(deltaY, deltaX);
+    
+    // Convert the angle to degrees
+    double angleDegrees = angleRadians * (180.0 / M_PI);
+    
+    // Ensure the angle is in the range [0, 360)
+    if (angleDegrees < 0) {
+        angleDegrees += 360;
+    }
+
+    return angleDegrees;
+}
+
+//temporary
+sf::Vector2f movePoint(const sf::Vector2f& p, double distance, double angleDegrees) {
+    // Convert the angle from degrees to radians
+    double angleRadians = angleDegrees * M_PI / 180.0;
+
+    // Calculate the new coordinates
+    double newX = p.x + distance * cos(angleRadians);
+    double newY = p.y + distance * sin(angleRadians);
+
+    return { newX, newY };
+}
+
+//temporary
+float getDistance(sf::Vector2f a, sf::Vector2f b){
+	return sqrt(pow(a.x - b.x, 2) + pow((a.y - b.y), 2));
+}
+
+
+struct ProjectileEntity : public Scriptable::Entity
+{
+	double M_angle;
+
+	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle){
+		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,50}, {0, 0}, {25,50}, {25, 0}}));
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "de.jpg");
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test2", "drewno.jpg", sf::IntRect(0, 0, 20, 20));
-		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
+		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
+
+		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle + 90.f);
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
 	{
+		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
+		
+		float angle = M_angle;
+
+		renderC->setPosition(movePoint(renderC->getPosition(), 5, angle));
 
 	}
 
     void afterRender(const Scriptable::EventData* data)
 	{
+		
+	} 
 
+};
+
+struct DebugEntity : public Scriptable::Entity
+{
+	DebugEntity(){
+		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,50}, {0, 0}, {50,50}, {50, 0}}));
+		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png");
+		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
+	}
+
+	void beforeRender(const Scriptable::EventData* data)
+	{
+		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
+		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
+		
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && getDistance(renderC->getPosition(), mousePos) > 10) {
+			float angle = renderC->getRotation();
+
+
+			renderC->setPosition(movePoint(renderC->getPosition(), 2, angle));
+		}
+
+	}
+
+    void afterRender(const Scriptable::EventData* data)
+	{
+		
 	} 
 
 	void onMouseMoved(const Scriptable::EventData* data)
 	{
-		getComponent<Scriptable::Components::RenderComponent>()->setPosition(Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera());
-		//getComponent<Scriptable::Components::RenderComponent>()->setPosition((float) data->sfmlEvent.mouseMove.x, (float) data->sfmlEvent.mouseMove.y);
+		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
+		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
+
+		renderComponent->setRotation(getAngle(renderComponent->getPosition().x, renderComponent->getPosition().y, mouse_pos.x, mouse_pos.y));
+		
+	}
+
+	void onMouseButtonPressed(const Scriptable::EventData* data){
+		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left){
+			static uint32_t proj_ID = 0;
+
+			Scipp::globalGame->stateManager.currentState->addEntity<ProjectileEntity>(std::to_string(proj_ID), getComponent<Scriptable::Components::RenderComponent>()->getRotation(), getComponent<Scriptable::Components::RenderComponent>()->getPosition());
+			proj_ID++;
+		}
 	}
 
 	void onKeyPressed(const Scriptable::EventData* data)
 	{
-		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
-		if(data->sfmlEvent.key.code == sf::Keyboard::Key::E){
-			getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
-			renderComponent->rotate(360 / 10.f);
-		}
-		else if(data->sfmlEvent.key.code == sf::Keyboard::Key::Q){
-			getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test2");
-			renderComponent->rotate(-360 / 10.f);
-		}
-		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::R) {
-			float currentRotation = Scipp::globalGame->stateManager.currentState->M_camera.getRotation();
-			Scipp::globalGame->stateManager.currentState->M_camera.setRotation(currentRotation + 5.0f);
-			Scipp::globalGame->stateManager.currentState->M_camera.apply();
-		}
-		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::W) {
-			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(0.f, -10.f));
-			Scipp::globalGame->stateManager.currentState->M_camera.apply();
-		}
-		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::A) {
-			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(-10.f, 0.f));
-			Scipp::globalGame->stateManager.currentState->M_camera.apply();
-		}
-		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::S) {
-			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(0.f, 10.f));
-			Scipp::globalGame->stateManager.currentState->M_camera.apply();
-		}
-		else if (data->sfmlEvent.key.code == sf::Keyboard::Key::D) {
-			Scipp::globalGame->stateManager.currentState->M_camera.move(sf::Vector2f(10.f, 0.f));
-			Scipp::globalGame->stateManager.currentState->M_camera.apply();
-		}
+
+		
 	}
 };
+
+
+
 
 void Game::run() 
 {
