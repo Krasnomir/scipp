@@ -1,4 +1,5 @@
 #include <Game.hpp>
+#include <Util.hpp>
 #include <StateManager.hpp>
 #include <Scriptable/State.hpp>
 #include <InitState.hpp>
@@ -8,6 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <math.h>
 #include <string>
 #include <iostream>
 
@@ -70,46 +72,6 @@ void Game::pollEvents()
 	while (this->window->pollEvent(event)) handleEvent(event);
 }
 
-#include <math.h>
-
-//temporary
-double getAngle(double x1, double y1, double x2, double y2) {
-    // Calculate the difference in x and y coordinates
-    double deltaX = x2 - x1;
-    double deltaY = y2 - y1;
-    
-    // Calculate the angle in radians
-    double angleRadians = atan2(deltaY, deltaX);
-    
-    // Convert the angle to degrees
-    double angleDegrees = angleRadians * (180.0 / M_PI);
-    
-    // Ensure the angle is in the range [0, 360)
-    if (angleDegrees < 0) {
-        angleDegrees += 360;
-    }
-
-    return angleDegrees;
-}
-
-//temporary
-sf::Vector2f movePoint(const sf::Vector2f& p, double distance, double angleDegrees) {
-    // Convert the angle from degrees to radians
-    double angleRadians = angleDegrees * M_PI / 180.0;
-
-    // Calculate the new coordinates
-    double newX = p.x + distance * cos(angleRadians);
-    double newY = p.y + distance * sin(angleRadians);
-
-    return { newX, newY };
-}
-
-//temporary
-float getDistance(sf::Vector2f a, sf::Vector2f b){
-	return sqrt(pow(a.x - b.x, 2) + pow((a.y - b.y), 2));
-}
-
-
 struct ProjectileEntity : public Scriptable::Entity
 {
 	double M_angle;
@@ -128,7 +90,7 @@ struct ProjectileEntity : public Scriptable::Entity
 		
 		float angle = M_angle;
 
-		renderC->setPosition(movePoint(renderC->getPosition(), 5, angle));
+		renderC->setPosition(Util::movePoint(renderC->getPosition(), 5, angle));
 
 	}
 
@@ -155,11 +117,11 @@ struct DebugEntity : public Scriptable::Entity
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
 		
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && getDistance(renderC->getPosition(), mousePos) > 10) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(renderC->getPosition(), mousePos) > 10) {
 			float angle = renderC->getRotation();
 
 
-			renderC->setPosition(movePoint(renderC->getPosition(), 2, angle));
+			renderC->setPosition(Util::movePoint(renderC->getPosition(), 2, angle));
 		}
 
 	}
@@ -174,8 +136,7 @@ struct DebugEntity : public Scriptable::Entity
 		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
-		renderComponent->setRotation(getAngle(renderComponent->getPosition().x, renderComponent->getPosition().y, mouse_pos.x, mouse_pos.y));
-		
+		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mouse_pos));
 	}
 
 	void onMouseButtonPressed(const Scriptable::EventData* data){
