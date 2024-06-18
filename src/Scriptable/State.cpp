@@ -27,7 +27,7 @@ namespace Scriptable{
 		return false;
 	}
 
-	bool State::deleteComponent(const std::string& entityName){
+	bool State::deleteEntity(const std::string& entityName){
 		std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock);
 
 		if(!M_entityMap.contains(entityName)) return false;
@@ -48,6 +48,11 @@ namespace Scriptable{
 		}
 
 		return nullptr;
+	}
+
+	void State::init()
+	{
+		
 	}
 
 	void State::initCamera()

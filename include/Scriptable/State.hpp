@@ -21,6 +21,8 @@ namespace Scriptable{
 
 		Camera M_camera;
 
+		virtual void init();
+
 		void initCamera();
 
 		virtual void evokeAll(const std::string& eventName, const Scriptable::EventData* data);
@@ -32,7 +34,7 @@ namespace Scriptable{
 		bool hasEntity(const std::string& entityName) const noexcept;
 
 		//returns false on fail
-		bool deleteComponent(const std::string& entityName);
+		bool deleteEntity(const std::string& entityName);
 
 		template<Scriptable::DerivedEntity T, class ... Args>
 		inline bool addEntity(const std::string& entityName, Args ... args){

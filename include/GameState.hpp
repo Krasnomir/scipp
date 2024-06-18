@@ -8,14 +8,12 @@
 
 #include <vector>
 
-class InitState : public Scriptable::State
+class GameState : public Scriptable::State
 {
 public:
-	InitState();
+	GameState();
 
 	void init();
-
-	void onRender(const Scriptable::EventData* data);
 
 	void onWindowClosed(const Scriptable::EventData* data);
 };
