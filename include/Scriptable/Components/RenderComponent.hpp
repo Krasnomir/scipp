@@ -23,6 +23,8 @@ namespace Scriptable::Components{
         void addCostume(std::string name, std::string path, sf::IntRect area);
         void addCostume(std::string name, std::string path);
         void loadCostume(std::string name);
+
+        int m_layer;
     private:
         int m_verticesCount;
 

@@ -36,6 +36,9 @@ namespace Scriptable{
 		//returns false on fail
 		bool deleteEntity(const std::string& entityName);
 
+		size_t getEntitiesCount();
+		Scriptable::Entity* getEntitiesSortedByLayer();
+
 		template<Scriptable::DerivedEntity T, class ... Args>
 		inline bool addEntity(const std::string& entityName, Args ... args){
 			// std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock); temporary disabled

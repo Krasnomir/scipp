@@ -1,5 +1,6 @@
 #include <Scriptable/State.hpp>
 #include <StateManager.hpp>
+#include <Scriptable/Components/RenderComponent.hpp>
 
 #include <iostream>
 
@@ -37,6 +38,26 @@ namespace Scriptable{
 		M_entityMap.erase(entityName);
 
 		return true;
+	}
+	
+	size_t State::getEntitiesCount() {
+		return M_entityMap.size();
+	}
+
+	Scriptable::Entity* State::getEntitiesSortedByLayer() {
+		std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);
+
+		std::size_t arrSize = M_entityMap.size();
+
+		Scriptable::Entity* sorted = new Scriptable::Entity[arrSize];
+
+		Scriptable::Entity* i = sorted;
+		for (auto& entity : M_entityMap) {
+			i = entity.second;
+			i++;
+		}
+
+		return sorted;
 	}
 
 	Scriptable::Entity* State::getEntity(const std::string& entityName) noexcept{
