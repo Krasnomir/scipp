@@ -40,4 +40,17 @@ namespace Util {
     float getDistanceBetweenPoints(const sf::Vector2f& position1, const sf::Vector2f& position2) {
         return sqrt(pow(position1.x - position2.x, 2) + pow((position1.y - position2.y), 2));
     }
+
+    float getTriangleArea(Triangle t) {
+        return abs((t.a.x * (t.b.y - t.c.y) + t.b.x * (t.c.y - t.a.y) + t.c.x * (t.a.y - t.b.y)) / 2.0);
+    }
+
+    bool isInTriangle(Triangle triangle, sf::Vector2f point) {
+        float abc = Util::getTriangleArea(triangle);
+        float pbc = Util::getTriangleArea(Triangle(point, triangle.b, triangle.c));
+        float pac = Util::getTriangleArea(Triangle(point, triangle.a, triangle.c));
+        float pab = Util::getTriangleArea(Triangle(point, triangle.a, triangle.b));
+
+        return (abc == pbc + pac + pab);
+    }
 }

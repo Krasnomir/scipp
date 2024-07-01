@@ -18,8 +18,6 @@ namespace Scriptable::Components
             m_vertices[i].position = points[i];
             m_vertices[i].texCoords = points[i];
         }
-
-        m_layer = 0;
     }
 
     sf::Vector2f RenderComponent::center() {

@@ -95,16 +95,7 @@ void Game::run()
 
 		//render
 		{
-			//stateManager.currentState->evokeAll("onRender", &M_eventData);
-
-			size_t size = stateManager.currentState->getEntitiesCount();
-			Scriptable::Entity* entities = stateManager.currentState->getEntitiesSortedByLayer();
-
-			for (int i = 0; i < size; i++) {
-				entities->evokeAll("onRender", &M_eventData);
-				entities++;
-			}
-
+			stateManager.currentState->evokeAll("onRender", &M_eventData);
 			window->display();
 		}
 

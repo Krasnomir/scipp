@@ -2,8 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <iostream>
-
 namespace Scriptable{
 	Entity::Entity(){}
 
