@@ -2,6 +2,7 @@
 
 #include <Camera.hpp>
 #include <Scriptable/Entity.hpp>
+#include <Scriptable/UI/UIObject.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -66,6 +67,8 @@ namespace Scriptable{
 
 		//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 		std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
+
+		std::unordered_map<std::string, Scriptable::UI::UIElement*> M_uiMap;
 
 		Camera M_RenderCamera;
 	};
