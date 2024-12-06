@@ -1,0 +1,201 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper .header {
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: 800;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    z-index: 1;
+    color: rgb(214, 84, 23);
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapper .header .title {
+    width: 50%;
+}
+
+.wrapper .header .menu {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.wrapper .header .menu a {
+    text-decoration: none;
+    margin: 0 0 0 1rem;
+}
+
+.wrapper .body {
+    justify-content: flex-start;
+}
+
+.wrapper .body .article {
+    width: 60%;
+    height: 100%;
+    background-color: white;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex: 1;
+}
+
+
+
+/* home page/posts */
+
+.wrapper .body .article .post {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    margin: 0 0 2rem 0;
+}
+
+.wrapper .body .article .post a {
+    text-decoration: none;
+    color: black;
+}
+
+.wrapper .body .article .post .info {
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapper .body .article .post .info .author {
+    background-color: rgb(214, 84, 23);
+    padding: 1rem;
+}
+
+.wrapper .body .article .post .info .date {
+    background-color: rgb(250, 113, 49);
+    padding: 1rem;
+}
+
+.wrapper .body .article .post .title {
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+}
+
+.wrapper .body .article .post .post-content {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    width: 100%;
+    padding: 1rem;   
+}
+
+/* posts creator */
+
+.wrapper .body .article .create-post {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.wrapper .body .article .create-post #title {
+    padding: 1rem;
+    font-size: 1.5rem;
+    width: 100%;
+}
+
+.wrapper .body .article .create-post #body {
+    resize: none;
+    box-sizing: border-box;
+    padding: 1rem;
+    width: 100%;
+    font-family: default;
+}
+
+
+
+
+/* login stuff */
+
+.wrapper .body, .wrapper .login-wrapper {
+    flex-grow: 1;
+    background-color: rgb(240, 240, 240);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wrapper .login-wrapper {
+    justify-content: center;
+}
+
+.wrapper .login-wrapper .login-panel {
+    box-sizing: border-box;
+    background-color: white;
+    height: 80%;
+    width: 80%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapper .login-wrapper .login-panel .left, .wrapper .login-wrapper .login-panel .right {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.wrapper .login-wrapper .login-panel .left {
+    width: 50%;
+    align-items: flex-start;
+    font-size: 4rem;
+    color: rgb(214, 84, 23);
+    font-weight: 800;
+}
+
+.wrapper .login-wrapper .login-panel .right {
+    width: 50%;
+    align-items: flex-start;
+}
+
+.wrapper .login-wrapper .login-panel .right .field {
+    margin: 1rem 0 1rem 0;
+}
+
+.wrapper .login-wrapper .login-panel .right .field span {
+    font-weight: 800;
+    color: rgb(230, 0, 0)!important;
+}
+
+.wrapper .btn {
+    background: linear-gradient(to right, rgb(214, 84, 23), rgb(250, 113, 49));
+    border-radius: 2rem;
+    border: none;
+    padding: 1rem;
+    color: white;
+    font-weight: 800;
+    font-size: 1.05rem;
+    transition: 300ms ease-in-out;
+}
+
+.wrapper .login-wrapper .login-panel .right .btn:hover {
+    filter: brightness(120%);
+}

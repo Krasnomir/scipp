@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HotTake</title>
+    <link rel="stylesheet" href=" {% static 'app/css/main.css' %} ">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="title">HotTake</div>
+            <div class="menu">
+                <a href={{"/create/"}}>➕</a>
+                <a href="#">👤</a>
+            </div>
+        </div>
+        <div class="body">
+            <div class="article">
+                {% block content %}
+                {{ content }}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

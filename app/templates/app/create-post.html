@@ -1,0 +1,11 @@
+{% extends "app/home.html" %}
+{% block content %}
+
+<form method="POST" class="create-post">
+    {% csrf_token %}
+    <input type="text" id="title" name="title" placeholder="Write your post title here" maxlength="100">
+    <textarea id="body" name="body" placeholder="Write your post content here" cols="5" rows="30" maxlength="5000"></textarea>
+    <input type="submit" value="Post" class="btn">
+</form>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HotTake</title>
+    <link rel="stylesheet" href=" {% static 'app/css/main.css' %} ">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="login-wrapper">
+                <div class="login-panel">
+                    <div class="left">
+                        Hottake
+                    </div>
+                    <div class="right">
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+        </div>
+    </div>
+</body>
+</html>
