@@ -12,8 +12,12 @@ namespace Scriptable::Components{
 
     class RenderComponent : public Component, public sf::Drawable, public sf::Transformable {
     public:
-        //WARNING: This function requires input in the format of SFML triangleStrip
-        RenderComponent(const std::vector<sf::Vector2f>& triangleStripPoints);
+        //WARNING: This function requires input in the format of SFML triangles
+        RenderComponent(const std::vector<sf::Vector2f>& trianglePoints);
+
+        //WARNING: This function requires input in the format of SFML triangles, requires debugging cause of underlying issues
+        RenderComponent(const std::vector<std::pair<sf::Vector2f, sf::Vector2f>>& trianglePointsTxtCoords);
+
         ~RenderComponent() = default;
 
         sf::Vector2f center();

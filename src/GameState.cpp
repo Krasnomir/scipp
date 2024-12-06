@@ -43,15 +43,17 @@ struct ProjectileEntity : public Scriptable::Entity
 struct DebugEntity : public Scriptable::Entity
 {
 	DebugEntity() {
-		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {0, 0}, {50,50}, {50, 0} }));
+		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,0}, {0, 100}, {30, 0}, {30,0}, {30, 100}, {0,100}}));
+		
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png");
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png", sf::IntRect({0,0, 398, 273}));
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
 	{
+
 		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
 
@@ -72,6 +74,8 @@ struct DebugEntity : public Scriptable::Entity
 
 	void onMouseMoved(const Scriptable::EventData* data)
 	{
+
+		return;
 		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
