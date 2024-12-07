@@ -13,6 +13,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out)
 
 file(GLOB_RECURSE COMPILE_LIST "src/*.cpp")
 
+
 # Old
 # set(COMPILE_LIST src/Camera.cpp src/Scriptable/Entity.cpp src/Scriptable/Component.cpp src/Util.cpp src/Scriptable/EventObject.cpp src/Game.cpp src/GameState.cpp src/InitState.cpp src/Scriptable/State.cpp src/StateManager.cpp src/Scriptable/Components/RenderComponent.cpp)
 

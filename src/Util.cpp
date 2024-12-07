@@ -53,4 +53,17 @@ namespace Util {
 
         return (abc == pbc + pac + pab);
     }
+
+    shape_t CreateRectangle(sf::FloatRect rect){
+        Triangle a,b;
+        a.a = {rect.left, rect.top};
+        a.b = {rect.left, rect.top + rect.height};
+        a.c = {rect.left + rect.width, rect.top + rect.height};
+        
+        b.a = a.c;
+        b.b = a.a;
+        b.c = {rect.left + rect.width, rect.top};
+
+        return std::vector<sf::Vector2f>{a.a, a.b, a.c, b.a, b.b, b.c};
+    }
 }

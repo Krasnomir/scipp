@@ -3,11 +3,11 @@
         {
             "name": "Linux",
             "includePath": [
-                "${default}"
+                "${workspaceFolder}/include"
             ],
             "defines": [],
             "intelliSenseMode": "linux-gcc-x64",
-            "compileCommands" : "build/compile_commands.json"
+            "compileCommands": "build/compile_commands.json"
         }
     ],
     "version": 4

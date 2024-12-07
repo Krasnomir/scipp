@@ -11,6 +11,10 @@
 namespace Scriptable::Components
 {
     RenderComponent::RenderComponent(const std::vector<sf::Vector2f>& points) {
+        if((points.size() % 3) != 0){
+            throw std::runtime_error("Invalid initalization of RenderComponent");
+        }
+
         m_vertices = sf::VertexArray(sf::Triangles, points.size());
         m_verticesCount = (int) points.size();
 
@@ -21,6 +25,10 @@ namespace Scriptable::Components
     }
 
     RenderComponent::RenderComponent(const std::vector<std::pair<sf::Vector2f, sf::Vector2f>>& points){
+        if((points.size() % 3) != 0){
+            throw std::runtime_error("Invalid initalization of RenderComponent");
+        }
+
         m_vertices = sf::VertexArray(sf::Triangles, points.size());
         m_verticesCount = (int) points.size();
 

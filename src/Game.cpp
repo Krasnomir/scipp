@@ -28,6 +28,11 @@ void Game::handleEvent(sf::Event event)
 			break;
 		}
 
+		case sf::Event::Resized:{
+			stateManager.currentState->evokeAll("onWindowResized", &M_eventData);
+			break;
+		}
+
 		case sf::Event::MouseMoved:
 		{
 			stateManager.currentState->evokeAll("onMouseMoved", &M_eventData);
@@ -74,6 +79,7 @@ void Game::pollEvents()
 
 void Game::run() 
 {
+
 	while (this->window->isOpen()) 
 	{
 		deltaTime = M_clock.restart();
@@ -96,8 +102,20 @@ void Game::run()
 		//render
 		{
 			stateManager.currentState->evokeAll("onRender", &M_eventData);
-			window->display();
 		}
+
+		//ui render
+
+		sf::View current_view = this->window->getView();
+		this->window->setView(this->window->getDefaultView());
+
+		{
+			stateManager.currentState->evokeUIDraw(this->window);
+		}
+
+		this->window->setView(current_view);
+		window->display();
+
 
 		//after render
 		{

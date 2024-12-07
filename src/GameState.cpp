@@ -16,7 +16,7 @@ struct ProjectileEntity : public Scriptable::Entity
 	double M_angle;
 
 	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
-		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {0, 0}, {25,50}, {25, 0} }));
+		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
 
@@ -43,12 +43,15 @@ struct ProjectileEntity : public Scriptable::Entity
 struct DebugEntity : public Scriptable::Entity
 {
 	DebugEntity() {
-		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,0}, {0, 100}, {30, 0}, {30,0}, {30, 100}, {0,100}}));
+		// addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,0}, {0, 100}, {30, 0}, 	{30,0}, {30, 100}, {0,100}}));
+
+		addComponent<Scriptable::Components::RenderComponent>(std::vector<std::pair<sf::Vector2f, sf::Vector2f>>({{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}}));
 		
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 
 		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png", sf::IntRect({0,0, 398, 273}));
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
+
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -57,10 +60,14 @@ struct DebugEntity : public Scriptable::Entity
 		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
 
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)){
+			
+		}
 
+		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(renderC->getPosition(), mousePos) > 10) {
 			float angle = renderC->getRotation();
-
+			
 
 			renderC->setPosition(Util::movePoint(renderC->getPosition(), 2, angle));
 		}
@@ -74,8 +81,6 @@ struct DebugEntity : public Scriptable::Entity
 
 	void onMouseMoved(const Scriptable::EventData* data)
 	{
-
-		return;
 		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
@@ -96,6 +101,7 @@ struct DebugEntity : public Scriptable::Entity
 
 
 	}
+
 };
 
 void GameState::onWindowClosed(const Scriptable::EventData* data)
@@ -103,12 +109,22 @@ void GameState::onWindowClosed(const Scriptable::EventData* data)
 	data->targetWindow->close();
 }
 
+void GameState::onWindowResized(const Scriptable::EventData* data){
+	Camera newCamera((sf::Vector2f)data->targetWindow->getSize(), data->currentState->M_camera.getPosition(), sf::FloatRect({0,0,1,1}));
+	M_camera = newCamera;
+	M_camera.apply();
+}
+
 GameState::GameState()
 {
 	initCamera();
 }
 
+#include <Scriptable/UI/UIRect.hpp>
+
 void GameState::init()
 {
+	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({100,50, 400, 200}));
+	
 	Scipp::globalGame->stateManager.currentState->addEntity<DebugEntity>("test1");
 }
