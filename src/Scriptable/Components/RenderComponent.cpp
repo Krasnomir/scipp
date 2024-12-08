@@ -11,12 +11,30 @@
 namespace Scriptable::Components
 {
     RenderComponent::RenderComponent(const std::vector<sf::Vector2f>& points) {
-        m_vertices = sf::VertexArray(sf::TriangleStrip, points.size());
+        if((points.size() % 3) != 0){
+            throw std::runtime_error("Invalid initalization of RenderComponent");
+        }
+
+        m_vertices = sf::VertexArray(sf::Triangles, points.size());
         m_verticesCount = (int) points.size();
 
         for(size_t i = 0; i < points.size(); i++){
             m_vertices[i].position = points[i];
             m_vertices[i].texCoords = points[i];
+        }
+    }
+
+    RenderComponent::RenderComponent(const std::vector<std::pair<sf::Vector2f, sf::Vector2f>>& points){
+        if((points.size() % 3) != 0){
+            throw std::runtime_error("Invalid initalization of RenderComponent");
+        }
+
+        m_vertices = sf::VertexArray(sf::Triangles, points.size());
+        m_verticesCount = (int) points.size();
+
+        for(size_t i = 0; i < points.size(); i++){
+            m_vertices[i].position = points[i].first;
+            m_vertices[i].texCoords = points[i].second;
         }
     }
 
@@ -34,6 +52,7 @@ namespace Scriptable::Components
 
     void RenderComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
+        
         states.texture = &m_texture;
 
         target.draw(m_vertices, states);

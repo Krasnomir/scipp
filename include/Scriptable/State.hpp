@@ -26,7 +26,9 @@ namespace Scriptable{
 
 		void initCamera();
 
-		virtual void evokeAll(const std::string& eventName, const Scriptable::EventData* data);
+		void evokeUIDraw(sf::RenderWindow* target);
+
+		void evokeAll(const std::string& eventName, const Scriptable::EventData* data);
 
 		//returns 0 on fail
 		Scriptable::Entity* getEntity(const std::string& entityName) noexcept;
@@ -61,14 +63,42 @@ namespace Scriptable{
 			return true;
 		}
 
+		template<Scriptable::UI::DerivedUIObject T, class ... Args>
+		inline bool addUIObject(const std::string& objectName, Args ... args){
+			if(M_uiMap.contains(objectName)) return false;
+
+			T* newObject = new T(args...);
+			M_uiMap[objectName] = newObject;
+
+			return true;
+		}
+
+		template<Scriptable::UI::DerivedUIObject T>
+		inline bool addUIObject(const std::string& objectName){
+			if(M_uiMap.contains(objectName)) return false;
+
+			T* newObject = new T();
+			M_uiMap[objectName] = newObject;
+
+			return true;
+		}
+
+
+		bool hasUIObject(const std::string& objectName) const noexcept;
+
+		//returns false on fail
+		bool deleteUIObject(const std::string& objectName);
 
 	private:
 		mutable std::shared_mutex M_entityMapLock; // mutable means can be modified from a const function
 
+		mutable std::shared_mutex M_uiMapLock; // mutable means can be modified from a const function
+
+		std::unordered_map<std::string, Scriptable::UI::UIObject*> M_uiMap;
+
 		//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 		std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
 
-		std::unordered_map<std::string, Scriptable::UI::UIElement*> M_uiMap;
 
 		Camera M_RenderCamera;
 	};

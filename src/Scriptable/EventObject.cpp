@@ -6,6 +6,7 @@ namespace Scriptable{
         bindEvent("beforeRender", std::bind(&EventObject::beforeRender, this, std::placeholders::_1));
         bindEvent("onRender", std::bind(&EventObject::onRender, this, std::placeholders::_1));
         bindEvent("onWindowClosed", std::bind(&EventObject::onWindowClosed, this, std::placeholders::_1));
+        bindEvent("onWindowResized", std::bind(&EventObject::onWindowResized, this, std::placeholders::_1));
         bindEvent("onMouseMoved", std::bind(&EventObject::onMouseMoved, this, std::placeholders::_1));
         bindEvent("onMouseButtonPressed", std::bind(&EventObject::onMouseButtonPressed, this, std::placeholders::_1));
         bindEvent("onMouseButtonReleased", std::bind(&EventObject::onMouseButtonReleased, this, std::placeholders::_1));

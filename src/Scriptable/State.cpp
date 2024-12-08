@@ -8,12 +8,35 @@ namespace Scriptable{
 	{
 		evokeEvents(eventName, data); // evoke all events from base eventObject class
 
-		std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);
+			std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
 
-		for (auto& [name, entity] : M_entityMap)
+			for (auto& [name, uiobj] : M_uiMap)
+			{
+				if(eventName != "onRender")
+					uiobj->evokeEvents(eventName, data);
+			}
+
 		{
-			entity->evokeAll(eventName, data);
+			std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);
+
+			for (auto& [name, entity] : M_entityMap)
+			{
+				entity->evokeAll(eventName, data);
+			}
 		}
+	}
+
+	void State::evokeUIDraw(sf::RenderWindow* target){
+		std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
+		EventData data;
+		data.currentState = this;
+		data.targetWindow = target;
+
+		for (auto& [name, uiobj] : M_uiMap)
+		{
+			uiobj->draw_to_screen(&data);
+		}
+
 	}
 
 	bool State::hasEntity(const std::string& entityName) const noexcept{
@@ -25,6 +48,30 @@ namespace Scriptable{
 		}
 
 		return false;
+	}
+
+	bool State::hasUIObject(const std::string& objectName) const noexcept{
+		std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
+
+		for (auto& [name, entity] : M_uiMap)
+		{
+			if(name == objectName) return true;
+		}
+
+		return false;
+	}
+
+
+	bool State::deleteUIObject(const std::string& objectName){
+		std::unique_lock<std::shared_mutex> writeLock(M_uiMapLock);
+
+		if(!M_uiMap.contains(objectName)) return false;
+
+		delete M_uiMap[objectName];
+
+		M_uiMap.erase(objectName);
+
+		return true;
 	}
 
 	bool State::deleteEntity(const std::string& entityName){

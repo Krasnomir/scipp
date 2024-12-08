@@ -16,4 +16,7 @@ public:
 	void init();
 
 	void onWindowClosed(const Scriptable::EventData* data);
+
+	void onWindowResized(const Scriptable::EventData* data);
+
 };

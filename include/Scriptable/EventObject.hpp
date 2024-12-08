@@ -36,6 +36,8 @@ namespace Scriptable{
 
         virtual inline void onWindowClosed(const EventData* data) {}
 
+        virtual inline void onWindowResized(const EventData* data) {}
+
         virtual inline void onMouseMoved(const EventData* data) {}
 
         virtual inline void onMouseButtonPressed(const EventData* data) {}
