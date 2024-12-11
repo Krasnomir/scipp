@@ -10,6 +10,13 @@
 #include <unordered_map> 
 
 namespace Scriptable::Components{
+    struct BoundingBox {
+        float maxX;
+        float maxY;
+        float minX;
+        float minY;
+    };
+
     class RenderComponent : public Component, public sf::Drawable, public sf::Transformable {
     public:
         RenderComponent() = delete;
@@ -29,8 +36,19 @@ namespace Scriptable::Components{
         void addCostume(std::string name, std::string path, sf::IntRect area);
         void addCostume(std::string name, std::string path);
         void loadCostume(std::string name);
+
+        void boundingBoxInit();
+        sf::FloatRect getBoundingBox();
+        float getBoundingBoxSize();
+        bool boundingBoxCollide(Scriptable::Components::RenderComponent* renderComponent);
+
+        sf::VertexArray getVertices();
+
     private:
         int m_verticesCount;
+
+        float m_boundingBoxSize;
+        sf::FloatRect m_boundingBox;
 
         sf::VertexArray m_vertices;
         sf::Texture m_texture;

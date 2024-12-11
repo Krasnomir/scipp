@@ -29,7 +29,14 @@ struct ProjectileEntity : public Scriptable::Entity
 
 		float angle = M_angle;
 
-		renderC->setPosition(Util::movePoint(renderC->getPosition(), 5, angle));
+		// renderC->setPosition(Util::movePoint(renderC->getPosition(), 0.5, angle));
+
+		Scriptable::Entity* debugEntity = Scipp::globalGame->stateManager.currentState->getEntity("test1");
+		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
+
+		if(debugEntityRC->boundingBoxCollide(renderC)) {
+			renderC->setRotation(renderC->getRotation() + 20);
+		}
 
 	}
 
@@ -64,19 +71,17 @@ struct DebugEntity : public Scriptable::Entity
 			
 		}
 
-		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(renderC->getPosition(), mousePos) > 10) {
 			float angle = renderC->getRotation();
 			
 
 			renderC->setPosition(Util::movePoint(renderC->getPosition(), 2, angle));
 		}
-
 	}
 
 	void afterRender(const Scriptable::EventData* data)
 	{
-
+		
 	}
 
 	void onMouseMoved(const Scriptable::EventData* data)
@@ -91,7 +96,9 @@ struct DebugEntity : public Scriptable::Entity
 		if (data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
 			static uint32_t proj_ID = 0;
 
-			Scipp::globalGame->stateManager.currentState->addEntity<ProjectileEntity>(std::to_string(proj_ID), getComponent<Scriptable::Components::RenderComponent>()->getRotation(), getComponent<Scriptable::Components::RenderComponent>()->getPosition());
+			sf::Vector2f bulletStartPosition = Util::movePoint(getComponent<Scriptable::Components::RenderComponent>()->getPosition(), 50, getComponent<Scriptable::Components::RenderComponent>()->getRotation());
+
+			Scipp::globalGame->stateManager.currentState->addEntity<ProjectileEntity>(std::to_string(proj_ID), getComponent<Scriptable::Components::RenderComponent>()->getRotation(), bulletStartPosition);
 			proj_ID++;
 		}
 	}

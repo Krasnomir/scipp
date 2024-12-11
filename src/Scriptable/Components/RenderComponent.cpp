@@ -22,6 +22,8 @@ namespace Scriptable::Components
             m_vertices[i].position = points[i];
             m_vertices[i].texCoords = points[i];
         }
+
+        boundingBoxInit();
     }
 
     RenderComponent::RenderComponent(const std::vector<std::pair<sf::Vector2f, sf::Vector2f>>& points){
@@ -36,6 +38,8 @@ namespace Scriptable::Components
             m_vertices[i].position = points[i].first;
             m_vertices[i].texCoords = points[i].second;
         }
+
+        boundingBoxInit();
     }
 
     sf::Vector2f RenderComponent::center() {
@@ -84,6 +88,60 @@ namespace Scriptable::Components
         std::shared_lock<std::shared_mutex> readLock(m_costumesLock);
 
         m_texture = m_costumes[name];
+    }
+
+    // this bounding box is always going to contain the vertex array shape regardless of its rotation
+    // the downside to this approach is that the bounding box can be way bigger than the actual vertex array shape
+    void RenderComponent::boundingBoxInit() {
+        float minX = std::numeric_limits<float>::max();
+        float maxX = std::numeric_limits<float>::lowest();
+        float minY = std::numeric_limits<float>::max();
+        float maxY = std::numeric_limits<float>::lowest();
+
+        for(int i = 0; i < m_verticesCount; i++) {
+            minX = std::min(minX, m_vertices[i].position.x);
+            maxX = std::max(maxX, m_vertices[i].position.x);
+            minY = std::min(minY, m_vertices[i].position.y);
+            maxY = std::max(maxY, m_vertices[i].position.y);
+        }
+
+        float size = std::max(maxX, maxY);
+
+        m_boundingBoxSize = size / 2;
+        m_boundingBox = sf::FloatRect(minX, minY, size, size);
+    }
+
+    sf::FloatRect RenderComponent::getBoundingBox() {
+        return m_boundingBox;
+    }
+
+    float RenderComponent::getBoundingBoxSize() {
+        return m_boundingBoxSize;
+    }
+
+    // this is just for quick collision detection using bounding boxes this is not fully accurate method of checking collissions but its ffast
+    // TODO: proper collision detection that's going to go through each triangle and see if they collide with eachother
+    bool RenderComponent::boundingBoxCollide(Scriptable::Components::RenderComponent* renderComponent) {
+        sf::FloatRect boundingBox1 = getBoundingBox();
+        sf::FloatRect boundingBox2 = renderComponent->getBoundingBox();
+
+        sf::Vector2f position1 = getPosition();
+        sf::Vector2f position2 = renderComponent->getPosition();
+
+        boundingBox1.left += position1.x - m_boundingBoxSize;
+        boundingBox1.top += position1.y - m_boundingBoxSize;
+
+        boundingBox2.left += position2.x - renderComponent->getBoundingBoxSize();
+        boundingBox2.top += position2.y - renderComponent->getBoundingBoxSize();
+
+        //std::cout << boundingBox1.left << " " << boundingBox1.top << " | " << boundingBox1.height << " | " << boundingBox1.width << "\n";
+        //std::cout << boundingBox2.left << " " << boundingBox2.top << " | " << boundingBox2.height << " | " << boundingBox2.width << "\n\n";
+
+        return boundingBox1.intersects(boundingBox2);
+    }
+
+    sf::VertexArray RenderComponent::getVertices() {
+        return m_vertices;
     }
 }
 
