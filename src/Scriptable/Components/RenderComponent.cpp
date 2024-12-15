@@ -54,6 +54,25 @@ namespace Scriptable::Components
         return sf::Vector2f(xSum / m_verticesCount, ySum / m_verticesCount);
     }
 
+    // those two override the sf::Transofrmable setRotation() method, they update AABB bounding box each time they're called
+    // couldn't do it with templates, maybe Yesn't will figure it out 
+    void RenderComponent::setRotation(float angle) {
+        sf::Transformable::setRotation(angle);
+
+        float cosA = std::cos(angle * 3.14f / 180.0f);
+        float sinA = std::sin(angle * 3.14f / 180.0f);
+        m_rotationMatrix = RotationMatrix2x2(cosA, sinA);
+        AABB();
+    }
+    void RenderComponent::setRotation(double angle) {
+        sf::Transformable::setRotation(angle);
+
+        float cosA = std::cos(angle * 3.14f / 180.0f);
+        float sinA = std::sin(angle * 3.14f / 180.0f);
+        m_rotationMatrix = RotationMatrix2x2(cosA, sinA);
+        AABB();
+    }
+
     void RenderComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
         
@@ -92,7 +111,8 @@ namespace Scriptable::Components
 
     // this bounding box is always going to contain the vertex array shape regardless of its rotation
     // the downside to this approach is that the bounding box can be way bigger than the actual vertex array shape
-    void RenderComponent::boundingBoxInit() {
+    /*
+    void RenderComponent::rotationIndependentBoundingBox() {
         float minX = std::numeric_limits<float>::max();
         float maxX = std::numeric_limits<float>::lowest();
         float minY = std::numeric_limits<float>::max();
@@ -107,20 +127,39 @@ namespace Scriptable::Components
 
         float size = std::max(maxX, maxY);
 
-        m_boundingBoxSize = size / 2;
         m_boundingBox = sf::FloatRect(minX, minY, size, size);
+    }
+    */
+
+    // minimal rectangle that can contain the vertex array, has to be updated each time the rotation is changed
+    void RenderComponent::AABB() {
+        float minX = std::numeric_limits<float>::max();
+        float maxX = std::numeric_limits<float>::lowest();
+        float minY = std::numeric_limits<float>::max();
+        float maxY = std::numeric_limits<float>::lowest();
+
+        for (int i = 0; i < m_verticesCount; i++) {
+            sf::Vector2f rotatedVertex = m_rotationMatrix.rotate(m_vertices[i].position);
+
+            minX = std::min(minX, rotatedVertex.x);
+            maxX = std::max(maxX, rotatedVertex.x);
+            minY = std::min(minY, rotatedVertex.y);
+            maxY = std::max(maxY, rotatedVertex.y);
+        }
+
+        m_boundingBox = sf::FloatRect(minX, minY, maxX - minX, maxY - minY);
+    }
+
+    
+    void RenderComponent::boundingBoxInit() {
+        AABB();        
     }
 
     sf::FloatRect RenderComponent::getBoundingBox() {
         return m_boundingBox;
     }
 
-    float RenderComponent::getBoundingBoxSize() {
-        return m_boundingBoxSize;
-    }
-
-    // this is just for quick collision detection using bounding boxes this is not fully accurate method of checking collissions but its ffast
-    // TODO: proper collision detection that's going to go through each triangle and see if they collide with eachother
+    // checks if two AABBs collide
     bool RenderComponent::boundingBoxCollide(Scriptable::Components::RenderComponent* renderComponent) {
         sf::FloatRect boundingBox1 = getBoundingBox();
         sf::FloatRect boundingBox2 = renderComponent->getBoundingBox();
@@ -128,14 +167,12 @@ namespace Scriptable::Components
         sf::Vector2f position1 = getPosition();
         sf::Vector2f position2 = renderComponent->getPosition();
 
-        boundingBox1.left += position1.x - m_boundingBoxSize;
-        boundingBox1.top += position1.y - m_boundingBoxSize;
+        // adjust the position of bounding boxes (the renderComponent position refers to it's center position not top left corner)
+        boundingBox1.left = position1.x - boundingBox1.width / 2;
+        boundingBox1.top = position1.y - boundingBox1.height / 2;
 
-        boundingBox2.left += position2.x - renderComponent->getBoundingBoxSize();
-        boundingBox2.top += position2.y - renderComponent->getBoundingBoxSize();
-
-        //std::cout << boundingBox1.left << " " << boundingBox1.top << " | " << boundingBox1.height << " | " << boundingBox1.width << "\n";
-        //std::cout << boundingBox2.left << " " << boundingBox2.top << " | " << boundingBox2.height << " | " << boundingBox2.width << "\n\n";
+        boundingBox2.left = position2.x - boundingBox2.width / 2;
+        boundingBox2.top = position2.y - boundingBox2.height / 2;
 
         return boundingBox1.intersects(boundingBox2);
     }
@@ -144,4 +181,3 @@ namespace Scriptable::Components
         return m_vertices;
     }
 }
-

@@ -8,13 +8,34 @@
 #include <string>
 #include <vector>
 #include <unordered_map> 
+#include <math.h>
 
 namespace Scriptable::Components{
-    struct BoundingBox {
-        float maxX;
-        float maxY;
-        float minX;
-        float minY;
+
+    struct RotationMatrix2x2 {
+        float m[2][2];
+
+        // Constructor: Initialize the matrix to represent an identity matrix by default
+        RotationMatrix2x2() {
+            m[0][0] = m[1][1] = 1.0f;
+            m[0][1] = m[1][0] = 0.0f;
+        }
+
+        // Constructor to initialize the matrix based on an angle (in radians)
+        RotationMatrix2x2(float cosA, float sinA) {
+            m[0][0] = cosA;
+            m[0][1] = sinA;
+            m[1][0] = -sinA;
+            m[1][1] = cosA;
+        }
+
+        // Rotate a 2D vector using the matrix
+        sf::Vector2f rotate(const sf::Vector2f& v) const {
+            return sf::Vector2f(
+                m[0][0] * v.x + m[0][1] * v.y,
+                m[1][0] * v.x + m[1][1] * v.y
+            );
+        }
     };
 
     class RenderComponent : public Component, public sf::Drawable, public sf::Transformable {
@@ -31,15 +52,20 @@ namespace Scriptable::Components{
 
         sf::Vector2f center();
 
+        void setRotation(float angle);
+        void setRotation(double angle);
+
         void onRender(const EventData* data);
 
         void addCostume(std::string name, std::string path, sf::IntRect area);
         void addCostume(std::string name, std::string path);
         void loadCostume(std::string name);
 
+        // void rotationIndependentBoundingBox();
+        void AABB();
+
         void boundingBoxInit();
         sf::FloatRect getBoundingBox();
-        float getBoundingBoxSize();
         bool boundingBoxCollide(Scriptable::Components::RenderComponent* renderComponent);
 
         sf::VertexArray getVertices();
@@ -47,7 +73,6 @@ namespace Scriptable::Components{
     private:
         int m_verticesCount;
 
-        float m_boundingBoxSize;
         sf::FloatRect m_boundingBox;
 
         sf::VertexArray m_vertices;
@@ -57,6 +82,8 @@ namespace Scriptable::Components{
         std::unordered_map<std::string, sf::Texture> m_costumes;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+        Components::RotationMatrix2x2 m_rotationMatrix;
     };
 }
 
