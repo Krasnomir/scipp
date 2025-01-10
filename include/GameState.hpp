@@ -19,4 +19,7 @@ public:
 
 	void onWindowResized(const Scriptable::EventData* data);
 
+	void onRender(const Scriptable::EventData* data);
+private:
+	void cameraFollow();
 };

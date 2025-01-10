@@ -8,7 +8,7 @@ public:
 	Scriptable::State* currentState = nullptr;
 
 	void changeState(Scriptable::State* state);
-
+	
 	StateManager();
 };
 

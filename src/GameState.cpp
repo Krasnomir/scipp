@@ -42,7 +42,7 @@ struct ProjectileEntity : public Scriptable::Entity
 
 	void afterRender(const Scriptable::EventData* data)
 	{
-
+		
 	}
 
 };
@@ -65,7 +65,7 @@ struct DebugEntity : public Scriptable::Entity
 	{
 
 		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
-		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
+		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)){
 			
@@ -73,9 +73,8 @@ struct DebugEntity : public Scriptable::Entity
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(renderC->getPosition(), mousePos) > 10) {
 			float angle = renderC->getRotation();
-			
 
-			renderC->setPosition(Util::movePoint(renderC->getPosition(), 2, angle));
+			renderC->setPosition(Util::movePoint(renderC->getPosition(), data->deltaTime.asMilliseconds(), angle));
 		}
 	}
 
@@ -86,7 +85,7 @@ struct DebugEntity : public Scriptable::Entity
 
 	void onMouseMoved(const Scriptable::EventData* data)
 	{
-		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera();
+		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
 		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mouse_pos));
@@ -122,6 +121,21 @@ void GameState::onWindowResized(const Scriptable::EventData* data){
 	M_camera.apply();
 }
 
+void GameState::cameraFollow() {
+	sf::Vector2f playerPosition = getEntity("test1")->getComponent<Scriptable::Components::RenderComponent>()->getPosition();
+	// Camera position will be slightly shifted to where the player is looking (where the mouse cursor is) it also depends on how far from center it is 
+	float shiftIntensity = 20; // The smaller the number the bigger the intensity is going to be
+	float xShift = M_camera.getMousePositionRelativeToCamera().x / shiftIntensity;
+	float yShift = M_camera.getMousePositionRelativeToCamera().y / shiftIntensity;
+
+	M_camera.setPosition(sf::Vector2f(playerPosition.x + xShift, playerPosition.y + yShift));
+	M_camera.apply();
+}
+
+void GameState::onRender(const Scriptable::EventData* data) {
+	cameraFollow();
+}
+
 GameState::GameState()
 {
 	initCamera();
@@ -131,7 +145,7 @@ GameState::GameState()
 
 void GameState::init()
 {
-	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({100,50, 400, 200}));
+	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({0,0, 100, 50}));
 	
 	Scipp::globalGame->stateManager.currentState->addEntity<DebugEntity>("test1");
 }

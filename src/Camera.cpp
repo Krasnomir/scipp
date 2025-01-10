@@ -86,6 +86,10 @@ void Camera::apply() {
 }
 
 sf::Vector2f Camera::getMousePositionRelativeToCamera() {
+	return getMousePositionRelativeToCamera(false);
+}
+
+sf::Vector2f Camera::getMousePositionRelativeToCamera(bool addCameraPosition) {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(*Scipp::globalGame->window);
 
 	float x = mousePos.x - (getSize().x / 2) + M_position.x; // Mouse x position in the world not relative to camera rotation
@@ -99,8 +103,13 @@ sf::Vector2f Camera::getMousePositionRelativeToCamera() {
 	float angle = atan2(y - M_position.y, x - M_position.x); // Angle between mouse position in the world and x-axis casted from the mouse center position
 	float cameraRotation = getRotation() * (3.14159 / 180); // Convert camera rotation to radians
 
-	float x2 = M_position.x + radius * cos(angle + cameraRotation);
-	float y2 = M_position.y + radius * sin(angle + cameraRotation);
+	float x2 = radius * cos(angle + cameraRotation);
+	float y2 = radius * sin(angle + cameraRotation);
+
+	if(addCameraPosition == true) {
+		x2 += M_position.x;
+		y2 += M_position.y;
+	}
 
 	return sf::Vector2f(x2, y2);
 }

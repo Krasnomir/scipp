@@ -27,6 +27,7 @@ public:
 
 	void apply();
 
+	sf::Vector2f getMousePositionRelativeToCamera(bool addCameraPosition);
 	sf::Vector2f getMousePositionRelativeToCamera();
 
 	static Camera getDefaultCamera();
