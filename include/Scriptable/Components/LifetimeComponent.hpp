@@ -4,6 +4,7 @@
 #include <functional>
 
 #include <Scriptable/Component.hpp>
+#include <Scriptable/Entity.hpp>
 
 namespace Scriptable::Components {
 
@@ -18,6 +19,7 @@ namespace Scriptable::Components {
 
         // extends or cuts (if the paramter is negative) the lifetime
         void extend(sf::Time t);
+        void restart(sf::Time t);
 
         void beforeRender(const EventData* data);
     };

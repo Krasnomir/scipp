@@ -40,7 +40,7 @@ struct ProjectileEntity : public Scriptable::Entity
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
 
 		if(debugEntityRC->boundingBoxCollide(renderC)) {
-			getComponent<Scriptable::Components::LifetimeComponent>()->extend(sf::seconds(2.f));
+			getComponent<Scriptable::Components::LifetimeComponent>()->restart(sf::seconds(2.f));
 			renderC->setRotation(renderC->getRotation() + 20);
 		}
 
