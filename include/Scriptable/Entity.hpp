@@ -24,7 +24,8 @@ namespace Scriptable
 			{
 				try
 				{
-					return dynamic_cast<T*>(component); // this will throw an exception when component is derived from T
+					T* ptr = dynamic_cast<T*>(component); // this will throw an exception when component is derived from T
+					if(ptr) return ptr;
 				}
 				catch(...) {}
 			}

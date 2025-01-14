@@ -4,6 +4,7 @@
 #include <Scriptable/Entity.hpp>
 #include <Camera.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
+#include <Scriptable/Components/LifetimeComponent.hpp>
 #include <Util.hpp>
 #include <Game.hpp>
 
@@ -15,11 +16,15 @@ struct ProjectileEntity : public Scriptable::Entity
 {
 	double M_angle;
 
+	static void testr() {
+		std::cout << "ELAPSED" << std::endl;
+	}
+
 	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
+		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(2.f), testr);	
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
-
 		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle + 90.f);
 	}
 
@@ -35,6 +40,7 @@ struct ProjectileEntity : public Scriptable::Entity
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
 
 		if(debugEntityRC->boundingBoxCollide(renderC)) {
+			getComponent<Scriptable::Components::LifetimeComponent>()->extend(sf::seconds(2.f));
 			renderC->setRotation(renderC->getRotation() + 20);
 		}
 
