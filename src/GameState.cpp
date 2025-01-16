@@ -5,6 +5,7 @@
 #include <Camera.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
 #include <Scriptable/Components/LifetimeComponent.hpp>
+#include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Util.hpp>
 #include <Game.hpp>
 
@@ -23,9 +24,10 @@ struct ProjectileEntity : public Scriptable::Entity
 	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
 		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(2.f), testr);	
+		//addComponent<Scriptable::Components::PhysicsComponent>(5, this->getComponent<Scriptable::Components::RenderComponent>());
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
-		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle + 90.f);
+		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle);
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -39,10 +41,12 @@ struct ProjectileEntity : public Scriptable::Entity
 		Scriptable::Entity* debugEntity = Scipp::globalGame->stateManager.currentState->getEntity("test1");
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
 
+		/*
 		if(debugEntityRC->boundingBoxCollide(renderC)) {
 			getComponent<Scriptable::Components::LifetimeComponent>()->restart(sf::seconds(2.f));
 			renderC->setRotation(renderC->getRotation() + 20);
 		}
+		*/
 
 	}
 
@@ -59,7 +63,8 @@ struct DebugEntity : public Scriptable::Entity
 		// addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,0}, {0, 100}, {30, 0}, 	{30,0}, {30, 100}, {0,100}}));
 
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<std::pair<sf::Vector2f, sf::Vector2f>>({{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}}));
-		
+		addComponent<Scriptable::Components::PhysicsComponent>(0, getComponent<Scriptable::Components::RenderComponent>());
+
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 
 		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png", sf::IntRect({0,0, 398, 273}));
@@ -78,9 +83,15 @@ struct DebugEntity : public Scriptable::Entity
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(renderC->getPosition(), mousePos) > 10) {
+			/*
 			float angle = renderC->getRotation();
 
 			renderC->setPosition(Util::movePoint(renderC->getPosition(), data->deltaTime.asMilliseconds(), angle));
+			*/
+			getComponent<Scriptable::Components::PhysicsComponent>()->velocity = 5;
+		}
+		else {
+			getComponent<Scriptable::Components::PhysicsComponent>()->velocity = 0;
 		}
 	}
 

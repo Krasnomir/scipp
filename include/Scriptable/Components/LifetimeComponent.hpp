@@ -1,10 +1,9 @@
-#ifndef __LIFETIME_COMPONENT_HPP
-#define __LIFETIME_COMPONENT
+#ifndef __LIFETIME_COMPONENT
+#define __LIFETIME_COMPONENT 1
 
 #include <functional>
 
 #include <Scriptable/Component.hpp>
-#include <Scriptable/Entity.hpp>
 
 namespace Scriptable::Components {
 
