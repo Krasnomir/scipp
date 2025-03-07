@@ -10,7 +10,7 @@ namespace Scriptable::Components {
 
             if(time.asMicroseconds() < 0) {
                 elapsed = true;
-                onElapsedCallback();
+                onElapsedCallback(this);
             }
         }
     }

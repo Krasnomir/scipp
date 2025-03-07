@@ -8,7 +8,13 @@ namespace Scriptable::UI
     public:
         UIRect(sf::FloatRect rectangle);
 
-        ~UIRect() = default; 
+        virtual ~UIRect() = default; 
+
+        virtual void onWindowResized(const EventData* data) override;
+
+
+    protected:
+        sf::FloatRect M_rect;
     };
 
 }

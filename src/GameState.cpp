@@ -17,8 +17,9 @@ struct ProjectileEntity : public Scriptable::Entity
 {
 	double M_angle;
 
-	static void testr() {
+	static void testr(Scriptable::Components::LifetimeComponent* c) {
 		std::cout << "ELAPSED" << std::endl;
+		// Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
 	}
 
 	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
@@ -40,6 +41,12 @@ struct ProjectileEntity : public Scriptable::Entity
 
 		Scriptable::Entity* debugEntity = Scipp::globalGame->stateManager.currentState->getEntity("test1");
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
+		
+		if(renderC->isColliding(debugEntityRC)){
+			Scipp::globalGame->stateManager.currentState->softDeleteEntity(getName());
+		}
+
+		// printf("%f %f | %f %f\n", mouse_pos.x, mouse_pos.y, renderC->getPosition().x, renderC->getPosition().y);
 
 		/*
 		if(debugEntityRC->boundingBoxCollide(renderC)) {
@@ -106,6 +113,8 @@ struct DebugEntity : public Scriptable::Entity
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
 		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mouse_pos));
+
+
 	}
 
 	void onMouseButtonPressed(const Scriptable::EventData* data) {
@@ -160,9 +169,21 @@ GameState::GameState()
 
 #include <Scriptable/UI/UIRect.hpp>
 
+struct test_uiobj : public Scriptable::UI::UIRect{
+	test_uiobj(sf::FloatRect f) : UIRect(f){
+
+	}
+
+	void onClick(){
+		printf("Yes\n");
+	}
+
+};
+
 void GameState::init()
 {
-	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({0,0, 100, 50}));
+
+	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({0,0, 0.2, 0.05}));
 	
 	Scipp::globalGame->stateManager.currentState->addEntity<DebugEntity>("test1");
 }

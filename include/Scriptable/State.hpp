@@ -39,6 +39,10 @@ namespace Scriptable{
 		//returns false on fail
 		bool deleteEntity(const std::string& entityName);
 
+		void softDeleteEntity(const std::string& entityName);
+
+		void exec_schd_deletion();
+
 		template<Scriptable::DerivedEntity T, class ... Args>
 		inline bool addEntity(const std::string& entityName, Args ... args){
 			// std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock); temporary disabled
@@ -47,6 +51,7 @@ namespace Scriptable{
 
 			T* newEntity = new T(args...);
 			M_entityMap[entityName] = newEntity;
+			newEntity->M_name = entityName;
 
 			return true;
 		}
@@ -98,6 +103,9 @@ namespace Scriptable{
 
 		//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 		std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
+
+		mutable std::shared_mutex M_delschdLock;
+		std::vector<std::string> M_delschd_entityArray;
 
 
 		Camera M_RenderCamera;

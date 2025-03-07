@@ -17,10 +17,15 @@ namespace Scriptable::UI
 
         friend class State;
 
+        virtual void onMouseButtonPressed(const EventData* data) override;
+
+        virtual void onClick(){};
+
         void draw_to_screen(Scriptable::EventData* e);
+        
+        sf::Text Text;
     protected:
         Components::RenderComponent* m_RenderComponent = 0;
-        // TODO add text support sf::Text M_text; 
     private:
     };
 

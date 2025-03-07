@@ -114,6 +114,8 @@ void Game::run()
 		}
 
 		this->window->setView(current_view);
+
+
 		window->display();
 
 
@@ -121,6 +123,10 @@ void Game::run()
 		{
 			stateManager.currentState->evokeAll("afterRender", &M_eventData);
 		}
+
+		//execute scheduled deletion of components,entities, ...
+		stateManager.currentState->exec_schd_deletion();
+
 	}
 }
 

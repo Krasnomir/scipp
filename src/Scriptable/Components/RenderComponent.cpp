@@ -159,6 +159,54 @@ namespace Scriptable::Components
         return m_boundingBox;
     }
 
+    bool isPointInside_fast(const sf::Transform& Transform, const sf::VertexArray& Vertex, const sf::Vector2f& point){
+        Util::Triangle CurrentTriangle;
+
+        for(size_t i = 0; i < Vertex.getVertexCount(); i += 3){
+            CurrentTriangle.a = Transform.transformPoint(Vertex[i].position);
+            CurrentTriangle.b = Transform.transformPoint(Vertex[i + 1].position);
+            CurrentTriangle.c = Transform.transformPoint(Vertex[i + 2].position);
+            if(Util::isInTriangle(CurrentTriangle, point)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool RenderComponent::isColliding(Scriptable::Components::RenderComponent* other){
+        Util::Triangle CurrentTriangle;
+        auto& Transform = getTransform();
+        auto& OtherTransform = other->getTransform();
+        for(size_t i = 0; i < other->m_verticesCount; i++){
+            if(isPointInside_fast(Transform, m_vertices, OtherTransform.transformPoint(other->m_vertices[i].position))) return true;
+        }
+        for(size_t i = 0; i < m_verticesCount; i++){
+            if(isPointInside_fast(OtherTransform, other->m_vertices, Transform.transformPoint(m_vertices[i].position))) return true;
+        }
+
+        return false;
+
+    }
+
+    bool RenderComponent::isPointInside(sf::Vector2f point){
+        Util::Triangle CurrentTriangle;
+        auto& Transform = getTransform();
+
+
+        for(size_t i = 0; i < m_verticesCount; i += 3){
+            CurrentTriangle.a = Transform.transformPoint(m_vertices[i].position);
+            CurrentTriangle.b = Transform.transformPoint(m_vertices[i + 1].position);
+            CurrentTriangle.c = Transform.transformPoint(m_vertices[i + 2].position);
+            if(Util::isInTriangle(CurrentTriangle, point)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     // checks if two AABBs collide
     bool RenderComponent::boundingBoxCollide(Scriptable::Components::RenderComponent* renderComponent) {
         sf::FloatRect boundingBox1 = getBoundingBox();

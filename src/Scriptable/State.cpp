@@ -86,6 +86,31 @@ namespace Scriptable{
 		return true;
 	}
 
+	void State::exec_schd_deletion(){
+		std::unique_lock<std::shared_mutex> writeLock(M_delschdLock);
+		
+		{
+			std::unique_lock<std::shared_mutex> writeLock2(M_entityMapLock);
+		
+			for(auto& [name, ptr] : M_entityMap){
+				ptr->exec_schd_deletion();
+			}
+		}
+		
+		for(auto & schd_entry : M_delschd_entityArray){
+			deleteEntity(schd_entry);
+		}
+
+		M_delschd_entityArray.clear();
+	}
+
+	void State::softDeleteEntity(const std::string& entityName){
+		std::unique_lock<std::shared_mutex> writeLock(M_delschdLock);
+
+		M_delschd_entityArray.push_back(entityName);
+	}
+
+
 	Scriptable::Entity* State::getEntity(const std::string& entityName) noexcept{
 		std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);
 

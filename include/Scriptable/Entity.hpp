@@ -33,20 +33,26 @@ namespace Scriptable
 			return nullptr;
 		}
 
+
+
+
 		template<DerivedComponent T>
 		bool deleteComponent()
 		{
 			if(!hasComponent<T>()) return false;
 				
-			std::unique_lock<std::shared_mutex> writeLock(M_ComponentLock);
+			std::unique_lock<std::shared_mutex> writeLock(M_delComponentLock);
 				
+			std::unique_lock<std::shared_mutex> writeLock1(M_ComponentLock);
+
 			//cant iterate with an iterator because this loop removes a vector entry during iteration
 
 			for(size_t i = 0; i < M_Components.size(); i++)
 			{
 				try{
 					T* component = dynamic_cast<T>(M_Components[i]);
-					delete component;
+					
+					M_components_tobe_deleted.push_back(component);
 					M_Components.erase(M_Components.begin() + i);
 
 					return true;
@@ -113,6 +119,12 @@ namespace Scriptable
 		// calls all event with specified name from base class EventObject and all subcomponents
 		void evokeAll(const std::string& eventName, const EventData* data);
 
+		const std::string& getName() const;
+
+		void exec_schd_deletion();
+
+		friend class State;
+
 	private:
 		//Directly inserts component pointer into M_components, does not check for errors or race conditions (unsafe)
 		void M_insertComponent_nolock(Component* component);
@@ -120,6 +132,11 @@ namespace Scriptable
 		mutable std::shared_mutex M_ComponentLock;
 
 		std::vector<Component*> M_Components;
+
+		mutable std::shared_mutex M_delComponentLock;
+		std::vector<Component*> M_components_tobe_deleted;
+
+		std::string M_name;
 	};
 
 	template<class T>

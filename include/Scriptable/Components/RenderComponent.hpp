@@ -68,6 +68,10 @@ namespace Scriptable::Components{
         sf::FloatRect getBoundingBox();
         bool boundingBoxCollide(Scriptable::Components::RenderComponent* renderComponent);
 
+        bool isPointInside(sf::Vector2f point);
+
+        bool isColliding(Scriptable::Components::RenderComponent* other);
+
         sf::VertexArray getVertices();
 
     private:

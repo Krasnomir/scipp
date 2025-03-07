@@ -8,12 +8,12 @@
 namespace Scriptable::Components {
 
     class LifetimeComponent : public Component {
-        std::function<void()> onElapsedCallback;
+        std::function<void(LifetimeComponent*)> onElapsedCallback;
         sf::Time time;
         bool elapsed = false;
     public:
         LifetimeComponent() = delete;
-        LifetimeComponent(sf::Time t, std::function<void()> onElapsed) : time(t), onElapsedCallback(onElapsed) {};
+        LifetimeComponent(sf::Time t, std::function<void(LifetimeComponent*)> onElapsed) : time(t), onElapsedCallback(onElapsed) {};
         virtual ~LifetimeComponent() = default;
 
         // extends or cuts (if the paramter is negative) the lifetime
