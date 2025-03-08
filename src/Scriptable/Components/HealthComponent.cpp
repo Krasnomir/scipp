@@ -18,8 +18,8 @@ namespace Scriptable::Components {
             }
         }
 
-        std::cout << "Time without damage:" << m_timeWithoutDamage.asSeconds() << "\n";
-        std::cout << "Health:" << m_health << "\n";
+        //std::cout << "Time without damage:" << m_timeWithoutDamage.asSeconds() << "\n";
+        //std::cout << "Health:" << m_health << "\n";
     }
 
     float HealthComponent::getHealth() {

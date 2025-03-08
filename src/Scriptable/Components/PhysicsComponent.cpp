@@ -4,15 +4,13 @@
 #include <Util.hpp>
 
 namespace Scriptable::Components {
-    PhysicsComponent::PhysicsComponent(float b, Scriptable::Components::RenderComponent* rc) {
-        speed = b;
-        velocity = b;
-        renderComponent = rc;
+    PhysicsComponent::PhysicsComponent(RenderComponent* renderComponent) {
+        m_renderComponent = renderComponent;
     }
 
     void PhysicsComponent::beforeRender(const EventData* data) {
         // calculate the correct (fps independent) distance to move the entity using delta time and velocity
-        float distance = this->velocity * data->deltaTime.asMilliseconds();
-        renderComponent->setPosition(Util::movePoint(renderComponent->getPosition(), this->velocity, renderComponent->getRotation()));
+        float distance = velocity.magnitude * data->deltaTime.asMilliseconds();
+        m_renderComponent->setPosition(Util::movePoint(m_renderComponent->getPosition(), velocity.magnitude, velocity.direction));
     }
 }

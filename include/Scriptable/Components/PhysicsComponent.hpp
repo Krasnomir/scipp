@@ -7,13 +7,16 @@
 namespace Scriptable::Components {
 
     class PhysicsComponent : public Component {
+        RenderComponent* m_renderComponent;
 
     public:
-        float speed;
-        float velocity;
-        Scriptable::Components::RenderComponent* renderComponent;
+        struct Velocity {
+            float magnitude = 0;
+            float direction = 0;
+        };
+        Velocity velocity;
 
-        PhysicsComponent(float b, Scriptable::Components::RenderComponent* rc);
+        PhysicsComponent(RenderComponent* renderComponent);
         virtual ~PhysicsComponent() = default;
 
         void beforeRender(const EventData* data);

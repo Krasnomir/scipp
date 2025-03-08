@@ -86,7 +86,7 @@ struct DebugEntity : public Scriptable::Entity
 		// addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,0}, {0, 100}, {30, 0}, 	{30,0}, {30, 100}, {0,100}}));
 
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<std::pair<sf::Vector2f, sf::Vector2f>>({{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}}));
-		addComponent<Scriptable::Components::PhysicsComponent>(0, getComponent<Scriptable::Components::RenderComponent>());
+		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 
@@ -98,23 +98,20 @@ struct DebugEntity : public Scriptable::Entity
 	void beforeRender(const Scriptable::EventData* data)
 	{
 
-		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
+		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)){
 			
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(renderC->getPosition(), mousePos) > 10) {
-			/*
-			float angle = renderC->getRotation();
-
-			renderC->setPosition(Util::movePoint(renderC->getPosition(), data->deltaTime.asMilliseconds(), angle));
-			*/
-			getComponent<Scriptable::Components::PhysicsComponent>()->velocity = 5;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(rc->getPosition(), mousePos) > 10) {
+			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+			pc->velocity.magnitude = 5;
+			pc->velocity.direction = rc->getRotation();
 		}
 		else {
-			getComponent<Scriptable::Components::PhysicsComponent>()->velocity = 0;
+			getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 0;
 		}
 	}
 
