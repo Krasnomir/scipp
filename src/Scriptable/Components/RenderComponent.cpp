@@ -175,6 +175,9 @@ namespace Scriptable::Components
     }
 
     bool RenderComponent::isColliding(Scriptable::Components::RenderComponent* other){
+        // check if bounding boxes collide first (it's faster)
+        if(!boundingBoxCollide(other)) return false;
+
         Util::Triangle CurrentTriangle;
         auto& Transform = getTransform();
         auto& OtherTransform = other->getTransform();

@@ -6,6 +6,7 @@
 #include <Scriptable/Components/RenderComponent.hpp>
 #include <Scriptable/Components/LifetimeComponent.hpp>
 #include <Scriptable/Components/PhysicsComponent.hpp>
+#include <Scriptable/Components/HealthComponent.hpp>
 #include <Util.hpp>
 #include <Game.hpp>
 
@@ -22,13 +23,21 @@ struct ProjectileEntity : public Scriptable::Entity
 		// Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
 	}
 
+	static void callbackTest(Scriptable::Components::HealthComponent* c) {
+		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+		//std::cout << "DEATH" << std::endl;
+	}
+
 	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
-		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(2.f), testr);	
+		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(2.f), testr);
+		addComponent<Scriptable::Components::HealthComponent>(20.f, 100.f, 1.f, 2.f);
 		//addComponent<Scriptable::Components::PhysicsComponent>(5, this->getComponent<Scriptable::Components::RenderComponent>());
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
 		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle);
+
+		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(callbackTest);
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -43,7 +52,14 @@ struct ProjectileEntity : public Scriptable::Entity
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
 		
 		if(renderC->isColliding(debugEntityRC)){
-			Scipp::globalGame->stateManager.currentState->softDeleteEntity(getName());
+			auto* hc = getComponent<Scriptable::Components::HealthComponent>();
+			hc->setHealth(hc->getHealth() - 1);
+
+			/*
+			Scriptable::Components::HealthComponent* debugEntityHC = debugEntity->getComponent<Scriptable::Components::HealthComponent>();
+			debugEntityHC->setHealth(debugEntityHC->getHealth() - 1);
+			*/
+			// Scipp::globalGame->stateManager.currentState->softDeleteEntity(getName());
 		}
 
 		// printf("%f %f | %f %f\n", mouse_pos.x, mouse_pos.y, renderC->getPosition().x, renderC->getPosition().y);
@@ -121,7 +137,7 @@ struct DebugEntity : public Scriptable::Entity
 		if (data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
 			static uint32_t proj_ID = 0;
 
-			sf::Vector2f bulletStartPosition = Util::movePoint(getComponent<Scriptable::Components::RenderComponent>()->getPosition(), 50, getComponent<Scriptable::Components::RenderComponent>()->getRotation());
+			sf::Vector2f bulletStartPosition = Util::movePoint(getComponent<Scriptable::Components::RenderComponent>()->getPosition(), 200, getComponent<Scriptable::Components::RenderComponent>()->getRotation());
 
 			Scipp::globalGame->stateManager.currentState->addEntity<ProjectileEntity>(std::to_string(proj_ID), getComponent<Scriptable::Components::RenderComponent>()->getRotation(), bulletStartPosition);
 			proj_ID++;
