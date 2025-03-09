@@ -7,6 +7,7 @@
 #include <Scriptable/Components/LifetimeComponent.hpp>
 #include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Components/HealthComponent.hpp>
+#include <Scriptable/Components/EnemyComponent.hpp>
 #include <Util.hpp>
 #include <Game.hpp>
 
@@ -32,10 +33,14 @@ struct ProjectileEntity : public Scriptable::Entity
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
 		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(2.f), testr);
 		addComponent<Scriptable::Components::HealthComponent>(20.f, 100.f, 1.f, 2.f);
-		//addComponent<Scriptable::Components::PhysicsComponent>(5, this->getComponent<Scriptable::Components::RenderComponent>());
+		addComponent<Scriptable::Components::EnemyComponent>();
+		addComponent<Scriptable::Components::PhysicsComponent>(this->getComponent<Scriptable::Components::RenderComponent>());
+
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
 		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle);
+
+		getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 1;
 
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(callbackTest);
 
@@ -44,16 +49,17 @@ struct ProjectileEntity : public Scriptable::Entity
 
 	void beforeRender(const Scriptable::EventData* data)
 	{
-		auto* renderC = this->getComponent<Scriptable::Components::RenderComponent>();
+		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
+		auto* pc = this->getComponent<Scriptable::Components::PhysicsComponent>();
+
+		pc->velocity.direction = rc->getRotation();
 
 		float angle = M_angle;
-
-		// renderC->setPosition(Util::movePoint(renderC->getPosition(), 0.5, angle));
 
 		Scriptable::Entity* debugEntity = Scipp::globalGame->stateManager.currentState->getEntity("test1");
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
 		
-		if(renderC->isColliding(debugEntityRC)){
+		if(rc->isColliding(debugEntityRC)){
 			auto* hc = getComponent<Scriptable::Components::HealthComponent>();
 			hc->setHealth(hc->getHealth() - 1);
 
@@ -95,6 +101,7 @@ struct DebugEntity : public Scriptable::Entity
 		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png", sf::IntRect({0,0, 398, 273}));
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 
+		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "friendly");
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -145,7 +152,9 @@ struct DebugEntity : public Scriptable::Entity
 			auto* player = currentState->getEntity("test1");
 
 			auto* closest = currentState->findClosestEntityFromGroup(player, "enemies");
-			std::cout << closest->getName() << "\n";
+
+			currentState->removeEntityFromGroup(closest, "enemies");
+			currentState->softDeleteEntity(closest->getName());
 		}
 	}
 

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <limits>
+#include <algorithm>
 
 namespace Scriptable{
 	void State::evokeAll(const std::string& eventName, const Scriptable::EventData* data)
@@ -142,8 +143,16 @@ namespace Scriptable{
 		m_groups[group].push_back(entity);
 	}
 
-	Entity* State::findClosestEntityFromGroup(Entity* finder, std::string group) {
+	void State::removeEntityFromGroup(Entity* entity, std::string group) {
+		std::unique_lock<std::shared_mutex> writeLock(m_groupsLock);
+		std::string entityName = entity->getName();
 
+		m_groups[group].erase(std::find(m_groups[group].begin(), m_groups[group].end(), entity));
+	}
+
+	// returns a nullptr when there are no entities in the specified group
+	Entity* State::findClosestEntityFromGroup(Entity* finder, std::string group) {
+		
 		auto* finderRC = finder->getComponent<Scriptable::Components::RenderComponent>();
 
 		float closestDistanceYet = std::numeric_limits<float>::max();
