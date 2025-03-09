@@ -8,6 +8,7 @@
 #include <SFML/System.hpp>
 
 #include <vector>
+#include <string>
 
 class StateManager;
 
@@ -21,6 +22,9 @@ namespace Scriptable{
 		virtual ~State();
 
 		Camera M_camera;
+
+		void addEntityToGroup(Entity* entity, std::string group);
+		Entity* findClosestEntityFromGroup(Entity* finder, std::string group);
 
 		virtual void init();
 
@@ -51,7 +55,7 @@ namespace Scriptable{
 
 			T* newEntity = new T(args...);
 			M_entityMap[entityName] = newEntity;
-			newEntity->M_name = entityName;
+			newEntity->setName(entityName);
 
 			return true;
 		}
@@ -64,6 +68,7 @@ namespace Scriptable{
 
 			T* newEntity = new T();
 			M_entityMap[entityName] = newEntity;
+			newEntity->setName(entityName);
 
 			return true;
 		}
@@ -96,17 +101,17 @@ namespace Scriptable{
 
 	private:
 		mutable std::shared_mutex M_entityMapLock; // mutable means can be modified from a const function
-
-		mutable std::shared_mutex M_uiMapLock; // mutable means can be modified from a const function
-
-		std::unordered_map<std::string, Scriptable::UI::UIObject*> M_uiMap;
-
 		//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 		std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
+
+		mutable std::shared_mutex M_uiMapLock; // mutable means can be modified from a const function
+		std::unordered_map<std::string, Scriptable::UI::UIObject*> M_uiMap;
 
 		mutable std::shared_mutex M_delschdLock;
 		std::vector<std::string> M_delschd_entityArray;
 
+		mutable std::shared_mutex m_groupsLock;
+		std::map<std::string, std::vector<Scriptable::Entity*>> m_groups;
 
 		Camera M_RenderCamera;
 	};

@@ -18,6 +18,10 @@ namespace Scriptable{
     const std::string& Entity::getName() const{
         return M_name;
     }
+
+    void Entity::setName(std::string name) {
+        M_name = name;
+    }
     
     void Entity::exec_schd_deletion(){
         std::unique_lock<std::shared_mutex> writeLock(M_delComponentLock);

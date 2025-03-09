@@ -120,6 +120,7 @@ namespace Scriptable
 		void evokeAll(const std::string& eventName, const EventData* data);
 
 		const std::string& getName() const;
+		void setName(std::string name);
 
 		void exec_schd_deletion();
 

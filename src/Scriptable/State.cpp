@@ -1,7 +1,10 @@
 #include <Scriptable/State.hpp>
 #include <StateManager.hpp>
 
+#include <Scriptable/Components/PhysicsComponent.hpp>
+
 #include <iostream>
+#include <limits>
 
 namespace Scriptable{
 	void State::evokeAll(const std::string& eventName, const Scriptable::EventData* data)
@@ -131,6 +134,34 @@ namespace Scriptable{
 	{
 		M_camera = Camera(sf::Vector2f(800, 600), sf::Vector2f(0, 0));
 		M_camera.apply();
+	}
+
+	void State::addEntityToGroup(Entity* entity, std::string group) {
+		std::unique_lock<std::shared_mutex> writeLock(m_groupsLock);
+
+		m_groups[group].push_back(entity);
+	}
+
+	Entity* State::findClosestEntityFromGroup(Entity* finder, std::string group) {
+
+		auto* finderRC = finder->getComponent<Scriptable::Components::RenderComponent>();
+
+		float closestDistanceYet = std::numeric_limits<float>::max();
+		Entity* closestEntityYet = nullptr;
+
+		std::shared_lock<std::shared_mutex> readLock(m_groupsLock);
+
+		for(auto const& entity : m_groups[group]) {
+			auto* entityRC = entity->getComponent<Scriptable::Components::RenderComponent>();
+			float distance = Util::getDistanceBetweenPoints(finderRC->getPosition(), entityRC->getPosition());
+
+			if(distance < closestDistanceYet) {
+				closestDistanceYet = distance;
+				closestEntityYet = entity;
+			}
+		}
+
+		return closestEntityYet;
 	}
 
 	State::~State()

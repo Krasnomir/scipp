@@ -38,6 +38,8 @@ struct ProjectileEntity : public Scriptable::Entity
 		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle);
 
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(callbackTest);
+
+		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "enemies");
 	}
 
 	void beforeRender(const Scriptable::EventData* data)
@@ -101,10 +103,6 @@ struct DebugEntity : public Scriptable::Entity
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)){
-			
-		}
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(rc->getPosition(), mousePos) > 10) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
 			pc->velocity.magnitude = 5;
@@ -141,10 +139,14 @@ struct DebugEntity : public Scriptable::Entity
 		}
 	}
 
-	void onKeyPressed(const Scriptable::EventData* data)
-	{
+	void onKeyPressed(const Scriptable::EventData* data) {
+		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Z) {
+			auto* currentState = Scipp::globalGame->stateManager.currentState;
+			auto* player = currentState->getEntity("test1");
 
-
+			auto* closest = currentState->findClosestEntityFromGroup(player, "enemies");
+			std::cout << closest->getName() << "\n";
+		}
 	}
 
 };
