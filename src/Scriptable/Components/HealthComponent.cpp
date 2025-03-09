@@ -5,12 +5,15 @@
 namespace Scriptable::Components {
     void HealthComponent::beforeRender(const EventData* data) {
         if(m_health <= 0) {
-            m_onDeathCallback(this);
+            if(m_onDeathCallback != 0) {
+                m_onDeathCallback(this);
+            }
         }
         if(m_canRegen) {
             // if enough time has passed without taking damage, start regenerating health
             if(m_timeWithoutDamage >= m_regenDelay) {
-                if(m_health < m_maxHealth) setHealth(m_health + m_regen);
+                float healthIncrement = data->deltaTime.asSeconds() * m_regen; // fps independent
+                if(m_health < m_maxHealth) setHealth(m_health + healthIncrement);
             }
             // increase time without taking damage by the time that has passed since last frame
             else {

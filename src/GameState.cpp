@@ -58,27 +58,6 @@ struct ProjectileEntity : public Scriptable::Entity
 
 		Scriptable::Entity* debugEntity = Scipp::globalGame->stateManager.currentState->getEntity("test1");
 		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
-		
-		if(rc->isColliding(debugEntityRC)){
-			auto* hc = getComponent<Scriptable::Components::HealthComponent>();
-			hc->setHealth(hc->getHealth() - 1);
-
-			/*
-			Scriptable::Components::HealthComponent* debugEntityHC = debugEntity->getComponent<Scriptable::Components::HealthComponent>();
-			debugEntityHC->setHealth(debugEntityHC->getHealth() - 1);
-			*/
-			// Scipp::globalGame->stateManager.currentState->softDeleteEntity(getName());
-		}
-
-		// printf("%f %f | %f %f\n", mouse_pos.x, mouse_pos.y, renderC->getPosition().x, renderC->getPosition().y);
-
-		/*
-		if(debugEntityRC->boundingBoxCollide(renderC)) {
-			getComponent<Scriptable::Components::LifetimeComponent>()->restart(sf::seconds(2.f));
-			renderC->setRotation(renderC->getRotation() + 20);
-		}
-		*/
-
 	}
 
 	void afterRender(const Scriptable::EventData* data)
@@ -95,6 +74,7 @@ struct DebugEntity : public Scriptable::Entity
 
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<std::pair<sf::Vector2f, sf::Vector2f>>({{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}}));
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
+		addComponent<Scriptable::Components::HealthComponent>(100, 100, 10, 5);
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 
@@ -106,6 +86,8 @@ struct DebugEntity : public Scriptable::Entity
 
 	void beforeRender(const Scriptable::EventData* data)
 	{
+		auto* hc = getComponent<Scriptable::Components::HealthComponent>();
+		std::cout << hc->getHealth() << "\n";
 
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
@@ -153,8 +135,10 @@ struct DebugEntity : public Scriptable::Entity
 
 			auto* closest = currentState->findClosestEntityFromGroup(player, "enemies");
 
-			currentState->removeEntityFromGroup(closest, "enemies");
-			currentState->softDeleteEntity(closest->getName());
+			if(closest != nullptr) {
+				currentState->removeEntityFromGroup(closest, "enemies");
+				currentState->softDeleteEntity(closest->getName());
+			}
 		}
 	}
 

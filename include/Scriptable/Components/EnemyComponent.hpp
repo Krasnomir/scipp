@@ -10,10 +10,19 @@ namespace Scriptable::Components {
 
         Entity* m_target;
 
+        sf::Time m_cooldown = sf::seconds(1);
+        sf::Time m_cooldownTracker = sf::microseconds(0);
+
     public:
+
+        float damage = 20;
+        float reach = 50;
 
         EnemyComponent();
         virtual ~EnemyComponent() = default;
+
+        void setCooldown(float cooldownSeconds);
+        float getCooldown();
 
         void beforeRender(const EventData* data);
     };

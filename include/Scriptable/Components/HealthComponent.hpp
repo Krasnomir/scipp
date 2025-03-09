@@ -8,7 +8,7 @@
 namespace Scriptable::Components {
     
     class HealthComponent : public Component {
-        std::function<void(HealthComponent*)> m_onDeathCallback;
+        std::function<void(HealthComponent*)> m_onDeathCallback = 0;
 
         sf::Time m_timeWithoutDamage;
 
