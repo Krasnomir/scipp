@@ -8,6 +8,7 @@
 #include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Components/HealthComponent.hpp>
 #include <Scriptable/Components/EnemyComponent.hpp>
+#include <Scriptable/Components/ProjectileComponent.hpp>
 #include <Util.hpp>
 #include <Game.hpp>
 
@@ -20,8 +21,7 @@ struct ProjectileEntity : public Scriptable::Entity
 	double M_angle;
 
 	static void testr(Scriptable::Components::LifetimeComponent* c) {
-		std::cout << "ELAPSED" << std::endl;
-		// Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
 	}
 
 	static void callbackTest(Scriptable::Components::HealthComponent* c) {
@@ -31,16 +31,17 @@ struct ProjectileEntity : public Scriptable::Entity
 
 	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
 		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
-		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(2.f), testr);
+		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(0.2f), testr);
 		addComponent<Scriptable::Components::HealthComponent>(20.f, 100.f, 1.f, 2.f);
-		addComponent<Scriptable::Components::EnemyComponent>();
+		//addComponent<Scriptable::Components::EnemyComponent>();
 		addComponent<Scriptable::Components::PhysicsComponent>(this->getComponent<Scriptable::Components::RenderComponent>());
+		addComponent<Scriptable::Components::ProjectileComponent>(10, 8, (float)angle, "friendly");
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
 		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle);
 
-		getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 1;
+		// getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 1;
 
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(callbackTest);
 
@@ -87,7 +88,6 @@ struct DebugEntity : public Scriptable::Entity
 	void beforeRender(const Scriptable::EventData* data)
 	{
 		auto* hc = getComponent<Scriptable::Components::HealthComponent>();
-		std::cout << hc->getHealth() << "\n";
 
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);

@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/out/scipp",
             "args": [],
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "MIMode": "gdb",
