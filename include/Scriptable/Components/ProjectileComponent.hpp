@@ -18,8 +18,6 @@ namespace Scriptable::Components {
         ProjectileComponent(float damage, float speed, float rotation, std::string targetGroup);
         virtual ~ProjectileComponent() = default;
 
-        void init();
-
         void beforeRender(const EventData* data);
     };
 }

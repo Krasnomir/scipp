@@ -19,6 +19,7 @@ namespace Scriptable::Components {
             auto* target_rc = m_target->getComponent<Scriptable::Components::RenderComponent>();
 
             entity_rc->setRotation(Util::getAngleBetweenPoints(entity_rc->getPosition(), target_rc->getPosition()));
+            entity_pc->velocity.direction = Util::getAngleBetweenPoints(entity_rc->getPosition(), target_rc->getPosition());
 
             if(Util::getDistanceBetweenPoints(entity_rc->getPosition(), target_rc->getPosition()) <= reach) {
                 entity_pc->velocity.magnitude = 0;

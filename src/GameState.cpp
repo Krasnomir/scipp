@@ -1,129 +1,143 @@
+#include <Game.hpp>
 #include <StateManager.hpp>
-#include <Scriptable/State.hpp>
-#include <GameState.hpp>
-#include <Scriptable/Entity.hpp>
 #include <Camera.hpp>
+#include <Util.hpp>
+#include <GameState.hpp>
+#include <Scriptable/State.hpp>
+#include <Scriptable/Entity.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
 #include <Scriptable/Components/LifetimeComponent.hpp>
 #include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Components/HealthComponent.hpp>
 #include <Scriptable/Components/EnemyComponent.hpp>
 #include <Scriptable/Components/ProjectileComponent.hpp>
-#include <Util.hpp>
-#include <Game.hpp>
+#include <Scriptable/UI/UIRect.hpp>
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 
-struct ProjectileEntity : public Scriptable::Entity
+struct BulletEntity : public Scriptable::Entity
 {
-	double M_angle;
+	float lifetimeSeconds = 10;
+	float damage = 100;
+	float speed = 0.1;
+	std::string groupName = "bullets";
+	std::string targetGroupName = "hostile";
 
-	static void testr(Scriptable::Components::LifetimeComponent* c) {
-		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+	std::vector<sf::Vector2f> vertices = {{0,50}, {50,50}, {25,0}};
+
+	static void deleteBulletCallback(Scriptable::Components::LifetimeComponent* c) {
+		Scipp::globalGame->stateManager.currentState->deleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
 	}
 
-	static void callbackTest(Scriptable::Components::HealthComponent* c) {
-		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
-		//std::cout << "DEATH" << std::endl;
-	}
-
-	ProjectileEntity(double angle, sf::Vector2f pos) : M_angle(angle) {
-		addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({ {0,50}, {50,50}, {25,0}}));
-		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(0.2f), testr);
-		addComponent<Scriptable::Components::HealthComponent>(20.f, 100.f, 1.f, 2.f);
-		//addComponent<Scriptable::Components::EnemyComponent>();
-		addComponent<Scriptable::Components::PhysicsComponent>(this->getComponent<Scriptable::Components::RenderComponent>());
-		addComponent<Scriptable::Components::ProjectileComponent>(10, 8, (float)angle, "friendly");
+	BulletEntity(float angle, sf::Vector2f pos) {
+		
+		addComponent<Scriptable::Components::RenderComponent>(vertices);
+		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(lifetimeSeconds), deleteBulletCallback);
+		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
+		addComponent<Scriptable::Components::ProjectileComponent>(damage, speed, angle, targetGroupName);
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
 		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
-		getComponent<Scriptable::Components::RenderComponent>()->setRotation(M_angle);
+		getComponent<Scriptable::Components::RenderComponent>()->setRotation(angle);
 
-		// getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 1;
-
-		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(callbackTest);
-
-		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "enemies");
+		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
 	}
-
-	void beforeRender(const Scriptable::EventData* data)
-	{
-		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
-		auto* pc = this->getComponent<Scriptable::Components::PhysicsComponent>();
-
-		pc->velocity.direction = rc->getRotation();
-
-		float angle = M_angle;
-
-		Scriptable::Entity* debugEntity = Scipp::globalGame->stateManager.currentState->getEntity("test1");
-		Scriptable::Components::RenderComponent* debugEntityRC = debugEntity->getComponent<Scriptable::Components::RenderComponent>();
-	}
-
-	void afterRender(const Scriptable::EventData* data)
-	{
-		
-	}
-
 };
 
-struct DebugEntity : public Scriptable::Entity
-{
-	DebugEntity() {
-		// addComponent<Scriptable::Components::RenderComponent>(std::vector<sf::Vector2f>({{0,0}, {0, 100}, {30, 0}, 	{30,0}, {30, 100}, {0,100}}));
+struct EnemyEntity : public Scriptable::Entity {
 
-		addComponent<Scriptable::Components::RenderComponent>(std::vector<std::pair<sf::Vector2f, sf::Vector2f>>({{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}}));
+	float health = 100;
+	std::string groupName = "hostile";
+
+	std::vector<sf::Vector2f> vertices = {{0,0}, {0,50}, {50, 0}, {0, 50}, {50,50}, {50,0}};
+
+	static void deleteEnemyCallback(Scriptable::Components::HealthComponent* c) {
+		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+	}
+
+	EnemyEntity(sf::Vector2f pos) {
+		
+		addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
-		addComponent<Scriptable::Components::HealthComponent>(100, 100, 10, 5);
+		addComponent<Scriptable::Components::EnemyComponent>();
+		addComponent<Scriptable::Components::HealthComponent>(health);
+
+		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
+		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteEnemyCallback);
+
+		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
+	}
+};
+
+struct PlayerEntity : public Scriptable::Entity {
+	float health = 100;
+	float regenPerSecond = 10;
+	float regenDelaySeconds = 5;
+	float bulletDistance = 50;
+
+	std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
+
+	PlayerEntity() {
+		addComponent<Scriptable::Components::RenderComponent>(vertices);
+		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
+		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-
 		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png", sf::IntRect({0,0, 398, 273}));
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "friendly");
 	}
 
-	void beforeRender(const Scriptable::EventData* data)
-	{
-		auto* hc = getComponent<Scriptable::Components::HealthComponent>();
-
+	void beforeRender(const Scriptable::EventData* data) {
+		
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
-		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && Util::getDistanceBetweenPoints(rc->getPosition(), mousePos) > 10) {
+		// wasd movement
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
 			pc->velocity.magnitude = 5;
 			pc->velocity.direction = rc->getRotation();
+		}
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+			pc->velocity.magnitude = 5;
+			pc->velocity.direction = rc->getRotation() - 180;
+		}
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+			pc->velocity.magnitude = 5;
+			pc->velocity.direction = rc->getRotation() - 90;
+		}
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+			pc->velocity.magnitude = 5;
+			pc->velocity.direction = rc->getRotation() + 90;
 		}
 		else {
 			getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 0;
 		}
 	}
 
-	void afterRender(const Scriptable::EventData* data)
-	{
-		
-	}
-
-	void onMouseMoved(const Scriptable::EventData* data)
-	{
-		auto mouse_pos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
+	void onMouseMoved(const Scriptable::EventData* data) {
+		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
-		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mouse_pos));
-
-
+		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mousePos));
 	}
 
 	void onMouseButtonPressed(const Scriptable::EventData* data) {
-		if (data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
+		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
 			static uint32_t proj_ID = 0;
 
-			sf::Vector2f bulletStartPosition = Util::movePoint(getComponent<Scriptable::Components::RenderComponent>()->getPosition(), 200, getComponent<Scriptable::Components::RenderComponent>()->getRotation());
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<ProjectileEntity>(std::to_string(proj_ID), getComponent<Scriptable::Components::RenderComponent>()->getRotation(), bulletStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition);
+
 			proj_ID++;
 		}
 	}
@@ -139,6 +153,15 @@ struct DebugEntity : public Scriptable::Entity
 				currentState->removeEntityFromGroup(closest, "enemies");
 				currentState->softDeleteEntity(closest->getName());
 			}
+		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::E) {
+			static uint32_t enemy_ID = 0;
+
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 100, rc->getRotation());
+
+			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
+			enemy_ID++;
 		}
 	}
 
@@ -175,8 +198,6 @@ GameState::GameState()
 	initCamera();
 }
 
-#include <Scriptable/UI/UIRect.hpp>
-
 struct test_uiobj : public Scriptable::UI::UIRect{
 	test_uiobj(sf::FloatRect f) : UIRect(f){
 
@@ -190,8 +211,7 @@ struct test_uiobj : public Scriptable::UI::UIRect{
 
 void GameState::init()
 {
-
 	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({0,0, 0.2, 0.05}));
 	
-	Scipp::globalGame->stateManager.currentState->addEntity<DebugEntity>("test1");
+	Scipp::globalGame->stateManager.currentState->addEntity<PlayerEntity>("test1");
 }

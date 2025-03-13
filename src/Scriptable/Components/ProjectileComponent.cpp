@@ -12,6 +12,7 @@ namespace Scriptable::Components {
         m_damage = damage;
         m_targetGroup = groupName;
         m_speed = speed;
+        m_rotation = rotation;
     }
 
     void ProjectileComponent::beforeRender(const EventData* data) {
