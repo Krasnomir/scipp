@@ -87,6 +87,8 @@ namespace Scriptable{
 
 		M_entityMap.erase(entityName);
 
+
+
 		return true;
 	}
 
@@ -100,6 +102,7 @@ namespace Scriptable{
 				ptr->exec_schd_deletion();
 			}
 		}
+
 		
 		for(auto & schd_entry : M_delschd_entityArray){
 			deleteEntity(schd_entry);
@@ -110,6 +113,17 @@ namespace Scriptable{
 
 	void State::softDeleteEntity(const std::string& entityName){
 		std::unique_lock<std::shared_mutex> writeLock(M_delschdLock);
+
+		std::unique_lock<std::shared_mutex> writelock2(m_groupsLock);
+
+		for(auto & [name, list] : m_groups){
+			for(size_t i = 0; i < list.size(); i++){
+				if(list[i]->getName() == entityName){
+					list.erase(list.begin() + i);
+					continue;
+				}
+			}
+		}
 
 		M_delschd_entityArray.push_back(entityName);
 	}
@@ -159,9 +173,11 @@ namespace Scriptable{
 		Entity* closestEntityYet = nullptr;
 
 		std::shared_lock<std::shared_mutex> readLock(m_groupsLock);
+		std::shared_lock<std::shared_mutex> readLock1(M_entityMapLock);
 
-		for(auto const& entity : m_groups[group]) {
+		for(auto& entity : m_groups[group]) {
 			auto* entityRC = entity->getComponent<Scriptable::Components::RenderComponent>();
+			
 			float distance = Util::getDistanceBetweenPoints(finderRC->getPosition(), entityRC->getPosition());
 
 			if(distance < closestDistanceYet) {

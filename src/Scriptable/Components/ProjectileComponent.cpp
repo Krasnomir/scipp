@@ -41,9 +41,7 @@ namespace Scriptable::Components {
         if(target_rc->isColliding(entity_rc)) {
             target_hc->setHealth(target_hc->getHealth() - m_damage);
 
-            std::cout << target_hc->getHealth() << "\n";
-
-			state->softDeleteEntity(entity->getName());
+			// state->softDeleteEntity(entity->getName());
         }
         
     }

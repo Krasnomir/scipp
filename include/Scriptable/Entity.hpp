@@ -16,8 +16,6 @@ namespace Scriptable
 
 		template<DerivedComponent T>
 		T* getComponent(){
-			if(!hasComponent<T>()) return nullptr;
-
 			std::shared_lock<std::shared_mutex> readLock(M_ComponentLock);
 
 			for(auto * component : M_Components)
@@ -52,6 +50,7 @@ namespace Scriptable
 				try{
 					T* component = dynamic_cast<T>(M_Components[i]);
 					
+
 					M_components_tobe_deleted.push_back(component);
 					M_Components.erase(M_Components.begin() + i);
 
@@ -93,7 +92,7 @@ namespace Scriptable
 			std::unique_lock<std::shared_mutex> writeLock(M_ComponentLock);
 
 			T* newComponent = new T();
-
+			
 			M_insertComponent_nolock(newComponent);
 
 			return true;

@@ -13,6 +13,8 @@ namespace Scriptable{
         for(auto * component : M_Components){
             delete component;
         }
+
+        M_Components.clear();
     }
 
     const std::string& Entity::getName() const{
@@ -50,5 +52,6 @@ namespace Scriptable{
     {
         M_Components.push_back(component);
         component->parentEntity = this;
+
     }
 }

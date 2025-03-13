@@ -28,7 +28,7 @@ struct BulletEntity : public Scriptable::Entity
 	std::vector<sf::Vector2f> vertices = {{0,50}, {50,50}, {25,0}};
 
 	static void deleteBulletCallback(Scriptable::Components::LifetimeComponent* c) {
-		Scipp::globalGame->stateManager.currentState->deleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
 	}
 
 	BulletEntity(float angle, sf::Vector2f pos) {
@@ -43,6 +43,7 @@ struct BulletEntity : public Scriptable::Entity
 		getComponent<Scriptable::Components::RenderComponent>()->setRotation(angle);
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
+
 	}
 };
 
@@ -69,7 +70,10 @@ struct EnemyEntity : public Scriptable::Entity {
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteEnemyCallback);
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
+
 	}
+
+	virtual ~EnemyEntity() = default;
 };
 
 struct PlayerEntity : public Scriptable::Entity {
@@ -79,6 +83,8 @@ struct PlayerEntity : public Scriptable::Entity {
 	float bulletDistance = 50;
 
 	std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
+
+	virtual ~PlayerEntity() = default;
 
 	PlayerEntity() {
 		addComponent<Scriptable::Components::RenderComponent>(vertices);
