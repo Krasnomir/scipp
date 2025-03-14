@@ -10,42 +10,14 @@
 #include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Components/HealthComponent.hpp>
 #include <Scriptable/Components/EnemyComponent.hpp>
-#include <Scriptable/Components/ProjectileComponent.hpp>
+#include <Scriptable/Entities/TurretEntity.hpp>
+#include <Scriptable/Entities/BulletEntity.hpp>
 #include <Scriptable/UI/UIRect.hpp>
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 
-struct BulletEntity : public Scriptable::Entity
-{
-	float lifetimeSeconds = 10;
-	float damage = 100;
-	float speed = 0.1;
-	std::string groupName = "bullets";
-	std::string targetGroupName = "hostile";
-
-	std::vector<sf::Vector2f> vertices = {{0,50}, {50,50}, {25,0}};
-
-	static void deleteBulletCallback(Scriptable::Components::LifetimeComponent* c) {
-		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
-	}
-
-	BulletEntity(float angle, sf::Vector2f pos) {
-		
-		addComponent<Scriptable::Components::RenderComponent>(vertices);
-		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(lifetimeSeconds), deleteBulletCallback);
-		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
-		addComponent<Scriptable::Components::ProjectileComponent>(damage, speed, angle, targetGroupName);
-
-		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
-		getComponent<Scriptable::Components::RenderComponent>()->setRotation(angle);
-
-		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
-
-	}
-};
 
 struct EnemyEntity : public Scriptable::Entity {
 
@@ -142,7 +114,7 @@ struct PlayerEntity : public Scriptable::Entity {
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition);
 
 			proj_ID++;
 		}
@@ -164,10 +136,19 @@ struct PlayerEntity : public Scriptable::Entity {
 			static uint32_t enemy_ID = 0;
 
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 100, rc->getRotation());
+			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
 
 			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
 			enemy_ID++;
+		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
+			static uint32_t turret_ID = 0;
+
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			sf::Vector2f turretStartPosition = Util::movePoint(rc->getPosition(), 300, rc->getRotation());
+
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), turretStartPosition);
+			turret_ID++;
 		}
 	}
 
