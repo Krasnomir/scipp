@@ -17,6 +17,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+#include <cstdlib>
 
 
 struct EnemyEntity : public Scriptable::Entity {
@@ -150,6 +151,10 @@ struct PlayerEntity : public Scriptable::Entity {
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), turretStartPosition);
 			turret_ID++;
 		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::R) {
+			auto* gamestate = (GameState*) Scipp::globalGame->stateManager.currentState;
+			gamestate->shakeCamera(10, 15);
+		}
 	}
 
 };
@@ -178,6 +183,7 @@ void GameState::cameraFollow() {
 
 void GameState::onRender(const Scriptable::EventData* data) {
 	cameraFollow();
+	handleCameraShake(data->deltaTime);
 }
 
 GameState::GameState()
@@ -202,3 +208,76 @@ void GameState::init()
 	
 	Scipp::globalGame->stateManager.currentState->addEntity<PlayerEntity>("test1");
 }
+
+void GameState::shakeCamera(int minShake, int maxShake) {
+	if(m_isGoingBack || m_isTilting) return; // prevents two shakes from happening at the same time
+
+	int randomRotation = rand() % (maxShake-minShake) + minShake;
+	if(rand() % 2 == 1) {
+		randomRotation = -randomRotation;
+		m_isReverse = true;
+	} 
+	else {
+		m_isReverse = false;
+	}
+	
+	float goal = M_camera.getRotation() + randomRotation;
+
+	m_isTilting = true;
+	m_startingRotation = M_camera.getRotation();
+	m_currentRotation = M_camera.getRotation();
+	m_endingRotation = goal;
+}
+
+// BEWARE! nesting hell ahead
+void GameState::handleCameraShake(sf::Time deltaTime) {
+	if(m_isTilting || m_isGoingBack) {
+		float increment = deltaTime.asSeconds() * m_shakeIncrement;
+
+		if(m_isTilting) {
+			if(m_isReverse) {
+				if(m_currentRotation - increment <= m_endingRotation) {
+					m_currentRotation = m_endingRotation;
+					M_camera.setRotation(Util::numToAngle(m_currentRotation));
+					m_isGoingBack = true;
+					m_isTilting = false;
+					return;
+				}
+				m_currentRotation = m_currentRotation - increment;
+				M_camera.setRotation(Util::numToAngle(m_currentRotation));
+			}
+			else {
+				if(m_currentRotation + increment >= m_endingRotation) {
+					m_currentRotation = m_endingRotation;
+					M_camera.setRotation(Util::numToAngle(m_currentRotation));
+					m_isGoingBack = true;
+					m_isTilting = false;
+					return;
+				}
+				m_currentRotation = m_currentRotation + increment;
+				M_camera.setRotation(Util::numToAngle(m_currentRotation));
+			}
+		}
+		else if(m_isGoingBack) {
+			if(m_isReverse) {
+				if(m_currentRotation + increment >= m_startingRotation) {
+					M_camera.setRotation(Util::numToAngle(m_startingRotation));
+					m_isGoingBack = false;
+					return;
+				}
+				m_currentRotation = m_currentRotation + increment;
+				M_camera.setRotation(Util::numToAngle(m_currentRotation));
+			}
+			else {
+				if(m_currentRotation - increment <= m_startingRotation) {
+					M_camera.setRotation(Util::numToAngle(m_startingRotation));
+					m_isGoingBack = false;
+					return;
+				}
+				m_currentRotation = m_currentRotation - increment;
+				M_camera.setRotation(Util::numToAngle(m_currentRotation));
+			}
+		}
+	}
+}
+

@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <vector>
+#include <cstdlib>
 
 class StateManager;
 

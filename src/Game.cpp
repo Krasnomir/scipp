@@ -146,6 +146,7 @@ void Game::initStates()
 void Game::init() 
 {
 	Scipp::globalGame = this;
+	srand(time(NULL));
 
 	this->initWindow();
 	this->initStates();
