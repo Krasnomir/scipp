@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _UIOBJECT_HPP
+#define _UIOBJECT_HPP 1
 
 #include <Scriptable/EventObject.hpp>
 #include <Scriptable/Entity.hpp>
@@ -7,28 +9,27 @@
 
 #include <SFML/Graphics.hpp>
 
+
+
 namespace Scriptable::UI
 {	
-    class UIObject : public EventObject{
+    class Object : public EventObject{
     public:
-        UIObject() = default;
+        Object() = default;
 
-        virtual ~UIObject();
+        virtual ~Object();
 
         friend class State;
 
-        virtual void onMouseButtonPressed(const EventData* data) override;
-
-        virtual void onClick(){};
-
-        void draw_to_screen(Scriptable::EventData* e);
+        virtual void draw_to_screen(Scriptable::EventData* e);
         
-        sf::Text Text;
     protected:
         Components::RenderComponent* m_RenderComponent = 0;
     private:
     };
 
     template<class T>
-    concept DerivedUIObject = std::is_base_of_v<UIObject, T>;
+    concept DerivedUIObject = std::is_base_of_v<Object, T>;
 }   
+
+#endif

@@ -78,6 +78,11 @@ namespace Scriptable{
 		return true;
 	}
 
+	void State::softDeleteUIObject(const std::string& objectName){
+		std::unique_lock writeLock(M_uidelschdLock);
+		M_delschd_uiArray.push_back(objectName);
+	}
+
 	bool State::deleteEntity(const std::string& entityName){
 		std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock);
 
@@ -109,6 +114,12 @@ namespace Scriptable{
 		}
 
 		M_delschd_entityArray.clear();
+
+		std::unique_lock writeLock3(M_uidelschdLock);
+		for(auto & ui_schd_entry : M_delschd_uiArray){
+			deleteUIObject(ui_schd_entry);
+		}
+		M_delschd_uiArray.clear();
 	}
 
 	void State::softDeleteEntity(const std::string& entityName){

@@ -2,7 +2,7 @@
 
 #include <Camera.hpp>
 #include <Scriptable/Entity.hpp>
-#include <Scriptable/UI/UIObject.hpp>
+#include <Scriptable/UI/Object.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -100,16 +100,22 @@ namespace Scriptable{
 		//returns false on fail
 		bool deleteUIObject(const std::string& objectName);
 
+		void softDeleteUIObject(const std::string& objectName);
+
+
 	private:
 		mutable std::shared_mutex M_entityMapLock; // mutable means can be modified from a const function
 		//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 		std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;
 
 		mutable std::shared_mutex M_uiMapLock; // mutable means can be modified from a const function
-		std::unordered_map<std::string, Scriptable::UI::UIObject*> M_uiMap;
+		std::unordered_map<std::string, Scriptable::UI::Object*> M_uiMap;
 
 		mutable std::shared_mutex M_delschdLock;
 		std::vector<std::string> M_delschd_entityArray;
+
+		mutable std::shared_mutex M_uidelschdLock;
+		std::vector<std::string> M_delschd_uiArray;
 
 		mutable std::shared_mutex m_groupsLock;
 		std::map<std::string, std::vector<Scriptable::Entity*>> m_groups;

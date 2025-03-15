@@ -66,4 +66,6 @@ namespace Util {
 
         return std::vector<sf::Vector2f>{a.a, a.b, a.c, b.a, b.b, b.c};
     }
+
+
 }

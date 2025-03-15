@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 
 #include <cmath>
+#include <random>
+#include <sstream>
 
 namespace Util {
     struct Triangle {
@@ -24,4 +26,6 @@ namespace Util {
 
     typedef std::vector<sf::Vector2f> shape_t;
     shape_t CreateRectangle(sf::FloatRect rect);
+
+
 }

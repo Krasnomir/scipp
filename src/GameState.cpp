@@ -12,7 +12,7 @@
 #include <Scriptable/Components/EnemyComponent.hpp>
 #include <Scriptable/Entities/TurretEntity.hpp>
 #include <Scriptable/Entities/BulletEntity.hpp>
-#include <Scriptable/UI/UIRect.hpp>
+#include <Scriptable/UI/UI.hpp>
 
 #include <SFML/Graphics.hpp>
 
@@ -191,20 +191,24 @@ GameState::GameState()
 	initCamera();
 }
 
-struct test_uiobj : public Scriptable::UI::UIRect{
-	test_uiobj(sf::FloatRect f) : UIRect(f){
-
+struct test_uiobj : public Scriptable::UI::TextObject{
+	test_uiobj() : TextObject("debug"){
+		Text::setPosition({100,100});
+		Text::setString("hello world");
 	}
 
-	void onClick(){
-		printf("Yes\n");
-	}
-
+		
 };
+
+
 
 void GameState::init()
 {
-	Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::UIRect>("Hello", sf::FloatRect({0,0, 0.2, 0.05}));
+
+	printf("Font: %d\n", Scriptable::UI::TextObject::loadFont("./FreeMono.otf", "debug"));
+	
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("texttest");
+
 	
 	Scipp::globalGame->stateManager.currentState->addEntity<PlayerEntity>("test1");
 }
