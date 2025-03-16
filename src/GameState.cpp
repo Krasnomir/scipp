@@ -55,6 +55,14 @@ struct PlayerEntity : public Scriptable::Entity {
 	float regenDelaySeconds = 5;
 	float bulletDistance = 50;
 
+	// dashing system variables
+	bool m_isDashing = false;
+	sf::Time m_dashDuration = sf::seconds(0.25);
+	sf::Time m_dashCooldown = sf::seconds(1);
+	sf::Time m_dashDurationTrack = sf::seconds(0);
+	sf::Time m_dashCooldownTrack = sf::seconds(0);
+	float m_dashSpeed = 10;
+
 	std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
 
 	virtual ~PlayerEntity() = default;
@@ -65,39 +73,46 @@ struct PlayerEntity : public Scriptable::Entity {
 		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "test.png", sf::IntRect({0,0, 398, 273}));
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "res/test.png", sf::IntRect({0,0, 398, 273}));
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "friendly");
 	}
 
 	void beforeRender(const Scriptable::EventData* data) {
-		
+
+		handleDash(data);
+
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
+
+		float dashValue = 0;
+		if(m_isDashing) dashValue = m_dashSpeed;
 
 		// wasd movement
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5;
+			pc->velocity.magnitude = 5 + dashValue;
 			pc->velocity.direction = rc->getRotation();
 		}
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5;
+			pc->velocity.magnitude = 5 + dashValue;
 			pc->velocity.direction = rc->getRotation() - 180;
 		}
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5;
+			pc->velocity.magnitude = 5 + dashValue;
 			pc->velocity.direction = rc->getRotation() - 90;
 		}
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5;
+			pc->velocity.magnitude = 5 + dashValue;
 			pc->velocity.direction = rc->getRotation() + 90;
 		}
 		else {
-			getComponent<Scriptable::Components::PhysicsComponent>()->velocity.magnitude = 0;
+			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+			pc->velocity.magnitude = dashValue;
+			pc->velocity.direction = rc->getRotation();
 		}
 	}
 
@@ -155,6 +170,30 @@ struct PlayerEntity : public Scriptable::Entity {
 			auto* gamestate = (GameState*) Scipp::globalGame->stateManager.currentState;
 			gamestate->shakeCamera(10, 15);
 		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
+			dash();
+		}
+	}
+
+	void handleDash(const Scriptable::EventData* data) {
+		if(m_isDashing) {
+			if(m_dashDurationTrack >= m_dashDuration) {
+				m_dashDurationTrack = sf::seconds(0);
+				m_isDashing = false;
+			}
+			else {
+				m_dashDurationTrack += data->deltaTime;	
+			}
+		}
+
+		m_dashCooldownTrack += data->deltaTime;
+	}
+
+	void dash() {
+		if(m_dashCooldownTrack >= m_dashCooldown) {
+			m_isDashing = true;
+			m_dashCooldownTrack = sf::seconds(0);
+		}
 	}
 
 };
@@ -196,8 +235,6 @@ struct test_uiobj : public Scriptable::UI::TextObject{
 		Text::setPosition({100,100});
 		Text::setString("hello world");
 	}
-
-		
 };
 
 
@@ -205,7 +242,7 @@ struct test_uiobj : public Scriptable::UI::TextObject{
 void GameState::init()
 {
 
-	printf("Font: %d\n", Scriptable::UI::TextObject::loadFont("./FreeMono.otf", "debug"));
+	printf("Font: %d\n", Scriptable::UI::TextObject::loadFont("res/FreeMono.otf", "debug"));
 	
 	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("texttest");
 
