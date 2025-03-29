@@ -61,6 +61,9 @@ namespace Scriptable::Components{
         void addCostume(std::string name, std::string path);
         void loadCostume(std::string name);
 
+        void setAlpha(float alpha);
+        int getAlpha();
+
         // void rotationIndependentBoundingBox();
         void AABB();
 
@@ -81,6 +84,8 @@ namespace Scriptable::Components{
 
         sf::VertexArray m_vertices;
         sf::Texture m_texture;
+
+        int m_alpha;
 
         mutable std::shared_mutex m_costumesLock;
         std::unordered_map<std::string, sf::Texture> m_costumes;

@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22.2)
 
+# Set the minimum version of CMake you want to support for your project
+cmake_minimum_required(VERSION 3.22.2)
+
 project(scipp)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

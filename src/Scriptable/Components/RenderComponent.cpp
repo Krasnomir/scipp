@@ -109,6 +109,18 @@ namespace Scriptable::Components
         m_texture = m_costumes[name];
     }
 
+    void RenderComponent::setAlpha(float alpha) {
+        m_alpha = alpha;
+
+        for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
+            m_vertices[i].color.a = alpha;
+        }
+    }
+
+    int RenderComponent::getAlpha() {
+        return m_alpha;
+    }
+
     // this bounding box is always going to contain the vertex array shape regardless of its rotation
     // the downside to this approach is that the bounding box can be way bigger than the actual vertex array shape
     /*

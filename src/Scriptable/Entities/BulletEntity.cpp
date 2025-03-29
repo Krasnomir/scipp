@@ -3,6 +3,8 @@
 #include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Components/HealthComponent.hpp>
 
+#include <Misc/Explosion.hpp>
+
 namespace Scriptable::Entities {
     BulletEntity::BulletEntity(float angle, sf::Vector2f pos) {
         addComponent<Scriptable::Components::RenderComponent>(m_vertices);
@@ -40,8 +42,15 @@ namespace Scriptable::Entities {
         if(target_rc == nullptr || target_hc == nullptr) return;
 
         if(target_rc->isColliding(bullet_rc)) {
-            target_hc->setHealth(target_hc->getHealth() - m_damage);
+            using namespace Scipp::ExplosionPresets;
 
+            int particleCount = 5;
+            int size = 30;
+            int speed = 2;
+            float duration = 1; // in seconds
+            explosion(bullet_rc->getPosition(), BulletHit::count, BulletHit::size, BulletHit::speed, BulletHit::duration);
+
+            target_hc->setHealth(target_hc->getHealth() - m_damage);
 			state->softDeleteEntity(getName());
         }
         
