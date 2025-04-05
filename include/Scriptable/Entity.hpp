@@ -31,9 +31,6 @@ namespace Scriptable
 			return nullptr;
 		}
 
-
-
-
 		template<DerivedComponent T>
 		bool deleteComponent()
 		{
@@ -122,6 +119,10 @@ namespace Scriptable
 		void setName(std::string name);
 
 		void exec_schd_deletion();
+
+		// has to be in entity class because state has to sort the entitymap by zindex values
+		// entities may not have a rendercomponent and calling the hasComponent() function for every component every frame will be slow
+		int zindex = 0; 
 
 		friend class State;
 

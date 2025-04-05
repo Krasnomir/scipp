@@ -68,6 +68,8 @@ struct PlayerEntity : public Scriptable::Entity {
 	virtual ~PlayerEntity() = default;
 
 	PlayerEntity() {
+		zindex = -1;
+
 		addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
 		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);

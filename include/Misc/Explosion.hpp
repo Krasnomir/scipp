@@ -6,7 +6,7 @@
 namespace Scipp::ExplosionPresets {
     enum BulletHit {
         count = 4,
-        size = 15,
+        size = 20,
         speed = 2,
         duration = 200,
     };

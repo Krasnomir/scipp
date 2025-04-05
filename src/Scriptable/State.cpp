@@ -8,6 +8,11 @@
 #include <algorithm>
 
 namespace Scriptable{
+	bool compareZIndexes(const Entity* a, const Entity* b) {
+		return a->zindex < b->zindex;
+	}
+
+
 	void State::evokeAll(const std::string& eventName, const Scriptable::EventData* data)
 	{
 		evokeEvents(eventName, data); // evoke all events from base eventObject class
@@ -23,7 +28,15 @@ namespace Scriptable{
 		{
 			std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);
 
-			for (auto& [name, entity] : M_entityMap)
+			// maps cannot be sorted so we have to transfer it's data to a vector
+			// the vector only contains entity pointers and no entity names because they aren't used in this context
+			std::vector<Entity*> sortedEntities;
+			for(auto& entity : M_entityMap) {
+				sortedEntities.push_back(entity.second);
+			}
+			std::sort(sortedEntities.begin(), sortedEntities.end(), compareZIndexes);
+
+			for (auto& entity : sortedEntities)
 			{
 				entity->evokeAll(eventName, data);
 			}
