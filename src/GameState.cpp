@@ -25,7 +25,16 @@ struct EnemyEntity : public Scriptable::Entity {
 	float health = 100;
 	std::string groupName = "hostile";
 
-	std::vector<sf::Vector2f> vertices = {{0,0}, {0,50}, {50, 0}, {0, 50}, {50,50}, {50,0}};
+	std::vector<sf::Vector2f> vertices = {
+		{25,25}, {25,50}, {10,40}, 
+		{25,25}, {0,25}, {10,40},
+		{25,25}, {0,25}, {10,10},
+		{25,25}, {25,0}, {10,10},
+		{25,25}, {25,0}, {40,10},
+		{25,25}, {50,25}, {40,10},
+		{25,25}, {50,25}, {40,40},
+		{25,25}, {25,50}, {40,40},
+	};
 
 	static void deleteEnemyCallback(Scriptable::Components::HealthComponent* c) {
 		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
@@ -38,9 +47,13 @@ struct EnemyEntity : public Scriptable::Entity {
 		addComponent<Scriptable::Components::EnemyComponent>();
 		addComponent<Scriptable::Components::HealthComponent>(health);
 
-		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
-		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteEnemyCallback);
+		auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+		auto* hc = getComponent<Scriptable::Components::HealthComponent>();
+
+		rc->setPosition(pos);
+		rc->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		rc->setColor(sf::Color(120, 177, 108));
+		hc->setOnDeathCallback(deleteEnemyCallback);
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
 

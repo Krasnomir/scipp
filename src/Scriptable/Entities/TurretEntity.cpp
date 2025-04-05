@@ -9,8 +9,10 @@ namespace Scriptable::Entities {
 		//addComponent<Scriptable::Components::TurretComponent>(damage, firerate, group, targetGroup);
 		addComponent<Scriptable::Components::HealthComponent>(m_health);
 
-		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
+        auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+		rc->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		rc->setPosition(pos);
+        rc->setColor(sf::Color(116, 188, 218));
 
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteTurretCallback);
 

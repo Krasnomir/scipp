@@ -26,7 +26,15 @@ namespace Scriptable::Entities {
         std::string m_group = "friendly";
         std::string m_targetGroup = "hostile";
     
-        std::vector<sf::Vector2f> m_vertices = {{0,0}, {0,50}, {50, 0}, {0, 50}, {50,50}, {50,0}};
+        std::vector<sf::Vector2f> m_vertices = 
+        {
+            {0,0}, {0,40}, {40,0}, 
+            {0,40}, {40,40}, {40,0}, 
+            {0,40}, {0,0}, {-10,20},
+            {40,40}, {0,40}, {20,50},
+            {40,40}, {40,0}, {70,20},
+            {0,0}, {40,0}, {20,-10},
+        };
     
         static void deleteTurretCallback(Scriptable::Components::HealthComponent* c) {
             Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());

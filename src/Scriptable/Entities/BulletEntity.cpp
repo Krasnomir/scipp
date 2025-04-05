@@ -12,9 +12,11 @@ namespace Scriptable::Entities {
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
 		//addComponent<Scriptable::Components::ProjectileComponent>(damage, speed, angle, targetGroupName);
 
-		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->setPosition(pos);
-		getComponent<Scriptable::Components::RenderComponent>()->setRotation(angle);
+        auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+		rc->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		rc->setPosition(pos);
+		rc->setRotation(angle);
+        rc->setColor(sf::Color(255, 189, 58));
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, m_group);
     }
@@ -48,7 +50,8 @@ namespace Scriptable::Entities {
             int size = 30;
             int speed = 2;
             float duration = 1; // in seconds
-            explosion(bullet_rc->getPosition(), BulletHit::count, BulletHit::size, BulletHit::speed, BulletHit::duration);
+            auto color = sf::Color(BulletHit::colorR, BulletHit::colorG, BulletHit::colorB);
+            explosion(bullet_rc->getPosition(), BulletHit::count, BulletHit::size, BulletHit::speed, BulletHit::duration, color);
 
             target_hc->setHealth(target_hc->getHealth() - m_damage);
 			state->softDeleteEntity(getName());

@@ -121,6 +121,18 @@ namespace Scriptable::Components
         return m_alpha;
     }
 
+    void RenderComponent::setColor(sf::Color color) {
+        m_color = color;
+
+        for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
+            m_vertices[i].color = color;
+        }
+    }
+
+    sf::Color RenderComponent::getColor() {
+        return m_color;
+    }
+
     // this bounding box is always going to contain the vertex array shape regardless of its rotation
     // the downside to this approach is that the bounding box can be way bigger than the actual vertex array shape
     /*

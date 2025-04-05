@@ -17,7 +17,7 @@ namespace Scriptable::Entities {
         std::string m_group = "bullets";
         std::string m_targetGroup = "hostile";
 
-        std::vector<sf::Vector2f> m_vertices = {{0,50}, {50,50}, {25,0}};
+        std::vector<sf::Vector2f> m_vertices = {{0,0}, {0,20}, {20, 0}, {0, 20}, {20,20}, {20,0}, {20,0}, {20,20}, {30, 10}};
 
         static void deleteBulletCallback(Scriptable::Components::LifetimeComponent* c) {
             Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());

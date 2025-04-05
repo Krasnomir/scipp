@@ -2,7 +2,7 @@
 
 namespace Scriptable::Entities {
 
-    ParticleEntity::ParticleEntity(sf::Vector2f pos, float direction, float speed, float size, sf::Time lifetime) {
+    ParticleEntity::ParticleEntity(sf::Vector2f pos, float direction, float speed, float size, sf::Time lifetime, sf::Color color) {
 
         zindex = 1;
 
@@ -16,6 +16,7 @@ namespace Scriptable::Entities {
         rc->setPosition(pos);
         rc->setOrigin(rc->center());
         rc->setRotation(direction);
+        rc->setColor(color);
 
         m_direction = direction;
         m_speed = speed;

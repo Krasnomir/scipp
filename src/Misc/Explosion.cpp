@@ -6,13 +6,13 @@
 
 #include <Game.hpp>
 
-void explosion(sf::Vector2f position, int particleCount, float particleSize, float particleSpeed, float duration) {
+void explosion(sf::Vector2f position, int particleCount, float particleSize, float particleSpeed, float duration, sf::Color color) {
     static int id = 0;
 
     for(int i = 0; i < particleCount; i++) {
         float randomRotation = rand() % 360;
 
-        Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::ParticleEntity>("particle" + id, position, randomRotation, particleSpeed, particleSize, sf::milliseconds(duration));
+        Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::ParticleEntity>("particle" + id, position, randomRotation, particleSpeed, particleSize, sf::milliseconds(duration), color);
         id++;
     }
 }

@@ -61,8 +61,12 @@ namespace Scriptable::Components{
         void addCostume(std::string name, std::string path);
         void loadCostume(std::string name);
 
+        // both setAlpha() and setColor() apply the color values to all vertices
         void setAlpha(float alpha);
         int getAlpha();
+
+        void setColor(sf::Color color);
+        sf::Color getColor();
 
         // void rotationIndependentBoundingBox();
         void AABB();
@@ -86,6 +90,7 @@ namespace Scriptable::Components{
         sf::Texture m_texture;
 
         int m_alpha;
+        sf::Color m_color = {255, 255, 255};
 
         mutable std::shared_mutex m_costumesLock;
         std::unordered_map<std::string, sf::Texture> m_costumes;

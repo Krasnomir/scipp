@@ -29,7 +29,7 @@ namespace Scriptable::Entities {
         }
     
     public:
-        ParticleEntity(sf::Vector2f pos, float  direction, float speed, float size, sf::Time lifetime);
+        ParticleEntity(sf::Vector2f pos, float  direction, float speed, float size, sf::Time lifetime, sf::Color color);
         virtual ~ParticleEntity() = default;
 
         void fadeOut() {
