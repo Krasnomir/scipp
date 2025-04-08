@@ -21,6 +21,7 @@ namespace Scriptable::Components {
     public:
 
         float getHealth();
+        float getMaxHealth();
         void setHealth(float health);
 
         void setOnDeathCallback(std::function<void(HealthComponent*)> onDeath); 

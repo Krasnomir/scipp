@@ -42,6 +42,23 @@ namespace Scriptable::Components
         boundingBoxInit();
     }
 
+    void RenderComponent::setVertices(const std::vector<sf::Vector2f>& points){
+        if((points.size() % 3) != 0){
+            throw std::runtime_error("Invalid initalization of RenderComponent");
+        }
+
+        m_vertices = sf::VertexArray(sf::Triangles, points.size());
+        m_verticesCount = (int) points.size();
+
+        for(size_t i = 0; i < points.size(); i++){
+            m_vertices[i].position = points[i];
+            m_vertices[i].texCoords = points[i];
+            m_vertices[i].color = m_color;
+        }
+
+        boundingBoxInit();
+    }
+
     sf::Vector2f RenderComponent::center() {
         float xSum = 0;
         float ySum = 0;
@@ -129,6 +146,9 @@ namespace Scriptable::Components
         }
     }
 
+    void RenderComponent::setColor(sf::Color color, int index) {
+        m_vertices[index].color = color;
+    }
     sf::Color RenderComponent::getColor() {
         return m_color;
     }

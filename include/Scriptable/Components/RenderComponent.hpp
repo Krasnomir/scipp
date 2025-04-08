@@ -50,6 +50,8 @@ namespace Scriptable::Components{
 
         virtual ~RenderComponent() = default;
 
+        void setVertices(const std::vector<sf::Vector2f>& points);
+
         sf::Vector2f center();
 
         void setRotation(float angle);
@@ -66,6 +68,7 @@ namespace Scriptable::Components{
         int getAlpha();
 
         void setColor(sf::Color color);
+        void setColor(sf::Color color, int index);
         sf::Color getColor();
 
         // void rotationIndependentBoundingBox();

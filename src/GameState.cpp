@@ -12,6 +12,7 @@
 #include <Scriptable/Components/EnemyComponent.hpp>
 #include <Scriptable/Entities/TurretEntity.hpp>
 #include <Scriptable/Entities/BulletEntity.hpp>
+#include <Scriptable/Entities/HealthbarEntity.hpp>
 #include <Scriptable/UI/UI.hpp>
 
 #include <SFML/Graphics.hpp>
@@ -170,6 +171,7 @@ struct PlayerEntity : public Scriptable::Entity {
 			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
 
 			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 			enemy_ID++;
 		}
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
@@ -179,6 +181,7 @@ struct PlayerEntity : public Scriptable::Entity {
 			sf::Vector2f turretStartPosition = Util::movePoint(rc->getPosition(), 300, rc->getRotation());
 
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), turretStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
 			turret_ID++;
 		}
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::R) {

@@ -29,6 +29,10 @@ namespace Scriptable::Components {
         return m_health;
     }
 
+    float HealthComponent::getMaxHealth() {
+        return m_maxHealth;
+    }
+
     void HealthComponent::setHealth(float health) {
         float currentHealth = m_health;
         if(health <= currentHealth) m_timeWithoutDamage = sf::microseconds(0); // reset the time without taking damage if we took damage
