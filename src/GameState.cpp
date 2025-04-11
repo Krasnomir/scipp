@@ -13,208 +13,14 @@
 #include <Scriptable/Entities/TurretEntity.hpp>
 #include <Scriptable/Entities/BulletEntity.hpp>
 #include <Scriptable/Entities/HealthbarEntity.hpp>
+#include <Scriptable/Entities/PlayerEntity.hpp>
+#include <Scriptable/Entities/EnemyEntity.hpp>
 #include <Scriptable/UI/UI.hpp>
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 #include <cstdlib>
-
-
-struct EnemyEntity : public Scriptable::Entity {
-
-	float health = 100;
-	std::string groupName = "hostile";
-
-	std::vector<sf::Vector2f> vertices = {
-		{25,25}, {25,50}, {10,40}, 
-		{25,25}, {0,25}, {10,40},
-		{25,25}, {0,25}, {10,10},
-		{25,25}, {25,0}, {10,10},
-		{25,25}, {25,0}, {40,10},
-		{25,25}, {50,25}, {40,10},
-		{25,25}, {50,25}, {40,40},
-		{25,25}, {25,50}, {40,40},
-	};
-
-	static void deleteEnemyCallback(Scriptable::Components::HealthComponent* c) {
-		Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
-	}
-
-	EnemyEntity(sf::Vector2f pos) {
-		
-		addComponent<Scriptable::Components::RenderComponent>(vertices);
-		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
-		addComponent<Scriptable::Components::EnemyComponent>();
-		addComponent<Scriptable::Components::HealthComponent>(health);
-
-		auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-		auto* hc = getComponent<Scriptable::Components::HealthComponent>();
-
-		rc->setPosition(pos);
-		rc->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		rc->setColor(sf::Color(120, 177, 108));
-		hc->setOnDeathCallback(deleteEnemyCallback);
-
-		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
-
-	}
-
-	virtual ~EnemyEntity() = default;
-};
-
-struct PlayerEntity : public Scriptable::Entity {
-	float health = 100;
-	float regenPerSecond = 10;
-	float regenDelaySeconds = 5;
-	float bulletDistance = 50;
-
-	// dashing system variables
-	bool m_isDashing = false;
-	sf::Time m_dashDuration = sf::seconds(0.25);
-	sf::Time m_dashCooldown = sf::seconds(1);
-	sf::Time m_dashDurationTrack = sf::seconds(0);
-	sf::Time m_dashCooldownTrack = sf::seconds(0);
-	float m_dashSpeed = 10;
-
-	std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
-
-	virtual ~PlayerEntity() = default;
-
-	PlayerEntity() {
-		zindex = -1;
-
-		addComponent<Scriptable::Components::RenderComponent>(vertices);
-		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
-		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);
-
-		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "res/test.png", sf::IntRect({0,0, 398, 273}));
-		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
-
-		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "friendly");
-	}
-
-	void beforeRender(const Scriptable::EventData* data) {
-
-		handleDash(data);
-
-		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
-
-		float dashValue = 0;
-		if(m_isDashing) dashValue = m_dashSpeed;
-
-		// wasd movement
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
-			pc->velocity.direction = rc->getRotation();
-		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
-			pc->velocity.direction = rc->getRotation() - 180;
-		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
-			pc->velocity.direction = rc->getRotation() - 90;
-		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
-			pc->velocity.direction = rc->getRotation() + 90;
-		}
-		else {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = dashValue;
-			pc->velocity.direction = rc->getRotation();
-		}
-	}
-
-	void onMouseMoved(const Scriptable::EventData* data) {
-		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
-		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
-
-		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mousePos));
-	}
-
-	void onMouseButtonPressed(const Scriptable::EventData* data) {
-		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
-			static uint32_t proj_ID = 0;
-
-			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
-
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition);
-
-			proj_ID++;
-		}
-	}
-
-	void onKeyPressed(const Scriptable::EventData* data) {
-		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Z) {
-			auto* currentState = Scipp::globalGame->stateManager.currentState;
-			auto* player = currentState->getEntity("test1");
-
-			auto* closest = currentState->findClosestEntityFromGroup(player, "enemies");
-
-			if(closest != nullptr) {
-				currentState->removeEntityFromGroup(closest, "enemies");
-				currentState->softDeleteEntity(closest->getName());
-			}
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::E) {
-			static uint32_t enemy_ID = 0;
-
-			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
-
-			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
-			enemy_ID++;
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
-			static uint32_t turret_ID = 0;
-
-			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f turretStartPosition = Util::movePoint(rc->getPosition(), 300, rc->getRotation());
-
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), turretStartPosition);
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
-			turret_ID++;
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::R) {
-			auto* gamestate = (GameState*) Scipp::globalGame->stateManager.currentState;
-			gamestate->shakeCamera(10, 15);
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
-			dash();
-		}
-	}
-
-	void handleDash(const Scriptable::EventData* data) {
-		if(m_isDashing) {
-			if(m_dashDurationTrack >= m_dashDuration) {
-				m_dashDurationTrack = sf::seconds(0);
-				m_isDashing = false;
-			}
-			else {
-				m_dashDurationTrack += data->deltaTime;	
-			}
-		}
-
-		m_dashCooldownTrack += data->deltaTime;
-	}
-
-	void dash() {
-		if(m_dashCooldownTrack >= m_dashCooldown) {
-			m_isDashing = true;
-			m_dashCooldownTrack = sf::seconds(0);
-		}
-	}
-
-};
 
 void GameState::onWindowClosed(const Scriptable::EventData* data)
 {
@@ -258,14 +64,9 @@ struct test_uiobj : public Scriptable::UI::TextObject{
 
 
 void GameState::init()
-{
-
-	printf("Font: %d\n", Scriptable::UI::TextObject::loadFont("res/FreeMono.otf", "debug"));
-	
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("texttest");
-
-	
-	Scipp::globalGame->stateManager.currentState->addEntity<PlayerEntity>("test1");
+{	
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("texttest");	
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");
 }
 
 void GameState::shakeCamera(int minShake, int maxShake) {
