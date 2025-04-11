@@ -1,0 +1,4 @@
+TODO:
+
+lepsze formatowanie gui, bo teraz jak zmieniasz rozmiar okna to sie po prostu rozszerza
+nie wiem może jakieś constrainty zrobić żeby przylegało to krawędzi ekranu czy coś
