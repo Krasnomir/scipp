@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <limits>
 
 namespace Scriptable::Entities {
     HealthbarBackgroundEntity::HealthbarBackgroundEntity(std::vector<sf::Vector2f> vertices) {
@@ -12,6 +13,7 @@ namespace Scriptable::Entities {
         auto* rc = getComponent<Scriptable::Components::RenderComponent>();
         rc->setOrigin(rc->center());
         rc->setColor(sf::Color(255, 50, 50));
+        rc->setAlpha(HEALTHBAR_OPACITY);
     }
 
     HealthbarEntity::HealthbarEntity(std::string name, Scriptable::Entity* entity) {
@@ -33,6 +35,17 @@ namespace Scriptable::Entities {
             auto* rc = getComponent<Scriptable::Components::RenderComponent>();
             rc->setOrigin(rc->center());
             rc->setColor(sf::Color(100, 225, 50));
+            rc->setAlpha(HEALTHBAR_OPACITY);
+
+            // finds the width of the tracked entity's RenderComponent
+            float maxX = std::numeric_limits<float>::min();
+            float minX = std::numeric_limits<float>::max();
+            auto vertices = rc->getVertices();
+            for(size_t i = 0; i < vertices.getVertexCount(); i++) {
+                if(vertices[i].position.x > maxX) maxX = vertices[i].position.x;
+                if(vertices[i].position.x < minX) minX = vertices[i].position.x;
+            }
+            m_trackedEntityHalfWidth = (maxX - minX) / 2;
         }
     }
 
@@ -43,7 +56,7 @@ namespace Scriptable::Entities {
         auto* brc = m_backgroundEntity->getComponent<Scriptable::Components::RenderComponent>();
 
         auto rotation = m_trackedRenderComponent->getRotation()-90;
-        auto position = Util::movePoint(m_trackedRenderComponent->getPosition(), m_offset, rotation-90);
+        auto position = Util::movePoint(m_trackedRenderComponent->getPosition(), m_offset + m_trackedEntityHalfWidth, rotation-90);
 
         rc->setPosition(position);
         rc->setRotation(rotation);
@@ -57,6 +70,7 @@ namespace Scriptable::Entities {
             };
 
             rc->setVertices(vertices);
+            rc->setAlpha(HEALTHBAR_OPACITY);
         }
     }
 

@@ -126,7 +126,7 @@ namespace Scriptable::Components
         m_texture = m_costumes[name];
     }
 
-    void RenderComponent::setAlpha(float alpha) {
+    void RenderComponent::setAlpha(float alpha) { // values from 0 to 255
         m_alpha = alpha;
 
         for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {

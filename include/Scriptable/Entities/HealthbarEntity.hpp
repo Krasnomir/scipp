@@ -10,6 +10,8 @@
 
 namespace Scriptable::Entities {
 
+    static const int HEALTHBAR_OPACITY = 150;
+
     class HealthbarBackgroundEntity : public Scriptable::Entity 
     {
     public:
@@ -23,7 +25,8 @@ namespace Scriptable::Entities {
 
         float m_healthbarWidth = 50;
         float m_healthbarHeight = 10;
-        float m_offset = 20;
+        float m_offset = 10;
+        float m_trackedEntityHalfWidth = 0; // for offseting healthbars from the tracked entity's center
 
         float m_currentHealthbarWidth = m_healthbarWidth;
 
