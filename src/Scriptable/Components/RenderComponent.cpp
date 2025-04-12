@@ -143,6 +143,7 @@ namespace Scriptable::Components
 
         for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
             m_vertices[i].color = color;
+            m_vertices[i].color.a = m_alpha;
         }
     }
 

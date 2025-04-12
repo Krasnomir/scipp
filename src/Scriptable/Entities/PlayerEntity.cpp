@@ -9,8 +9,16 @@
 #include <Scriptable/Entities/BulletEntity.hpp>
 #include <Scriptable/Entities/HealthbarEntity.hpp>
 #include <Scriptable/Entities/EnemyEntity.hpp>
+#include <Scriptable/Entities/SimpleEntity.hpp>
+
+#include <iostream>
 
 namespace Scriptable::Entities {
+	sf::Color const PlayerEntity::DUMMY_COLOR_ALLOWED 	= sf::Color(80, 210, 80);
+	sf::Color const PlayerEntity::DUMMY_COLOR_FORBIDDEN = sf::Color(220, 70, 70);
+	short const PlayerEntity::DUMMY_COLOR_ALPHA 		= 150;
+	short const PlayerEntity::DUMMY_ZINDEX				= 10;
+
     PlayerEntity::PlayerEntity() {
         zindex = -1;
 
@@ -28,6 +36,7 @@ namespace Scriptable::Entities {
 	void PlayerEntity::beforeRender(const Scriptable::EventData* data) {
 
 		handleDash(data);
+		handleDummy();
 
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
 
@@ -70,6 +79,19 @@ namespace Scriptable::Entities {
 	}
 
 	void PlayerEntity::onMouseButtonPressed(const Scriptable::EventData* data) {
+		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Right) {
+			if(!(m_hasDummy && m_dummyAllowed)) return;
+
+			static uint32_t turret_ID = 0;
+
+			auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
+
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
+			turret_ID++;
+
+			cancelDummy();
+		}
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
 			static uint32_t proj_ID = 0;
 
@@ -83,6 +105,10 @@ namespace Scriptable::Entities {
 	}
 
 	void PlayerEntity::onKeyPressed(const Scriptable::EventData* data) {
+		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::E) {
+			requestDummy(m_dummy_type::turret);
+		}
+		/*
 		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Z) {
 			auto* currentState = Scipp::globalGame->stateManager.currentState;
 			auto* player = currentState->getEntity("test1");
@@ -121,6 +147,58 @@ namespace Scriptable::Entities {
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
 			dash();
 		}
+		*/
+	}
+
+	void PlayerEntity::requestDummy(int type) {
+		if(m_hasDummy) return;
+
+		auto* currentState = Scipp::globalGame->stateManager.currentState;
+
+		if(type == m_dummy_type::turret) {
+			currentState->addEntity<Scriptable::Entities::SimpleEntity>("dummy", m_dummy_vertices["turret"]);
+			m_dummy = currentState->getEntity("dummy");
+
+			m_dummy->zindex = DUMMY_ZINDEX;
+
+			auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
+
+			rc->setAlpha(100);
+			rc->setColor(DUMMY_COLOR_FORBIDDEN);
+		}
+
+		m_hasDummy = true;
+	}
+
+	void PlayerEntity::handleDummy() {
+		if(m_dummy != nullptr) {
+			auto* currentState = Scipp::globalGame->stateManager.currentState;
+			auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
+
+			// set the dummy's position to mouse position
+			rc->setPosition(currentState->M_camera.getMousePositionRelativeToCamera(true));
+
+			m_dummyAllowed = true;
+			std::vector<Entity*> friendly = currentState->getEntitiesFromGroup("friendly");
+			for(auto& friend1 : friendly) {
+				if(friend1->getComponent<Scriptable::Components::RenderComponent>()->isColliding(rc)) m_dummyAllowed = false;
+			}
+
+			if(m_dummyAllowed) {
+				rc->setColor(DUMMY_COLOR_ALLOWED);
+			}
+			else {
+				rc->setColor(DUMMY_COLOR_FORBIDDEN);
+			}
+		}
+	}
+
+	void PlayerEntity::cancelDummy() {
+		auto* currentState = Scipp::globalGame->stateManager.currentState;
+		currentState->softDeleteEntity("dummy");
+
+		m_dummy = nullptr;
+		m_hasDummy = false;
 	}
 
 	void PlayerEntity::handleDash(const Scriptable::EventData* data) {

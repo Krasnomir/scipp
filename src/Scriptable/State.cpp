@@ -213,6 +213,17 @@ namespace Scriptable{
 		return closestEntityYet;
 	}
 
+	std::vector<Entity*> State::getEntitiesFromGroup(std::string group) {
+		std::shared_lock<std::shared_mutex> readLock(m_groupsLock);
+
+		std::vector<Entity*> entities;
+		for(auto& entity : m_groups[group]) {
+			entities.push_back(entity);
+		}
+
+		return entities;
+	}
+
 	State::~State()
 	{
 		std::unique_lock<std::shared_mutex> entityWriteLock(M_entityMapLock);

@@ -10,7 +10,7 @@ namespace Scriptable::Entities {
 		addComponent<Scriptable::Components::HealthComponent>(m_health);
 
         auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-		rc->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
+		rc->setOrigin(rc->center());
 		rc->setPosition(pos);
         rc->setColor(sf::Color(116, 188, 218));
 

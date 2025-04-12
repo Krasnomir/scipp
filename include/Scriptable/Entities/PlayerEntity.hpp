@@ -9,6 +9,30 @@
 
 namespace Scriptable::Entities {
     class PlayerEntity : public Scriptable::Entity {
+        // PLACEMENT SYSTEM
+        // defined in the .cpp file
+        static const sf::Color    DUMMY_COLOR_ALLOWED;
+        static const sf::Color    DUMMY_COLOR_FORBIDDEN;
+        static const short        DUMMY_COLOR_ALPHA;
+        static const short        DUMMY_ZINDEX;
+
+        enum m_dummy_type {
+            turret
+        };
+        std::map<std::string, std::vector<sf::Vector2f>> m_dummy_vertices {
+            {"turret",  {
+                {0,0}, {0,40}, {40,0}, 
+                {0,40}, {40,40}, {40,0}, 
+                {0,40}, {0,0}, {-10,20},
+                {40,40}, {0,40}, {20,50},
+                {40,40}, {40,0}, {70,20},
+                {0,0}, {40,0}, {20,-10},
+            }}
+        };
+        Entity* m_dummy = nullptr;
+        bool m_hasDummy = false;
+        bool m_dummyAllowed = false;
+
         float health = 100;
         float regenPerSecond = 10;
         float regenDelaySeconds = 5;
@@ -32,6 +56,12 @@ public:
         void onKeyPressed(const Scriptable::EventData* data);
         void onMouseMoved(const Scriptable::EventData* data);
         void onMouseButtonPressed(const Scriptable::EventData* data);
+        
+        // placement system
+        void requestDummy(int type);
+        void handleDummy();
+        void cancelDummy();
+
         void handleDash(const Scriptable::EventData* data);
         void dash();
     };

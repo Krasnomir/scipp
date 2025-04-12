@@ -92,7 +92,7 @@ namespace Scriptable::Components{
         sf::VertexArray m_vertices;
         sf::Texture m_texture;
 
-        int m_alpha;
+        int m_alpha = 255;
         sf::Color m_color = {255, 255, 255};
 
         mutable std::shared_mutex m_costumesLock;

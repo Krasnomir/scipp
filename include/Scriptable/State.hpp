@@ -26,6 +26,7 @@ namespace Scriptable{
 		void addEntityToGroup(Entity* entity, std::string group);
 		void removeEntityFromGroup(Entity* entity, std::string group);
 		Entity* findClosestEntityFromGroup(Entity* finder, std::string group);
+		std::vector<Entity*> getEntitiesFromGroup(std::string group);
 
 		virtual void init();
 
