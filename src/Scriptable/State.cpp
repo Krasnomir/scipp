@@ -224,6 +224,18 @@ namespace Scriptable{
 		return entities;
 	}
 
+	std::vector<Entity*> State::getEntities() {
+		std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);
+
+		std::vector<Entity*> entities;
+
+		for(auto& [name, entity] : M_entityMap) {
+			entities.push_back(entity);
+		}
+
+		return entities;
+	}
+
 	State::~State()
 	{
 		std::unique_lock<std::shared_mutex> entityWriteLock(M_entityMapLock);

@@ -5,6 +5,12 @@
 #include <limits>
 
 namespace Scriptable::Entities {
+
+    const int HealthbarEntity::HEALTHBAR_OPACITY = 150;
+    const int HealthbarEntity::HEALTHBAR_OFFSET = 20;
+    const int HealthbarEntity::HEALTHBAR_WIDTH = 50;
+    const int HealthbarEntity::HEALTHBAR_HEIGHT = 10;
+
     HealthbarBackgroundEntity::HealthbarBackgroundEntity(std::vector<sf::Vector2f> vertices) {
         zindex = 4;
 
@@ -13,7 +19,7 @@ namespace Scriptable::Entities {
         auto* rc = getComponent<Scriptable::Components::RenderComponent>();
         rc->setOrigin(rc->center());
         rc->setColor(sf::Color(255, 50, 50));
-        rc->setAlpha(HEALTHBAR_OPACITY);
+        rc->setAlpha(HealthbarEntity::HEALTHBAR_OPACITY);
     }
 
     HealthbarEntity::HealthbarEntity(std::string name, Scriptable::Entity* entity) {
@@ -50,13 +56,13 @@ namespace Scriptable::Entities {
     }
 
     void HealthbarEntity::update() {
-        float healthWidth = (std::round(m_trackedHealthComponent->getHealth()) / std::round(m_trackedHealthComponent->getMaxHealth())) * m_healthbarWidth;
+        float healthWidth = (std::round(m_trackedHealthComponent->getHealth()) / std::round(m_trackedHealthComponent->getMaxHealth())) * HEALTHBAR_WIDTH;
         
         auto* rc = getComponent<Scriptable::Components::RenderComponent>();
         auto* brc = m_backgroundEntity->getComponent<Scriptable::Components::RenderComponent>();
 
         auto rotation = m_trackedRenderComponent->getRotation()-90;
-        auto position = Util::movePoint(m_trackedRenderComponent->getPosition(), m_offset + m_trackedEntityHalfWidth, rotation-90);
+        auto position = Util::movePoint(m_trackedRenderComponent->getPosition(), HEALTHBAR_OFFSET + m_trackedEntityHalfWidth, rotation-90);
 
         rc->setPosition(position);
         rc->setRotation(rotation);
@@ -65,8 +71,8 @@ namespace Scriptable::Entities {
 
         if(healthWidth != m_currentHealthbarWidth) {
             std::vector<sf::Vector2f> vertices = {
-                {0,0}, {healthWidth, 0}, {0, m_healthbarHeight},
-                {0, m_healthbarHeight}, {healthWidth, m_healthbarHeight}, {healthWidth, 0},
+                {0,0}, {healthWidth, 0}, {0, HEALTHBAR_HEIGHT},
+                {0, HEALTHBAR_HEIGHT}, {healthWidth, HEALTHBAR_HEIGHT}, {healthWidth, 0},
             };
 
             rc->setVertices(vertices);

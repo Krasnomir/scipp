@@ -28,6 +28,8 @@ namespace Scriptable{
 		Entity* findClosestEntityFromGroup(Entity* finder, std::string group);
 		std::vector<Entity*> getEntitiesFromGroup(std::string group);
 
+		std::vector<Entity*> getEntities();
+
 		virtual void init();
 
 		void initCamera();

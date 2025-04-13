@@ -10,8 +10,6 @@
 
 namespace Scriptable::Entities {
 
-    static const int HEALTHBAR_OPACITY = 150;
-
     class HealthbarBackgroundEntity : public Scriptable::Entity 
     {
     public:
@@ -23,16 +21,13 @@ namespace Scriptable::Entities {
     {
         bool m_toBeDeleted = false;
 
-        float m_healthbarWidth = 50;
-        float m_healthbarHeight = 10;
-        float m_offset = 10;
         float m_trackedEntityHalfWidth = 0; // for offseting healthbars from the tracked entity's center
 
-        float m_currentHealthbarWidth = m_healthbarWidth;
+        float m_currentHealthbarWidth = HEALTHBAR_WIDTH; // width of the green bar that indicates the ammount of health (over the red background bar that has static width)
 
         std::vector<sf::Vector2f> m_vertices = {
-            {0,0}, {(float)m_healthbarWidth, 0}, {0, (float)m_healthbarHeight},
-            {0, (float)m_healthbarHeight}, {(float)m_healthbarWidth, (float)m_healthbarHeight}, {(float)m_healthbarWidth, 0}
+            {0,0}, {(float)HEALTHBAR_WIDTH, 0}, {0, (float)HEALTHBAR_HEIGHT},
+            {0, (float)HEALTHBAR_HEIGHT}, {(float)HEALTHBAR_WIDTH, (float)HEALTHBAR_HEIGHT}, {(float)HEALTHBAR_WIDTH, 0}
         };
 
         HealthbarBackgroundEntity* m_backgroundEntity = nullptr;
@@ -41,6 +36,12 @@ namespace Scriptable::Entities {
         Scriptable::Components::HealthComponent* m_trackedHealthComponent = nullptr;
 
     public:
+
+        static const int HEALTHBAR_OPACITY;
+        static const int HEALTHBAR_OFFSET;
+        static const int HEALTHBAR_WIDTH;
+        static const int HEALTHBAR_HEIGHT;
+
         HealthbarEntity(std::string name, Scriptable::Entity* entity);
         virtual ~HealthbarEntity() = default;
 

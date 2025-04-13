@@ -1,3 +1,4 @@
+#include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Entities/TurretEntity.hpp>
 #include <Scriptable/Entities/BulletEntity.hpp>
 #include <GameState.hpp>
@@ -13,6 +14,10 @@ namespace Scriptable::Entities {
 		rc->setOrigin(rc->center());
 		rc->setPosition(pos);
         rc->setColor(sf::Color(116, 188, 218));
+
+        addComponent<Scriptable::Components::PhysicsComponent>(rc);
+        auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+        pc->collidable = true;
 
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteTurretCallback);
 

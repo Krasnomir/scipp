@@ -10,6 +10,9 @@ namespace Scriptable::Components {
         RenderComponent* m_renderComponent;
 
     public:
+
+        bool collidable = false;
+        
         struct Velocity {
             float magnitude = 0;
             float direction = 0;
