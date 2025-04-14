@@ -66,9 +66,12 @@ namespace Scriptable{
 
 		return false;
 	}
+	UI::Object* State::getUIObject(const std::string& objectName){
+		
+		return M_uiMap.contains(objectName) ? M_uiMap[objectName] : 0;
+	}
 
 	bool State::hasUIObject(const std::string& objectName) const noexcept{
-		std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
 
 		for (auto& [name, entity] : M_uiMap)
 		{

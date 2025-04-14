@@ -54,21 +54,32 @@ GameState::GameState()
 	initCamera();
 }
 
-struct test_uiobj : public Scriptable::UI::TextObject{
-	test_uiobj() : TextObject("debug"){
-		Text::setPosition({100,100});
-		Text::setString("hello world");
+struct test_iobj : public Scriptable::UI::Rect{
+	test_iobj() : Rect(sf::FloatRect({0,0}, {0.1, 0.1})){
+
 	}
 };
 
 
+struct test_uiobj : public Scriptable::UI::Rect{
+	test_uiobj() : Rect(sf::FloatRect({0.3,0.3}, {0.1, 0.1})){
+		this->setAttachmentTarget("textobj2", {Scriptable::UI::Object::AttachmentPoint::TOPRIGHT, {}});
+	}
+};
+
 
 void GameState::init()
 {	
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("texttest");	
-	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");
-}
+	Scriptable::UI::TextObject::loadFont(Util::getPathToResource("FreeMono.otf"), "font");
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj2");
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj");
 
+	
+
+
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");
+
+}
 void GameState::shakeCamera(int minShake, int maxShake) {
 	if(m_isGoingBack || m_isTilting) return; // prevents two shakes from happening at the same time
 

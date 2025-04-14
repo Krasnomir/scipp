@@ -1,5 +1,4 @@
 #define _USE_MATH_DEFINES
-
 #include <Util.hpp>
 
 #include <SFML/Graphics.hpp>
@@ -7,6 +6,22 @@
 #include <math.h>
 
 namespace Util {
+    std::filesystem::path resourceDirectory = "./res/";
+    
+    bool setResourceDirectory(const std::filesystem::path& path){
+        if(!std::filesystem::is_directory(path)){
+            return false;
+        }
+
+        resourceDirectory = path;
+        return true;
+    }
+
+    //returns resourceDirectory + resPath
+    std::filesystem::path getPathToResource(const std::string& resPath){
+        return (resourceDirectory / resPath); 
+    }
+
 	sf::Vector2f movePoint(const sf::Vector2f& position, double distance, double angleDegrees) {
         // Convert the angle from degrees to radians
         float angleRadians = angleDegrees * M_PI / 180.0;

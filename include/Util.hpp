@@ -3,8 +3,11 @@
 
 #include <cmath>
 #include <random>
+#include <filesystem>
 #include <sstream>
 
+
+// [WARNING]: functions in ::Util may be thread-unsafe
 namespace Util {
     struct Triangle {
         sf::Vector2f a;
@@ -17,6 +20,11 @@ namespace Util {
     float getDistanceBetweenPoints(const sf::Vector2f& position1, const sf::Vector2f& position2);
     float getTriangleArea(const Triangle& t);
     bool isInTriangle(const Triangle& triangle, const sf::Vector2f& point);
+
+    bool setResourceDirectory(const std::filesystem::path& path);
+
+    //returns resourceDirectory + resPath
+    std::filesystem::path getPathToResource(const std::string& resPath);
 
     template <typename T>
     T numToAngle(T num) {

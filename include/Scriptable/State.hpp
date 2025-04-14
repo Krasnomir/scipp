@@ -79,6 +79,7 @@ namespace Scriptable{
 
 		template<Scriptable::UI::DerivedUIObject T, class ... Args>
 		inline bool addUIObject(const std::string& objectName, Args ... args){
+			std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
 			if(M_uiMap.contains(objectName)) return false;
 
 			T* newObject = new T(args...);
@@ -89,6 +90,8 @@ namespace Scriptable{
 
 		template<Scriptable::UI::DerivedUIObject T>
 		inline bool addUIObject(const std::string& objectName){
+			std::unique_lock<std::shared_mutex> writeLock(M_uiMapLock);
+
 			if(M_uiMap.contains(objectName)) return false;
 
 			T* newObject = new T();
@@ -97,6 +100,7 @@ namespace Scriptable{
 			return true;
 		}
 
+		UI::Object* getUIObject(const std::string& objectName);
 
 		bool hasUIObject(const std::string& objectName) const noexcept;
 

@@ -27,7 +27,7 @@ namespace Scriptable::Entities {
 		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", "res/test.png", sf::IntRect({0,0, 398, 273}));
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", Util::getPathToResource("test.png"), sf::IntRect({0,0, 398, 273}));
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 
 		getComponent<Scriptable::Components::PhysicsComponent>()->collidable = true;
