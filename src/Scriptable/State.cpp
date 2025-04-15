@@ -6,6 +6,7 @@
 #include <iostream>
 #include <limits>
 #include <algorithm>
+#include <queue>
 
 namespace Scriptable{
 	bool compareZIndexes(const Entity* a, const Entity* b) {
@@ -49,11 +50,22 @@ namespace Scriptable{
 		data.currentState = this;
 		data.targetWindow = target;
 
+		std::vector<UI::Object*> drawQueue;
+
 		for (auto& [name, uiobj] : M_uiMap)
 		{
-			uiobj->draw_to_screen(&data);
+			drawQueue.push_back(uiobj);
 		}
 
+
+		std::sort(drawQueue.begin(), drawQueue.end(), [](UI::Object* a, UI::Object* b) {
+			return a->getLayer() < b->getLayer();
+		});
+	
+		for(auto * obj : drawQueue){
+			obj->draw_to_screen(&data);
+		}
+		
 	}
 
 	bool State::hasEntity(const std::string& entityName) const noexcept{

@@ -71,13 +71,23 @@ namespace Util {
 
     shape_t CreateRectangle(sf::FloatRect rect){
         Triangle a,b;
-        a.a = {rect.left, rect.top};
-        a.b = {rect.left, rect.top + rect.height};
-        a.c = {rect.left + rect.width, rect.top + rect.height};
-        
+
+        //Center is set to 0,0
+
+        /*
+        left,top -> is the center
+        */
+
+        float halfWidth = rect.width / 2.f;
+        float halfHeight = rect.height / 2.f;
+
+        a.a = {-halfWidth, -halfHeight};
+        a.b = {-halfWidth, halfHeight};
+        a.c = {halfWidth, halfHeight};
+
         b.a = a.c;
         b.b = a.a;
-        b.c = {rect.left + rect.width, rect.top};
+        b.c = {halfWidth, -halfHeight}; 
 
         return std::vector<sf::Vector2f>{a.a, a.b, a.c, b.a, b.b, b.c};
     }

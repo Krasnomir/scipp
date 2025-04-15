@@ -78,7 +78,8 @@ namespace Scriptable::Entities {
 		auto mousePos = Scipp::globalGame->stateManager.currentState->M_camera.getMousePositionRelativeToCamera(true);
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
-		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mousePos));
+
+		// renderCmponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mousePos));
 	}
 
 	void PlayerEntity::onMouseButtonPressed(const Scriptable::EventData* data) {

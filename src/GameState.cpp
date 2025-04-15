@@ -55,15 +55,16 @@ GameState::GameState()
 }
 
 struct test_iobj : public Scriptable::UI::Rect{
-	test_iobj() : Rect(sf::FloatRect({0,0}, {0.1, 0.1})){
-
+	test_iobj() : Rect(sf::FloatRect({0.5,0.5}, {0.8, 0.8})){
+		this->m_RenderComponent->setColor(sf::Color::Red);
 	}
 };
 
 
 struct test_uiobj : public Scriptable::UI::Rect{
-	test_uiobj() : Rect(sf::FloatRect({0.3,0.3}, {0.1, 0.1})){
-		this->setAttachmentTarget("textobj2", {Scriptable::UI::Object::AttachmentPoint::TOPRIGHT, {}});
+	test_uiobj() : Rect(sf::FloatRect({0,0}, {0.1, 0.1})){
+		this->setAttachmentTarget("textobj", {Scriptable::UI::Object::AttachmentPoint::TOPRIGHT, {}});
+		this->setLayer(1);
 	}
 };
 
@@ -71,10 +72,9 @@ struct test_uiobj : public Scriptable::UI::Rect{
 void GameState::init()
 {	
 	Scriptable::UI::TextObject::loadFont(Util::getPathToResource("FreeMono.otf"), "font");
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj2");
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj");
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
 
-	
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj2");
 
 
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");

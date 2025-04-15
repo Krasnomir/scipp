@@ -2,11 +2,21 @@
 #include <Scriptable/State.hpp>
 #include <Util.hpp>
 #include <Game.hpp>
+#include <Input/Input.hpp>
 
 namespace Scriptable::UI{
     Object::~Object(){
         if(m_RenderComponent) delete m_RenderComponent;
     }
+
+    void Object::setLayer(int Layer){
+        m_Layer = Layer;
+    }
+    
+    int Object::getLayer() const{
+        return m_Layer;
+    }
+
 
 
     bool Object::setAttachmentTarget(const std::string& target, AttachmentPoint point){
@@ -60,7 +70,6 @@ namespace Scriptable::UI{
 
         }
         else{
-            if(m_RenderComponent) m_RenderComponent->setPosition({0,0});
             
         }
 

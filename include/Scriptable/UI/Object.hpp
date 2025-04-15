@@ -34,12 +34,16 @@ namespace Scriptable::UI
 
         virtual void draw_to_screen(Scriptable::EventData* e);
 
+        int getLayer() const;
+        void setLayer(int layer);
         
     protected:
         Components::RenderComponent* m_RenderComponent = 0;
     private:
         std::string m_Target = "";
         AttachmentPoint m_Point;
+
+        int m_Layer = 0;
 };
 
     template<class T>
