@@ -6,6 +6,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 
 #include <vector>
 #include <string>
@@ -109,8 +110,14 @@ namespace Scriptable{
 
 		void softDeleteUIObject(const std::string& objectName);
 
+		void addSound(std::string path, std::string name);
+		void removeSound(std::string name);
+		void playSound(std::string name);
 
 	private:
+		mutable std::shared_mutex m_soundsLock;
+		std::map<std::string, sf::Sound> m_sounds;
+
 		mutable std::shared_mutex M_entityMapLock; // mutable means can be modified from a const function
 		//every entity has a name (like in unity), only for internal use, please refer to the get/set methods for external use
 		std::unordered_map<std::string, Scriptable::Entity*> M_entityMap;

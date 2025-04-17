@@ -75,6 +75,7 @@ void GameState::init()
 	//Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
 	//Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj2");
 
+	addSound("pop.mp3", "pop");
 
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");
 

@@ -251,6 +251,36 @@ namespace Scriptable{
 		return entities;
 	}
 
+	void State::addSound(std::string path, std::string name) {
+
+		std::unique_lock<std::shared_mutex> soundWriteLock(m_soundsLock);
+
+		sf::SoundBuffer* buff = new sf::SoundBuffer();
+		std::string fullPath = Util::getPathToResource(path);
+
+		if(!buff->loadFromFile(fullPath)) {
+			std::cerr << "Failed to load the resource at " + fullPath + " to a sound buffer" << "\n";
+		}
+
+		m_sounds[name] = sf::Sound();
+		m_sounds[name].setBuffer(*buff);
+	}
+
+	void State::removeSound(std::string name) {
+
+		std::unique_lock<std::shared_mutex> soundWriteLock(m_soundsLock);
+
+		delete m_sounds[name].getBuffer();
+		m_sounds.erase(name);
+	}
+
+	void State::playSound(std::string name) {
+
+		std::shared_lock<std::shared_mutex> soundReadLock(m_soundsLock);
+
+		m_sounds[name].play();
+	}
+
 	State::~State()
 	{
 		std::unique_lock<std::shared_mutex> entityWriteLock(M_entityMapLock);

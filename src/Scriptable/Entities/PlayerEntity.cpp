@@ -93,8 +93,8 @@ namespace Scriptable::Entities {
 
 				auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
 
-				Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
-				Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
+				data->currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
+				data->currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
 				turret_ID++;
 
 				m_inventory[ItemEntity::Item::steel]--;
@@ -103,6 +103,8 @@ namespace Scriptable::Entities {
 			cancelDummy();
 		}
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
+			data->currentState->playSound("pop");
+
 			static uint32_t proj_ID = 0;
 
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
