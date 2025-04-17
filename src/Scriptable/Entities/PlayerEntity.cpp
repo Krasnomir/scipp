@@ -41,6 +41,8 @@ namespace Scriptable::Entities {
 		handleDash(data);
 		handleDummy();
 
+		handleItems(data);
+
 		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
 
 		float dashValue = 0;
@@ -79,20 +81,24 @@ namespace Scriptable::Entities {
 		auto* renderComponent = getComponent<Scriptable::Components::RenderComponent>();
 
 
-		// renderCmponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mousePos));
+		renderComponent->setRotation(Util::getAngleBetweenPoints(renderComponent->getPosition(), mousePos));
 	}
 
 	void PlayerEntity::onMouseButtonPressed(const Scriptable::EventData* data) {
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Right) {
 			if(!(m_hasDummy && m_dummyAllowed)) return;
 
-			static uint32_t turret_ID = 0;
+			if(m_inventory[ItemEntity::Item::steel] >= 1) {
+				static uint32_t turret_ID = 0;
 
-			auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
+				auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
 
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
-			turret_ID++;
+				Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
+				Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
+				turret_ID++;
+
+				m_inventory[ItemEntity::Item::steel]--;
+			}
 
 			cancelDummy();
 		}
@@ -111,6 +117,16 @@ namespace Scriptable::Entities {
 	void PlayerEntity::onKeyPressed(const Scriptable::EventData* data) {
 		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::E) {
 			requestDummy(m_dummy_type::turret);
+		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
+			static uint32_t enemy_ID = 0;
+
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
+
+			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+			enemy_ID++;
 		}
 		/*
 		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Z) {
@@ -223,6 +239,22 @@ namespace Scriptable::Entities {
 		if(m_dashCooldownTrack >= m_dashCooldown) {
 			m_isDashing = true;
 			m_dashCooldownTrack = sf::seconds(0);
+		}
+	}
+
+	void PlayerEntity::handleItems(const Scriptable::EventData* data) {
+		auto items = data->currentState->getEntitiesFromGroup("items");
+
+		auto* player_rc = getComponent<Scriptable::Components::RenderComponent>();
+
+		for(auto const& item : items) {
+			auto* item_rc = item->getComponent<Scriptable::Components::RenderComponent>();
+			
+			if(item_rc->isColliding(player_rc)) {
+				m_inventory[((Scriptable::Entities::ItemEntity*)item)->itemType]++;
+
+				data->currentState->softDeleteEntity(item->getName());
+			}
 		}
 	}
 }

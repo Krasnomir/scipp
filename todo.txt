@@ -1,4 +1,7 @@
 TODO:
 
-lepsze formatowanie gui, bo teraz jak zmieniasz rozmiar okna to sie po prostu rozszerza
-nie wiem może jakieś constrainty zrobić żeby przylegało to krawędzi ekranu czy coś
+gui do inventory (masz w PlayerEntity),
+entycja pułapki,
+trzeba sie pospieszyć bo mamy tylko 2 tygodnie
+
+jak ty wgl commity robisz nie mając dostępu do żadnego komunikatora?

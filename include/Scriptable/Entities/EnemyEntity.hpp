@@ -3,6 +3,8 @@
 
 #include <Scriptable/Entity.hpp>
 
+#include <Scriptable/Entities/ItemEntity.hpp>
+
 #include <Scriptable/Components/HealthComponent.hpp>
 
 #include <Game.hpp>
@@ -24,7 +26,21 @@ namespace Scriptable::Entities {
         };
 
         static void deleteEnemyCallback(Scriptable::Components::HealthComponent* c) {
-            Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+
+            using namespace Scriptable::Entities;
+            using namespace Scriptable::Components;
+
+            static uint32_t item_id = 0;
+
+            auto* entity = (Entity*)c->parentEntity;
+            auto* rc = entity->getComponent<RenderComponent>();
+
+            auto* currentState = Scipp::globalGame->stateManager.currentState;
+
+            currentState->addEntity<ItemEntity>("item_" + item_id, ItemEntity::Item::steel, rc->getPosition());
+            currentState->softDeleteEntity(entity->getName());
+
+            ++item_id;
         }
 
 public:

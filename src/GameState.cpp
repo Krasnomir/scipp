@@ -72,9 +72,8 @@ struct test_uiobj : public Scriptable::UI::Rect{
 void GameState::init()
 {	
 	Scriptable::UI::TextObject::loadFont(Util::getPathToResource("FreeMono.otf"), "font");
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
-
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj2");
+	//Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
+	//Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj2");
 
 
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");

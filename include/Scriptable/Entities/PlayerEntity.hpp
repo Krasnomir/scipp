@@ -2,6 +2,7 @@
 #define PLAYER_ENTITY
 
 #include <Scriptable/Entity.hpp>
+#include <Scriptable/Entities/ItemEntity.hpp>
 
 #include <SFML/System.hpp>
 
@@ -48,6 +49,8 @@ namespace Scriptable::Entities {
 
         std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
 
+        std::map<ItemEntity::Item, int> m_inventory;
+
 public:
         virtual ~PlayerEntity() = default;
         PlayerEntity();
@@ -64,6 +67,8 @@ public:
 
         void handleDash(const Scriptable::EventData* data);
         void dash();
+
+        void handleItems(const Scriptable::EventData* data);
     };
     
 }
