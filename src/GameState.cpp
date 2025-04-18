@@ -22,6 +22,45 @@
 #include <iostream>
 #include <cstdlib>
 
+const sf::Time GameState::WAVE_INTERVAL = sf::seconds(10);
+const int GameState::WAVE_SPAWN_AREA_OFFSET = 1000;
+
+void GameState::handleWaves(const Scriptable::EventData* data) {
+	using namespace Scriptable::Entities;
+	if(m_waveCooldown <= sf::seconds(0)) {
+		m_waveCooldown = WAVE_INTERVAL;
+
+		for(short i = 0; i < 10; i++) {
+			int randomType = rand() % 8 + 1;
+
+			int randomX = rand() % 500 - 250;
+			int randomY = rand() % 500 - 250;
+
+			static uint32_t enemy_ID = 0;
+
+			std::string enemyName = "enemy" + std::to_string(enemy_ID);
+
+			if(randomType == 1) {
+				data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::tank);
+				data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+			}
+			else if(randomType == 2) {
+				data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::speedy);
+				data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+			}
+			else {
+				data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::normal);
+				data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+			}
+
+			enemy_ID++;
+		}
+	}
+	else {
+		m_waveCooldown -= data->deltaTime;
+	}
+}
+
 void GameState::onWindowClosed(const Scriptable::EventData* data)
 {
 	data->targetWindow->close();
@@ -47,6 +86,7 @@ void GameState::cameraFollow() {
 void GameState::onRender(const Scriptable::EventData* data) {
 	cameraFollow();
 	handleCameraShake(data->deltaTime);
+	handleWaves(data);
 }
 
 GameState::GameState()

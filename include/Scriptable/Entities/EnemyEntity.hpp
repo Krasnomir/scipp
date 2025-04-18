@@ -10,7 +10,27 @@
 #include <Game.hpp>
 
 namespace Scriptable::Entities {
+    struct EnemyTypeInfo {
+        std::vector<sf::Vector2f> vertices;
+        int health;
+        int speed;
+        int damage;
+        sf::Color color;
+    };
+
     class EnemyEntity : public Scriptable::Entity {
+
+public:
+        enum Type {
+            normal,
+            speedy,
+            tank
+        };
+
+private:
+
+        static const std::map<Type, EnemyTypeInfo> TYPE_INFO;
+
         float health = 100;
         std::string groupName = "hostile";
 
@@ -22,7 +42,7 @@ namespace Scriptable::Entities {
             {25,25}, {25,0}, {40,10},
             {25,25}, {50,25}, {40,10},
             {25,25}, {50,25}, {40,40},
-            {25,25}, {25,50}, {40,40},
+            {25,25}, {25,50}, {40,40}
         };
 
         static void deleteEnemyCallback(Scriptable::Components::HealthComponent* c) {
@@ -43,9 +63,9 @@ namespace Scriptable::Entities {
             ++item_id;
         }
 
-public:
+    public:
 
-        EnemyEntity(sf::Vector2f pos);
+        EnemyEntity(sf::Vector2f pos, Type type);
         virtual ~EnemyEntity() = default;
     };
 }

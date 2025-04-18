@@ -21,6 +21,11 @@ class GameState : public Scriptable::State
 	bool m_isTilting = false;
 	bool m_isGoingBack = false;
 
+	static const sf::Time 	WAVE_INTERVAL;
+	static const int 		WAVE_SPAWN_AREA_OFFSET;
+
+	sf::Time m_waveCooldown = sf::seconds(0);
+
 public:
 	GameState();
 
@@ -35,4 +40,6 @@ public:
 	void shakeCamera(int minShake, int maxShake);
 	void handleCameraShake(sf::Time deltaTime);
 	void handleDash(sf::Time deltaTime);
+
+	void handleWaves(const Scriptable::EventData* data);
 };

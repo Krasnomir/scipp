@@ -42,10 +42,10 @@ namespace Scriptable::Entities {
         // dashing system variables
         bool m_isDashing = false;
         sf::Time m_dashDuration = sf::seconds(0.1);
-        sf::Time m_dashCooldown = sf::seconds(5);
+        sf::Time m_dashCooldown = sf::seconds(2);
         sf::Time m_dashDurationTrack = sf::seconds(0);
         sf::Time m_dashCooldownTrack = sf::seconds(0);
-        float m_dashSpeed = 50;
+        float m_dashSpeed = 20;
 
         std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
 

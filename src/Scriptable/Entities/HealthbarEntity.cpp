@@ -42,6 +42,7 @@ namespace Scriptable::Entities {
             rc->setOrigin(rc->center());
             rc->setColor(sf::Color(100, 225, 50));
             rc->setAlpha(HEALTHBAR_OPACITY);
+            rc->setPosition(m_trackedRenderComponent->getPosition());
 
             // finds the width of the tracked entity's RenderComponent
             float maxX = std::numeric_limits<float>::min();

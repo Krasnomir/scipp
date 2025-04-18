@@ -13,12 +13,14 @@ namespace Scriptable::Components {
         sf::Time m_cooldown = sf::seconds(1);
         sf::Time m_cooldownTracker = sf::microseconds(0);
 
+        float m_speed = 0;
+
     public:
 
         float damage = 20;
         float reach = 50;
 
-        EnemyComponent();
+        EnemyComponent(int speed);
         virtual ~EnemyComponent() = default;
 
         void setCooldown(float cooldownSeconds);

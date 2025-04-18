@@ -35,7 +35,7 @@ namespace Scriptable::Components {
                 }
             }
             else {
-                entity_pc->velocity.magnitude = 1;
+                entity_pc->velocity.magnitude = m_speed;
             }
         }
     }
@@ -48,5 +48,7 @@ namespace Scriptable::Components {
         return m_cooldown.asSeconds();
     }
 
-    EnemyComponent::EnemyComponent() {}
+    EnemyComponent::EnemyComponent(int speed) {
+        m_speed = speed;
+    }
 }

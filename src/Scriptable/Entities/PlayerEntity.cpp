@@ -103,8 +103,6 @@ namespace Scriptable::Entities {
 			cancelDummy();
 		}
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
-			data->currentState->playSound("pop");
-
 			static uint32_t proj_ID = 0;
 
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
@@ -126,50 +124,13 @@ namespace Scriptable::Entities {
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::tank);
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 			enemy_ID++;
-		}
-		/*
-		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Z) {
-			auto* currentState = Scipp::globalGame->stateManager.currentState;
-			auto* player = currentState->getEntity("test1");
-
-			auto* closest = currentState->findClosestEntityFromGroup(player, "enemies");
-
-			if(closest != nullptr) {
-				currentState->removeEntityFromGroup(closest, "enemies");
-				currentState->softDeleteEntity(closest->getName());
-			}
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::E) {
-			static uint32_t enemy_ID = 0;
-
-			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
-
-			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition);
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
-			enemy_ID++;
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
-			static uint32_t turret_ID = 0;
-
-			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f turretStartPosition = Util::movePoint(rc->getPosition(), 300, rc->getRotation());
-
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), turretStartPosition);
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
-			turret_ID++;
-		}
-		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::R) {
-			//auto* gamestate = (GameState*) Scipp::globalGame->stateManager.currentState;
-			//gamestate->shakeCamera(10, 15);
 		}
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
 			dash();
 		}
-		*/
 	}
 
 	void PlayerEntity::requestDummy(int type) {
@@ -253,6 +214,8 @@ namespace Scriptable::Entities {
 			auto* item_rc = item->getComponent<Scriptable::Components::RenderComponent>();
 			
 			if(item_rc->isColliding(player_rc)) {
+				data->currentState->playSound("pop");
+
 				m_inventory[((Scriptable::Entities::ItemEntity*)item)->itemType]++;
 
 				data->currentState->softDeleteEntity(item->getName());
