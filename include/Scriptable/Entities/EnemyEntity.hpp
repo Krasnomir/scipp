@@ -13,7 +13,7 @@ namespace Scriptable::Entities {
     struct EnemyTypeInfo {
         std::vector<sf::Vector2f> vertices;
         int health;
-        int speed;
+        float speed;
         int damage;
         sf::Color color;
     };
@@ -24,7 +24,8 @@ public:
         enum Type {
             normal,
             speedy,
-            tank
+            tank,
+            boss
         };
 
 private:

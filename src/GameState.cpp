@@ -22,43 +22,92 @@
 #include <iostream>
 #include <cstdlib>
 
-const sf::Time GameState::WAVE_INTERVAL = sf::seconds(10);
-const int GameState::WAVE_SPAWN_AREA_OFFSET = 1000;
+const sf::Time GameState::WAVE_INTERVAL 		= sf::seconds(20);
+const sf::Time GameState::WAVE_SPAWN_INTERVAL	= sf::milliseconds(300);
+const int GameState::WAVE_SPAWN_AREA_OFFSET 	= 500;
+const int GameState::WAVE_SPAWN_AREA_MAX_OFFSET = 500;
+const int GameState::WAVE_STARTING_ENEMY_COUNT 	= 1;
+const int GameState::WAVE_ENEMY_COUNT_INCREMENT = 1;
+
 
 void GameState::handleWaves(const Scriptable::EventData* data) {
-	using namespace Scriptable::Entities;
-	if(m_waveCooldown <= sf::seconds(0)) {
+
+	if(m_waveCooldown <= sf::seconds(0) && !m_isSpawningEnemies) {
+		m_isSpawningEnemies = true;
+		m_enemiesLeftToSpawn = m_waveCount * WAVE_ENEMY_COUNT_INCREMENT + WAVE_STARTING_ENEMY_COUNT;
 		m_waveCooldown = WAVE_INTERVAL;
+		++m_waveCount;
+	}
+	else if(m_isSpawningEnemies) {
 
-		for(short i = 0; i < 10; i++) {
-			int randomType = rand() % 8 + 1;
+		if(!m_bossSpawned) {
+			spawnBoss(data);
+			m_bossSpawned = true;
+		}
 
-			int randomX = rand() % 500 - 250;
-			int randomY = rand() % 500 - 250;
+		if(m_spawnEnemyCooldown <= sf::seconds(0)) {
+			spawnEnemy(data);
+			m_spawnEnemyCooldown = WAVE_SPAWN_INTERVAL;
+			--m_enemiesLeftToSpawn;
+		}
+		else {
+			m_spawnEnemyCooldown -= data->deltaTime;
+		}
 
-			static uint32_t enemy_ID = 0;
-
-			std::string enemyName = "enemy" + std::to_string(enemy_ID);
-
-			if(randomType == 1) {
-				data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::tank);
-				data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
-			}
-			else if(randomType == 2) {
-				data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::speedy);
-				data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
-			}
-			else {
-				data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::normal);
-				data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
-			}
-
-			enemy_ID++;
+		if(m_enemiesLeftToSpawn == 0) {
+			m_isSpawningEnemies = false;
+			m_bossSpawned = false;
 		}
 	}
 	else {
 		m_waveCooldown -= data->deltaTime;
 	}
+}
+
+void GameState::spawnEnemy(const Scriptable::EventData* data) {
+
+	using namespace Scriptable::Entities;
+
+	int randomType = rand() % 8 + 1;
+
+	int randomX = rand() % WAVE_SPAWN_AREA_MAX_OFFSET - (WAVE_SPAWN_AREA_MAX_OFFSET / 2);
+	int randomY = rand() % WAVE_SPAWN_AREA_MAX_OFFSET - (WAVE_SPAWN_AREA_MAX_OFFSET / 2);
+
+	static uint32_t enemy_ID = 0;
+
+	std::string enemyName = "enemy" + std::to_string(enemy_ID);
+
+	if(randomType == 1) {
+		data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::tank);
+		data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+	}
+	else if(randomType == 2) {
+		data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::speedy);
+		data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+	}
+	else {
+		data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::normal);
+		data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
+	}
+
+	++enemy_ID;
+}
+
+void GameState::spawnBoss(const Scriptable::EventData* data) {
+	
+	using namespace Scriptable::Entities;
+
+	int randomX = rand() % WAVE_SPAWN_AREA_MAX_OFFSET - (WAVE_SPAWN_AREA_MAX_OFFSET / 2);
+	int randomY = rand() % WAVE_SPAWN_AREA_MAX_OFFSET - (WAVE_SPAWN_AREA_MAX_OFFSET / 2);
+
+	static uint32_t boss_ID = 0;
+
+	std::string enemyName = "boss" + std::to_string(boss_ID);
+	
+	data->currentState->addEntity<EnemyEntity>(enemyName, sf::Vector2f(randomX, WAVE_SPAWN_AREA_OFFSET + randomY), EnemyEntity::Type::boss);
+	data->currentState->addEntity<HealthbarEntity>("healthbar_boss" + enemyName, "healthbar_boss" + enemyName, data->currentState->getEntity("boss" + std::to_string(boss_ID)));
+
+	++boss_ID;
 }
 
 void GameState::onWindowClosed(const Scriptable::EventData* data)

@@ -48,7 +48,7 @@ namespace Scriptable::Components {
         return m_cooldown.asSeconds();
     }
 
-    EnemyComponent::EnemyComponent(int speed) {
+    EnemyComponent::EnemyComponent(float speed) {
         m_speed = speed;
     }
 }

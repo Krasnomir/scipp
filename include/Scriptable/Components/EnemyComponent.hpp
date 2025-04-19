@@ -20,7 +20,7 @@ namespace Scriptable::Components {
         float damage = 20;
         float reach = 50;
 
-        EnemyComponent(int speed);
+        EnemyComponent(float speed);
         virtual ~EnemyComponent() = default;
 
         void setCooldown(float cooldownSeconds);
