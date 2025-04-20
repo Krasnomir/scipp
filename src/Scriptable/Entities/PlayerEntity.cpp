@@ -27,8 +27,9 @@ namespace Scriptable::Entities {
 		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);
 
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", Util::getPathToResource("test.png"), sf::IntRect({0,0, 398, 273}));
-		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
+		//getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", Util::getPathToResource("test.png"), sf::IntRect({0,0, 398, 273}));
+		//getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
+		getComponent<Scriptable::Components::RenderComponent>()->setColor(sf::Color(62, 75, 76));
 
 		getComponent<Scriptable::Components::PhysicsComponent>()->collidable = true;
 
@@ -108,7 +109,7 @@ namespace Scriptable::Entities {
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition);
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition, 20);
 
 			proj_ID++;
 		}
@@ -124,7 +125,7 @@ namespace Scriptable::Entities {
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::tank);
+			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::boss);
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 			enemy_ID++;
 		}

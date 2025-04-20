@@ -29,7 +29,7 @@ class GameState : public Scriptable::State
 	static const int 		WAVE_ENEMY_COUNT_INCREMENT;
 
 	unsigned int m_waveCount = 0;
-	sf::Time m_waveCooldown = WAVE_INTERVAL;
+	sf::Time m_waveCooldown = sf::seconds(0);
 
 	bool m_isSpawningEnemies = false;
 	sf::Time m_spawnEnemyCooldown = sf::seconds(0);

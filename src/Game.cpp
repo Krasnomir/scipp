@@ -96,7 +96,7 @@ void Game::run()
 		//before render	
 		{
 			stateManager.currentState->evokeAll("beforeRender", &M_eventData);
-			window->clear();
+			window->clear(sf::Color(90, 90, 75));
 		}
 
 		//render

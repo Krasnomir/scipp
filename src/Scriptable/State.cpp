@@ -18,13 +18,13 @@ namespace Scriptable{
 	{
 		evokeEvents(eventName, data); // evoke all events from base eventObject class
 
-			std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
+		std::shared_lock<std::shared_mutex> readLock(M_uiMapLock);
 
-			for (auto& [name, uiobj] : M_uiMap)
-			{
-				if(eventName != "onRender")
-					uiobj->evokeEvents(eventName, data);
-			}
+		for (auto& [name, uiobj] : M_uiMap)
+		{
+			if(eventName != "onRender")
+				uiobj->evokeEvents(eventName, data);
+		}
 
 		{
 			std::shared_lock<std::shared_mutex> readLock(M_entityMapLock);

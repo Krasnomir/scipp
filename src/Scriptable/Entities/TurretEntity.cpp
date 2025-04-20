@@ -45,7 +45,7 @@ namespace Scriptable::Entities {
                 auto* rc = getComponent<Scriptable::Components::RenderComponent>();
                 sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), m_bulletOffset, rc->getRotation());
 
-                Scipp::globalGame->stateManager.currentState->addEntity<BulletEntity>(std::to_string(turretProj_ID), rc->getRotation(), bulletStartPosition);
+                Scipp::globalGame->stateManager.currentState->addEntity<BulletEntity>(std::to_string(turretProj_ID), rc->getRotation(), bulletStartPosition, m_damage);
 
                 turretProj_ID++;
             }

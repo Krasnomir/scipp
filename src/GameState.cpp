@@ -22,12 +22,12 @@
 #include <iostream>
 #include <cstdlib>
 
-const sf::Time GameState::WAVE_INTERVAL 		= sf::seconds(20);
+const sf::Time GameState::WAVE_INTERVAL 		= sf::seconds(15);
 const sf::Time GameState::WAVE_SPAWN_INTERVAL	= sf::milliseconds(300);
-const int GameState::WAVE_SPAWN_AREA_OFFSET 	= 500;
+const int GameState::WAVE_SPAWN_AREA_OFFSET 	= 2000;
 const int GameState::WAVE_SPAWN_AREA_MAX_OFFSET = 500;
-const int GameState::WAVE_STARTING_ENEMY_COUNT 	= 1;
-const int GameState::WAVE_ENEMY_COUNT_INCREMENT = 1;
+const int GameState::WAVE_STARTING_ENEMY_COUNT 	= 2;
+const int GameState::WAVE_ENEMY_COUNT_INCREMENT = 2;
 
 
 void GameState::handleWaves(const Scriptable::EventData* data) {
@@ -40,13 +40,13 @@ void GameState::handleWaves(const Scriptable::EventData* data) {
 	}
 	else if(m_isSpawningEnemies) {
 
-		if(!m_bossSpawned) {
-			spawnBoss(data);
+		if(;!m_bossSpawned && (m_waveCount % 3 == 0)) {
+			//spawnBoss(data);
 			m_bossSpawned = true;
 		}
 
 		if(m_spawnEnemyCooldown <= sf::seconds(0)) {
-			spawnEnemy(data);
+			//spawnEnemy(data);
 			m_spawnEnemyCooldown = WAVE_SPAWN_INTERVAL;
 			--m_enemiesLeftToSpawn;
 		}

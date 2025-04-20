@@ -9,6 +9,8 @@
 
 #include <Game.hpp>
 
+#include <iostream>
+
 namespace Scriptable::Entities {
     struct EnemyTypeInfo {
         std::vector<sf::Vector2f> vertices;
@@ -32,36 +34,28 @@ private:
 
         static const std::map<Type, EnemyTypeInfo> TYPE_INFO;
 
-        float health = 100;
         std::string groupName = "hostile";
-
-        std::vector<sf::Vector2f> vertices = {
-            {25,25}, {25,50}, {10,40}, 
-            {25,25}, {0,25}, {10,40},
-            {25,25}, {0,25}, {10,10},
-            {25,25}, {25,0}, {10,10},
-            {25,25}, {25,0}, {40,10},
-            {25,25}, {50,25}, {40,10},
-            {25,25}, {50,25}, {40,40},
-            {25,25}, {25,50}, {40,40}
-        };
 
         static void deleteEnemyCallback(Scriptable::Components::HealthComponent* c) {
 
             using namespace Scriptable::Entities;
             using namespace Scriptable::Components;
 
-            static uint32_t item_id = 0;
-
-            auto* entity = (Entity*)c->parentEntity;
-            auto* rc = entity->getComponent<RenderComponent>();
-
             auto* currentState = Scipp::globalGame->stateManager.currentState;
+            auto* entity = (Entity*)c->parentEntity;
 
-            currentState->addEntity<ItemEntity>("item_" + item_id, ItemEntity::Item::steel, rc->getPosition());
+            short random = rand() % 3 + 1;
+
+            if(random == 1) {
+                static uint32_t item_id = 0;
+
+                auto* rc = entity->getComponent<RenderComponent>();
+                currentState->addEntity<ItemEntity>("item_" + item_id, ItemEntity::Item::steel, rc->getPosition());
+
+                ++item_id;
+            }
+
             currentState->softDeleteEntity(entity->getName());
-
-            ++item_id;
         }
 
     public:

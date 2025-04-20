@@ -6,7 +6,9 @@
 #include <Misc/Explosion.hpp>
 
 namespace Scriptable::Entities {
-    BulletEntity::BulletEntity(float angle, sf::Vector2f pos) {
+    BulletEntity::BulletEntity(float angle, sf::Vector2f pos, int damage) {
+        m_damage = damage;
+
         addComponent<Scriptable::Components::RenderComponent>(m_vertices);
 		addComponent<Scriptable::Components::LifetimeComponent>(sf::seconds(m_lifetimeSeconds), deleteBulletCallback);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());

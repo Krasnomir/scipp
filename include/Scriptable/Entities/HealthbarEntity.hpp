@@ -13,7 +13,7 @@ namespace Scriptable::Entities {
     class HealthbarBackgroundEntity : public Scriptable::Entity 
     {
     public:
-        HealthbarBackgroundEntity(std::vector<sf::Vector2f> vertices);
+        HealthbarBackgroundEntity(std::vector<sf::Vector2f> vertices, sf::Vector2f pos);
         virtual ~HealthbarBackgroundEntity() = default;
     };
 

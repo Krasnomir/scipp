@@ -11,7 +11,7 @@ namespace Scriptable::Entities {
     const int HealthbarEntity::HEALTHBAR_WIDTH = 50;
     const int HealthbarEntity::HEALTHBAR_HEIGHT = 10;
 
-    HealthbarBackgroundEntity::HealthbarBackgroundEntity(std::vector<sf::Vector2f> vertices) {
+    HealthbarBackgroundEntity::HealthbarBackgroundEntity(std::vector<sf::Vector2f> vertices, sf::Vector2f pos) {
         zindex = 4;
 
         addComponent<Scriptable::Components::RenderComponent>(vertices);
@@ -20,6 +20,7 @@ namespace Scriptable::Entities {
         rc->setOrigin(rc->center());
         rc->setColor(sf::Color(255, 50, 50));
         rc->setAlpha(HealthbarEntity::HEALTHBAR_OPACITY);
+        rc->setPosition(pos);
     }
 
     HealthbarEntity::HealthbarEntity(std::string name, Scriptable::Entity* entity) {
@@ -30,11 +31,11 @@ namespace Scriptable::Entities {
         else {
             zindex = 5;
 
-            Scipp::globalGame->stateManager.currentState->addEntity<HealthbarBackgroundEntity>(name + "background",m_vertices);
-            m_backgroundEntity = (HealthbarBackgroundEntity*) Scipp::globalGame->stateManager.currentState->getEntity(name + "background");
-
             m_trackedRenderComponent = entity->getComponent<Scriptable::Components::RenderComponent>();
             m_trackedHealthComponent = entity->getComponent<Scriptable::Components::HealthComponent>();
+
+            Scipp::globalGame->stateManager.currentState->addEntity<HealthbarBackgroundEntity>(name + "background",m_vertices, m_trackedRenderComponent->getPosition());
+            m_backgroundEntity = (HealthbarBackgroundEntity*) Scipp::globalGame->stateManager.currentState->getEntity(name + "background");
 
             addComponent<Scriptable::Components::RenderComponent>(m_vertices);
 
@@ -47,7 +48,7 @@ namespace Scriptable::Entities {
             // finds the width of the tracked entity's RenderComponent
             float maxX = std::numeric_limits<float>::min();
             float minX = std::numeric_limits<float>::max();
-            auto vertices = rc->getVertices();
+            auto vertices = m_trackedRenderComponent->getVertices();
             for(size_t i = 0; i < vertices.getVertexCount(); i++) {
                 if(vertices[i].position.x > maxX) maxX = vertices[i].position.x;
                 if(vertices[i].position.x < minX) minX = vertices[i].position.x;

@@ -47,7 +47,16 @@ namespace Scriptable::Entities {
         sf::Time m_dashCooldownTrack = sf::seconds(0);
         float m_dashSpeed = 20;
 
-        std::vector<std::pair<sf::Vector2f, sf::Vector2f>> vertices = {{{0,0}, {18,70}}, {{0, 100}, {18, 170}}, {{30, 0},  {48, 70}}, {{30,0}, {48, 70}}, {{30,100}, {48, 170}},{{0,100},{18, 170}}};
+        std::vector<sf::Vector2f> vertices = {
+            {25,25}, {25,50}, {10,40}, 
+            {25,25}, {0,25}, {10,40},
+            {25,25}, {0,25}, {10,10},
+            {25,25}, {25,0}, {10,10},
+            {25,25}, {25,0}, {40,10},
+            {25,25}, {50,25}, {40,10},
+            {25,25}, {50,25}, {40,40},
+            {25,25}, {25,50}, {40,40}
+        };
 
         std::map<ItemEntity::Item, int> m_inventory;
 
