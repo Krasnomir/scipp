@@ -135,7 +135,7 @@ void GameState::cameraFollow() {
 void GameState::onRender(const Scriptable::EventData* data) {
 	cameraFollow();
 	handleCameraShake(data->deltaTime);
-	handleWaves(data);
+	//handleWaves(data);
 }
 
 GameState::GameState()

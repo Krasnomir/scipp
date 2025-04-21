@@ -48,7 +48,12 @@ namespace Scriptable::Components {
         return m_cooldown.asSeconds();
     }
 
+    float EnemyComponent::getMaxSpeed() {
+        return m_maxSpeed;
+    }
+
     EnemyComponent::EnemyComponent(float speed) {
+        m_maxSpeed = speed;
         m_speed = speed;
     }
 }

@@ -10,6 +10,8 @@
 #include <Scriptable/Entities/HealthbarEntity.hpp>
 #include <Scriptable/Entities/EnemyEntity.hpp>
 #include <Scriptable/Entities/SimpleEntity.hpp>
+#include <Scriptable/Entities/MudTrapEntity.hpp>
+#include <Scriptable/Entities/SpikeTrapEntity.hpp>
 
 #include <iostream>
 
@@ -87,21 +89,7 @@ namespace Scriptable::Entities {
 
 	void PlayerEntity::onMouseButtonPressed(const Scriptable::EventData* data) {
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Right) {
-			if(!(m_hasDummy && m_dummyAllowed)) return;
-
-			if(m_inventory[ItemEntity::Item::steel] >= 1) {
-				static uint32_t turret_ID = 0;
-
-				auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
-
-				data->currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
-				data->currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
-				turret_ID++;
-
-				m_inventory[ItemEntity::Item::steel]--;
-			}
-
-			cancelDummy();
+			requestPlacement(data);
 		}
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
 			static uint32_t proj_ID = 0;
@@ -117,15 +105,25 @@ namespace Scriptable::Entities {
 
 	void PlayerEntity::onKeyPressed(const Scriptable::EventData* data) {
 		if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::E) {
-			requestDummy(m_dummy_type::turret);
+			requestDummy(m_placementPanel[m_placementPanelIndex]);
+		}
+		// switch to the next dummy type
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::R) {
+			if(m_hasDummy) {
+				m_placementPanelIndex = (m_placementPanelIndex + 1) % m_placementPanel.size();
+				requestDummy(m_placementPanel[m_placementPanelIndex]);
+			}
 		}
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
+			cancelDummy();
+		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::G) {
 			static uint32_t enemy_ID = 0;
 
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::boss);
+			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::normal);
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 			enemy_ID++;
 		}
@@ -134,13 +132,18 @@ namespace Scriptable::Entities {
 		}
 	}
 
-	void PlayerEntity::requestDummy(int type) {
-		if(m_hasDummy) return;
+	void PlayerEntity::requestDummy(m_dummy_type type) {
+		if(m_hasDummy) {
+			auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
 
-		auto* currentState = Scipp::globalGame->stateManager.currentState;
+			rc->setVertices(m_dummy_vertices[type]);
+			rc->setOrigin(rc->center());
+			m_currentDummyType = type;
+		}
+		else {
+			auto* currentState = Scipp::globalGame->stateManager.currentState;
 
-		if(type == m_dummy_type::turret) {
-			currentState->addEntity<Scriptable::Entities::SimpleEntity>("dummy", m_dummy_vertices["turret"]);
+			currentState->addEntity<Scriptable::Entities::SimpleEntity>("dummy", m_dummy_vertices[type]);
 			m_dummy = currentState->getEntity("dummy");
 
 			m_dummy->zindex = DUMMY_ZINDEX;
@@ -149,9 +152,10 @@ namespace Scriptable::Entities {
 
 			rc->setAlpha(100);
 			rc->setColor(DUMMY_COLOR_FORBIDDEN);
-		}
 
-		m_hasDummy = true;
+			m_hasDummy = true;
+			m_currentDummyType = type;
+		}
 	}
 
 	void PlayerEntity::handleDummy() {
@@ -178,11 +182,48 @@ namespace Scriptable::Entities {
 	}
 
 	void PlayerEntity::cancelDummy() {
-		auto* currentState = Scipp::globalGame->stateManager.currentState;
-		currentState->softDeleteEntity("dummy");
+		if(m_hasDummy) {
+			auto* currentState = Scipp::globalGame->stateManager.currentState;
+			currentState->softDeleteEntity("dummy");
 
-		m_dummy = nullptr;
-		m_hasDummy = false;
+			m_dummy = nullptr;
+			m_hasDummy = false;
+		}
+	}
+
+	void PlayerEntity::requestPlacement(const Scriptable::EventData* data) {
+
+		if(!(m_hasDummy && m_dummyAllowed)) return;
+
+		auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
+
+		if(m_currentDummyType == m_dummy_type::turret) {
+			if(m_inventory[ItemEntity::Item::steel] >= 1) {
+				static uint32_t turret_ID = 0;
+	
+				data->currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
+				data->currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_turret" + std::to_string(turret_ID), "healthbar_turret" + std::to_string(turret_ID), Scipp::globalGame->stateManager.currentState->getEntity("turret" + std::to_string(turret_ID)));
+				turret_ID++;
+	
+				m_inventory[ItemEntity::Item::steel]--;
+			}
+		}
+		else if(m_currentDummyType == m_dummy_type::mud_trap) {
+			static uint32_t mudTrap_ID = 0;
+
+			data->currentState->addEntity<Scriptable::Entities::MudTrapEntity>("mud_trap_"+mudTrap_ID, rc->getPosition());
+
+			++mudTrap_ID;
+		}
+		else if(m_currentDummyType == m_dummy_type::spike_trap) {
+			static uint32_t spikeTrap_ID = 0;
+
+			data->currentState->addEntity<Scriptable::Entities::SpikeTrapEntity>("spike_trap_"+spikeTrap_ID, rc->getPosition());
+
+			++spikeTrap_ID;
+		}
+
+		cancelDummy();
 	}
 
 	void PlayerEntity::handleDash(const Scriptable::EventData* data) {

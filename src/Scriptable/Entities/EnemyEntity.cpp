@@ -106,5 +106,7 @@ namespace Scriptable::Entities {
 		hc->setOnDeathCallback(deleteEnemyCallback);
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, groupName);
+
+		zindex = 2;
     }
 }

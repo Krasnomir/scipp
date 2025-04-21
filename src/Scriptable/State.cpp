@@ -120,8 +120,6 @@ namespace Scriptable{
 
 		M_entityMap.erase(entityName);
 
-
-
 		return true;
 	}
 

@@ -22,6 +22,8 @@ namespace Scriptable::Entities {
     const int ItemEntity::ALPHA_CHANGE = 300; // per second
 
     ItemEntity::ItemEntity(Item type, sf::Vector2f position) {
+        zindex = 3;
+
         std::vector<sf::Vector2f> vertices;
 
         itemType = type;

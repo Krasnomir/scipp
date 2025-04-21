@@ -4,7 +4,7 @@ namespace Scriptable::Entities {
 
     ParticleEntity::ParticleEntity(sf::Vector2f pos, float direction, float speed, float size, sf::Time lifetime, sf::Color color) {
 
-        zindex = 1;
+        zindex = 4;
 
         std::vector<sf::Vector2f> vertices = {{0,0}, {0,size}, {size, 0}, {0, size}, {size,size}, {size,0}};
 

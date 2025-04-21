@@ -14,6 +14,7 @@ namespace Scriptable::Components {
         sf::Time m_cooldownTracker = sf::microseconds(0);
 
         float m_speed = 0;
+        float m_maxSpeed = 0;
 
     public:
 
@@ -25,6 +26,8 @@ namespace Scriptable::Components {
 
         void setCooldown(float cooldownSeconds);
         float getCooldown();
+
+        float getMaxSpeed();
 
         void beforeRender(const EventData* data);
     };

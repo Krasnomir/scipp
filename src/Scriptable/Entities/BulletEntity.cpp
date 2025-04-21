@@ -21,6 +21,8 @@ namespace Scriptable::Entities {
         rc->setColor(sf::Color(255, 189, 58));
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, m_group);
+
+        zindex = 3;
     }
 
     void BulletEntity::beforeRender(const EventData* data) {

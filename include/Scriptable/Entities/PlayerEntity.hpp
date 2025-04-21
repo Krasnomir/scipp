@@ -18,21 +18,38 @@ namespace Scriptable::Entities {
         static const short        DUMMY_ZINDEX;
 
         enum m_dummy_type {
-            turret
+            turret,
+            mud_trap,
+            spike_trap
         };
-        std::map<std::string, std::vector<sf::Vector2f>> m_dummy_vertices {
-            {"turret",  {
+        std::map<m_dummy_type, std::vector<sf::Vector2f>> m_dummy_vertices {
+            {m_dummy_type::turret,  {
                 {0,0}, {0,40}, {40,0}, 
                 {0,40}, {40,40}, {40,0}, 
                 {0,40}, {0,0}, {-10,20},
                 {40,40}, {0,40}, {20,50},
                 {40,40}, {40,0}, {70,20},
                 {0,0}, {40,0}, {20,-10},
+            }},
+            {m_dummy_type::mud_trap, {
+                {0,0},{100,0},{0,100},
+                {100,0},{100,100},{0,100}
+            }},
+            {m_dummy_type::spike_trap, {
+                {0,0},{100,0},{0,100},
+                {100,0},{100,100},{0,100}
             }}
         };
+        std::vector<m_dummy_type> m_placementPanel = {
+            m_dummy_type::turret,
+            m_dummy_type::mud_trap,
+            m_dummy_type::spike_trap
+        };
+        short m_placementPanelIndex = 0;
         Entity* m_dummy = nullptr;
         bool m_hasDummy = false;
         bool m_dummyAllowed = false;
+        m_dummy_type m_currentDummyType = turret;
 
         float health = 100;
         float regenPerSecond = 10;
@@ -70,9 +87,10 @@ public:
         void onMouseButtonPressed(const Scriptable::EventData* data);
         
         // placement system
-        void requestDummy(int type);
+        void requestDummy(m_dummy_type type);
         void handleDummy();
         void cancelDummy();
+        void requestPlacement(const Scriptable::EventData* data);
 
         void handleDash(const Scriptable::EventData* data);
         void dash();
