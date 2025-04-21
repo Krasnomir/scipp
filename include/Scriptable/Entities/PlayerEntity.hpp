@@ -4,6 +4,12 @@
 #include <Scriptable/Entity.hpp>
 #include <Scriptable/Entities/ItemEntity.hpp>
 
+#include <Scriptable/Components/HealthComponent.hpp>
+
+#include <GameState.hpp>
+
+#include <Game.hpp>
+
 #include <SFML/System.hpp>
 
 #include <vector>
@@ -76,6 +82,10 @@ namespace Scriptable::Entities {
         };
 
         std::map<ItemEntity::Item, int> m_inventory;
+
+        static void playerDeathCallback(Scriptable::Components::HealthComponent* c) {
+            Scipp::globalGame->stateManager.currentState->scheduleStateChange(new GameState());
+        }
 
 public:
         virtual ~PlayerEntity() = default;

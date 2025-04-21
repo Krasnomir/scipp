@@ -122,7 +122,7 @@ void GameState::onWindowResized(const Scriptable::EventData* data){
 }
 
 void GameState::cameraFollow() {
-	sf::Vector2f playerPosition = getEntity("test1")->getComponent<Scriptable::Components::RenderComponent>()->getPosition();
+	sf::Vector2f playerPosition = getEntity("player")->getComponent<Scriptable::Components::RenderComponent>()->getPosition();
 	// Camera position will be slightly shifted to where the player is looking (where the mouse cursor is) it also depends on how far from center it is 
 	float shiftIntensity = 20; // The smaller the number the bigger the intensity is going to be
 	float xShift = M_camera.getMousePositionRelativeToCamera().x / shiftIntensity;
@@ -130,6 +130,13 @@ void GameState::cameraFollow() {
 
 	M_camera.setPosition(sf::Vector2f(playerPosition.x + xShift, playerPosition.y + yShift));
 	M_camera.apply();
+}
+
+void GameState::beforeRender(const Scriptable::EventData* data) {
+	if(m_scheduledStateChange) {
+		Scipp::globalGame->stateManager.changeState(m_scheduledState);
+		Scipp::globalGame->stateManager.currentState->init();
+	}
 }
 
 void GameState::onRender(const Scriptable::EventData* data) {
@@ -166,7 +173,8 @@ void GameState::init()
 
 	addSound("pop.mp3", "pop");
 
-	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("test1");
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_player", "healthbar_player", Scipp::globalGame->stateManager.currentState->getEntity("player"));
 
 }
 void GameState::shakeCamera(int minShake, int maxShake) {

@@ -35,6 +35,8 @@ namespace Scriptable::Entities {
 
 		getComponent<Scriptable::Components::PhysicsComponent>()->collidable = true;
 
+		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(playerDeathCallback);
+
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "friendly");
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "collidable");
     }
@@ -97,7 +99,7 @@ namespace Scriptable::Entities {
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>(std::to_string(proj_ID), rc->getRotation(), bulletStartPosition, 20);
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>("bullet_" + std::to_string(proj_ID), rc->getRotation(), bulletStartPosition, 20);
 
 			proj_ID++;
 		}

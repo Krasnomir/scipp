@@ -22,6 +22,11 @@ namespace Scriptable{
 
 		virtual ~State();
 
+		void scheduleStateChange(State* state) {
+			m_scheduledStateChange = true;
+			m_scheduledState = state;
+		}
+
 		Camera M_camera;
 
 		void addEntityToGroup(Entity* entity, std::string group);
@@ -114,7 +119,13 @@ namespace Scriptable{
 		void removeSound(std::string name);
 		void playSound(std::string name);
 
-	private:
+protected: 
+
+		bool m_scheduledStateChange = false;
+		State* m_scheduledState = nullptr;
+		
+private:
+
 		mutable std::shared_mutex m_soundsLock;
 		std::map<std::string, sf::Sound> m_sounds;
 

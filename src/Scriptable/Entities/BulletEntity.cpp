@@ -5,6 +5,8 @@
 
 #include <Misc/Explosion.hpp>
 
+#include <iostream>
+
 namespace Scriptable::Entities {
     BulletEntity::BulletEntity(float angle, sf::Vector2f pos, int damage) {
         m_damage = damage;
@@ -61,5 +63,11 @@ namespace Scriptable::Entities {
 			state->softDeleteEntity(getName());
         }
         
+    }
+
+    BulletEntity::~BulletEntity() {
+        
+
+        std::cout << "[DEBUG] BulletEntity destroyed at " << this << std::endl;
     }
 }

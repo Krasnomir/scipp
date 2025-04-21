@@ -25,7 +25,7 @@ namespace Scriptable::Entities {
 
     public:
         BulletEntity(float angle, sf::Vector2f pos, int damage);
-        virtual ~BulletEntity() = default;
+        ~BulletEntity();
 
         void beforeRender(const EventData* data);
     };
