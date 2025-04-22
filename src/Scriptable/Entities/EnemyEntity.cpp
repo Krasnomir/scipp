@@ -85,6 +85,23 @@ namespace Scriptable::Entities {
 		}
 	};
 
+	void EnemyEntity::randomItemDrop() {
+		short random = rand() % 3 + 1;
+
+		static uint32_t item_id = 0;
+
+		if(random == 1) {
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			Scipp::globalGame->stateManager.currentState->addEntity<ItemEntity>("item_" + item_id, ItemEntity::Item::steel, rc->getPosition());
+		}
+		else if(random == 2) {
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			Scipp::globalGame->stateManager.currentState->addEntity<ItemEntity>("item_" + item_id, ItemEntity::Item::electronic_components, rc->getPosition());
+		}
+
+		++item_id;
+	}
+
     EnemyEntity::EnemyEntity(sf::Vector2f pos, Type type) {
 
 		auto vertices = TYPE_INFO.at(type).vertices;

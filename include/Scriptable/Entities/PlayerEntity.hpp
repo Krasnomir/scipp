@@ -15,13 +15,17 @@
 #include <vector>
 
 namespace Scriptable::Entities {
+
     class PlayerEntity : public Scriptable::Entity {
+        // --------------------
         // PLACEMENT SYSTEM
         // defined in the .cpp file
         static const sf::Color    DUMMY_COLOR_ALLOWED;
         static const sf::Color    DUMMY_COLOR_FORBIDDEN;
         static const short        DUMMY_COLOR_ALPHA;
         static const short        DUMMY_ZINDEX;
+        
+        
 
         enum m_dummy_type {
             turret,
@@ -46,6 +50,18 @@ namespace Scriptable::Entities {
                 {100,0},{100,100},{0,100}
             }}
         };
+        std::map<m_dummy_type, std::unordered_map<ItemEntity::Item, int>> m_dummy_recipes {
+            {m_dummy_type::turret,  {
+                { ItemEntity::Item::steel, 1 },
+                { ItemEntity::Item::electronic_components, 3 }
+            }},
+            {m_dummy_type::mud_trap, {
+                { ItemEntity::Item::steel, 1 }
+            }},
+            {m_dummy_type::spike_trap, {
+                { ItemEntity::Item::steel, 2 }
+            }}
+        };
         std::vector<m_dummy_type> m_placementPanel = {
             m_dummy_type::turret,
             m_dummy_type::mud_trap,
@@ -56,6 +72,12 @@ namespace Scriptable::Entities {
         bool m_hasDummy = false;
         bool m_dummyAllowed = false;
         m_dummy_type m_currentDummyType = turret;
+
+        bool pay(std::unordered_map<ItemEntity::Item, int> requiredItems);
+
+        // --------------------
+
+        std::unordered_map<ItemEntity::Item, int> m_inventory;
 
         float health = 100;
         float regenPerSecond = 10;
@@ -80,8 +102,6 @@ namespace Scriptable::Entities {
             {25,25}, {50,25}, {40,40},
             {25,25}, {25,50}, {40,40}
         };
-
-        std::map<ItemEntity::Item, int> m_inventory;
 
         static void playerDeathCallback(Scriptable::Components::HealthComponent* c) {
             Scipp::globalGame->stateManager.scheduleStateChange(new GameState());

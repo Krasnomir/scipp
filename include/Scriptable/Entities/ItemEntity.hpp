@@ -6,9 +6,16 @@
 namespace Scriptable::Entities {
 
     class ItemEntity : public Scriptable::Entity {
-
+    public:
+        enum Item {
+            steel,
+            electronic_components
+        };
+    private:
         static const std::vector<sf::Vector2f> STEEL_VERTICES;
         static const std::vector<sf::Vector2f> ELECTRONIC_COMPONENTS_VERTICES;
+
+        static const std::unordered_map<Item, sf::Color> ITEM_COLORS;
 
         static const int MIN_ALPHA;
         static const int MAX_ALPHA;
@@ -18,10 +25,6 @@ namespace Scriptable::Entities {
         bool m_alphaIncreasing = false;
 
     public:
-        enum Item {
-            steel,
-            electronic_components
-        };
 
         Item itemType;
 
