@@ -16,6 +16,8 @@ namespace Scriptable::UI{
 
         m_RenderComponent = new Components::RenderComponent(Util::CreateRectangle(rect));
         sf::Vector2f pos = {rect.left, rect.top};
+        m_Point.offset = {rect.left, rect.top};
+        
         m_RenderComponent->setPosition(pos);
     }
 

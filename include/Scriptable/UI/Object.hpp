@@ -24,8 +24,8 @@ namespace Scriptable::UI
         
         struct AttachmentPoint{
             enum AttachmentPlace : uint8_t{
-                TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT, CENTER
-            } point;
+                CENTER = 0, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT
+            } point = AttachmentPlace::CENTER;
             sf::Vector2f offset;
         };
         
@@ -39,9 +39,9 @@ namespace Scriptable::UI
         
     protected:
         Components::RenderComponent* m_RenderComponent = 0;
+        AttachmentPoint m_Point;
     private:
         std::string m_Target = "";
-        AttachmentPoint m_Point;
 
         int m_Layer = 0;
 };

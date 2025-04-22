@@ -151,29 +151,22 @@ GameState::GameState()
 }
 
 struct test_iobj : public Scriptable::UI::Rect{
-	test_iobj() : Rect(sf::FloatRect({0.5,0.5}, {0.8, 0.8})){
+	test_iobj() : Rect(sf::FloatRect({0,0}, {0.5,0.5})){
 		this->m_RenderComponent->setColor(sf::Color::Red);
+		setAttachmentTarget("", {AttachmentPoint::TOPLEFT, {0.25,0.25}});
 	}
 };
 
-
-struct test_uiobj : public Scriptable::UI::Rect{
-	test_uiobj() : Rect(sf::FloatRect({0,0}, {0.1, 0.1})){
-		this->setAttachmentTarget("textobj", {Scriptable::UI::Object::AttachmentPoint::TOPRIGHT, {}});
-		this->setLayer(1);
-	}
-};
 
 
 void GameState::init()
 {	
-	Scriptable::UI::TextObject::loadFont(Util::getPathToResource("FreeMono.otf"), "font");
-	//Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
-	//Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("textobj2");
+	Scriptable::UI::TextObject::loadFont("FreeMono.otf", "font");
+	Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
 
 	addSound("pop.mp3", "pop");
 
-	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
+	// Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_player", "healthbar_player", Scipp::globalGame->stateManager.currentState->getEntity("player"));
 
 }

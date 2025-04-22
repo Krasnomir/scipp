@@ -27,8 +27,10 @@ namespace Scriptable::UI{
     bool TextObject::loadFont(const std::string& path, const std::string& name){
         std::unique_lock writeLock(fontLock);
 
+        std::string fullPath = Util::getPathToResource(path);
+
         if(loadedFonts.contains(name)) return false;
-        if(loadedFonts[name].loadFromFile(path)){
+        if(loadedFonts[name].loadFromFile(fullPath)){
             return true;
         }
         loadedFonts.erase(name);
