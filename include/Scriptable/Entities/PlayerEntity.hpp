@@ -84,7 +84,7 @@ namespace Scriptable::Entities {
         std::map<ItemEntity::Item, int> m_inventory;
 
         static void playerDeathCallback(Scriptable::Components::HealthComponent* c) {
-            Scipp::globalGame->stateManager.currentState->scheduleStateChange(new GameState());
+            Scipp::globalGame->stateManager.scheduleStateChange(new GameState());
         }
 
 public:
