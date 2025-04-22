@@ -182,9 +182,10 @@ namespace Scriptable{
 		
 	}
 
-	void State::initCamera()
+	void State::initCamera(sf::Vector2f windowSize)
 	{
-		M_camera = Camera(sf::Vector2f(800, 600), sf::Vector2f(0, 0));
+		
+		M_camera = Camera(windowSize, sf::Vector2f(0, 0));
 		M_camera.apply();
 	}
 
@@ -289,7 +290,6 @@ namespace Scriptable{
 		}
 
 		M_entityMap.clear();
-
 	}
 
 	State::State() {}

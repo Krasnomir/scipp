@@ -38,7 +38,7 @@ namespace Scriptable{
 
 		virtual void init();
 
-		void initCamera();
+		void initCamera(sf::Vector2f windowSize);
 
 		void evokeUIDraw(sf::RenderWindow* target);
 

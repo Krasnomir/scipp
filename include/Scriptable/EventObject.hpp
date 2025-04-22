@@ -56,7 +56,6 @@ namespace Scriptable{
 
     protected:
         std::shared_mutex M_boundEventLock;
-
         //bound events
         std::unordered_map<std::string, std::vector<Event_t>> M_boundEvents;
     };

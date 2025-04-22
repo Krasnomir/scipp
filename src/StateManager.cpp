@@ -11,7 +11,22 @@ void StateManager::changeState(Scriptable::State* state)
 	}
 
 	this->currentState = state;
+}
 
+void StateManager::scheduleStateChange(Scriptable::State* state) {
+	m_pendingState = state;
+}
+
+void StateManager::handleScheduledStateChanges() {
+	if(m_pendingState) {
+		if (currentState) {
+			delete currentState;
+		}
+
+        currentState = m_pendingState;
+        currentState->init();
+        m_pendingState = nullptr;
+	}
 }
 
 StateManager::StateManager()

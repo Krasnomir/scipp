@@ -127,6 +127,8 @@ void Game::run()
 		//execute scheduled deletion of components,entities, ...
 		stateManager.currentState->exec_schd_deletion();
 
+		stateManager.handleScheduledStateChanges();
+
 	}
 }
 
