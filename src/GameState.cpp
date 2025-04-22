@@ -166,7 +166,10 @@ void GameState::init()
 	// Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
 	SoundManager manager;
 	manager.loadSound("pop.mp3", "pop");
-	manager.asyncPlaySound("pop");
+	manager.pushSound("pop");
+	manager.pushSound("pop");
+	manager.pushSound("pop");
+	
 	
 	
 
