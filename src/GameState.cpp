@@ -16,6 +16,7 @@
 #include <Scriptable/Entities/PlayerEntity.hpp>
 #include <Scriptable/Entities/EnemyEntity.hpp>
 #include <Scriptable/UI/UI.hpp>
+#include <SoundManager.hpp>
 
 #include <SFML/Graphics.hpp>
 
@@ -162,11 +163,17 @@ struct test_iobj : public Scriptable::UI::Rect{
 void GameState::init()
 {	
 	Scriptable::UI::TextObject::loadFont("FreeMono.otf", "font");
-	Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
+	// Scipp::globalGame->stateManager.currentState->addUIObject<test_iobj>("textobj");
+	SoundManager manager;
+	manager.loadSound("pop.mp3", "pop");
+	manager.asyncPlaySound("pop");
+	
+	
 
 	addSound("pop.mp3", "pop");
+	// playSound("pop");
 
-	// Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_player", "healthbar_player", Scipp::globalGame->stateManager.currentState->getEntity("player"));
 
 }

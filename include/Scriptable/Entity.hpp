@@ -63,7 +63,7 @@ namespace Scriptable
 		template<DerivedComponent T>
 		inline bool hasComponent() const
 		{
-			std::shared_lock<std::shared_mutex> readLock(M_ComponentLock);
+			// std::shared_lock<std::shared_mutex> readLock(M_ComponentLock);
 
 			for(auto * component : M_Components)
 			{
