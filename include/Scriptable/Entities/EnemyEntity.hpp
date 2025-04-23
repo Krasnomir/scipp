@@ -22,7 +22,9 @@ namespace Scriptable::Entities {
 
     class EnemyEntity : public Scriptable::Entity {
 
-public:
+    public:
+        void randomItemDrop();
+
         enum Type {
             normal,
             speedy,
@@ -30,7 +32,7 @@ public:
             boss
         };
 
-private:
+    private:
 
         static const std::map<Type, EnemyTypeInfo> TYPE_INFO;
 
@@ -42,20 +44,11 @@ private:
             using namespace Scriptable::Components;
 
             auto* currentState = Scipp::globalGame->stateManager.currentState;
-            auto* entity = (Entity*)c->parentEntity;
-
-            short random = rand() % 3 + 1;
-
-            if(random == 1) {
-                static uint32_t item_id = 0;
-
-                auto* rc = entity->getComponent<RenderComponent>();
-                currentState->addEntity<ItemEntity>("item_" + item_id, ItemEntity::Item::steel, rc->getPosition());
-
-                ++item_id;
-            }
+            auto* entity = (EnemyEntity*)c->parentEntity;
 
             currentState->softDeleteEntity(entity->getName());
+
+            entity->randomItemDrop();
         }
 
     public:

@@ -64,10 +64,4 @@ namespace Scriptable::Entities {
         }
         
     }
-
-    BulletEntity::~BulletEntity() {
-        
-
-        std::cout << "[DEBUG] BulletEntity destroyed at " << this << std::endl;
-    }
 }

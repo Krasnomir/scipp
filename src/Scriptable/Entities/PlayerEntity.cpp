@@ -21,6 +21,22 @@ namespace Scriptable::Entities {
 	short const PlayerEntity::DUMMY_COLOR_ALPHA 		= 150;
 	short const PlayerEntity::DUMMY_ZINDEX				= 10;
 
+	bool PlayerEntity::pay(std::unordered_map<ItemEntity::Item, int> requiredItems) {
+		auto inv_clone = m_inventory;
+
+		for(auto& requiredItem : requiredItems) {
+			if(inv_clone[requiredItem.first] >= requiredItem.second) {
+				inv_clone[requiredItem.first] -= requiredItem.second;
+			}
+			else {
+				return false;
+			}
+		}
+
+		m_inventory = inv_clone;
+		return true;
+	}
+
     PlayerEntity::PlayerEntity() {
         zindex = -1;
 
@@ -200,7 +216,7 @@ namespace Scriptable::Entities {
 		auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
 
 		if(m_currentDummyType == m_dummy_type::turret) {
-			if(m_inventory[ItemEntity::Item::steel] >= 1) {
+			if(pay(m_dummy_recipes[m_currentDummyType])) {
 				static uint32_t turret_ID = 0;
 	
 				data->currentState->addEntity<Scriptable::Entities::TurretEntity>("turret" + std::to_string(turret_ID), rc->getPosition());
