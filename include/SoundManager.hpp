@@ -8,39 +8,23 @@
 #include <SFML/Audio.hpp>
 #include <queue>
 #include <map>
+#include <mutex>
 #include <vector>
 
 
 class SoundManager{
     public:
-        SoundManager();
+        SoundManager() = default;
+        
+        //sounds cannot yet be freed, TODO: implement S_loadedSounds as a vector of shared_ptrs
 
-        void asyncPlaySound(const std::string& soundName, std::chrono::milliseconds startingOffset = std::chrono::milliseconds(0));
+        static void asyncPlaySound(const std::string& soundName, std::chrono::milliseconds startingOffset = std::chrono::milliseconds(0));
+        static bool loadBuffer(const std::string& resPath, const std::string& soundName);
 
-        /*Sound queue, non blocking*/ 
-        void play();
-        void skip();
-        void restart(std::chrono::milliseconds startingOffset = std::chrono::milliseconds(0));
-        void pushSound(const std::string& soundName);
+        static const sf::SoundBuffer* getLoadedBuffer(const std::string& resPath);        
 
-        void clearQueue();
-
-        static bool loadSound(const std::string& resPath, const std::string& soundName);
-        static bool isSoundLoaded(const std::string& soundName);
-        static void freeSound(const std::string& soundName);
-
-        ~SoundManager();
+        ~SoundManager() = default;
     private:
-        void queueHandler();
-
-        enum Flag{
-            NONE = 0, RESUME, PAUSE, RESTART, SKIP, TERMINATE
-        } M_flag;  
-
-        sf::Time M_offset;
-
-        std::queue<std::string>M_soundQueue;
-        std::shared_mutex M_queueLock;
 
         static std::unordered_map<std::string, sf::SoundBuffer>S_loadedSounds;        
         static std::shared_mutex S_loadedSoundsLock;
