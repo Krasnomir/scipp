@@ -1,6 +1,7 @@
 #include <Scriptable/Components/PhysicsComponent.hpp>
 #include <Scriptable/Entities/TurretEntity.hpp>
 #include <Scriptable/Entities/BulletEntity.hpp>
+#include <Misc/Explosion.hpp>
 #include <GameState.hpp>
 
 namespace Scriptable::Entities {
@@ -48,6 +49,8 @@ namespace Scriptable::Entities {
                 Scipp::globalGame->stateManager.currentState->addEntity<BulletEntity>(std::to_string(turretProj_ID), rc->getRotation(), bulletStartPosition, m_damage);
 
                 turretProj_ID++;
+
+                explosion(bulletStartPosition, 3, 50, 2, 300, sf::Color(200,200,0,20));
             }
         }
     }

@@ -19,7 +19,7 @@ namespace Scriptable::Entities {
         float m_speed;
         sf::Vector2f m_pos;
 
-        float m_alpha = 255;
+        float m_alpha = 0;
 
         bool m_isFadingOut = false;
 

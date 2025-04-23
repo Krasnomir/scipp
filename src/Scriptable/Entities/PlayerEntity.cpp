@@ -12,6 +12,7 @@
 #include <Scriptable/Entities/SimpleEntity.hpp>
 #include <Scriptable/Entities/MudTrapEntity.hpp>
 #include <Scriptable/Entities/SpikeTrapEntity.hpp>
+#include <Misc/Explosion.hpp>
 
 #include <iostream>
 
@@ -20,6 +21,9 @@ namespace Scriptable::Entities {
 	sf::Color const PlayerEntity::DUMMY_COLOR_FORBIDDEN = sf::Color(220, 70, 70);
 	short const PlayerEntity::DUMMY_COLOR_ALPHA 		= 150;
 	short const PlayerEntity::DUMMY_ZINDEX				= 10;
+
+	sf::Time const PlayerEntity::GUN_COOLDOWN = sf::seconds(0.5);
+	int const PlayerEntity::GUN_DAMAGE = 100;
 
 	bool PlayerEntity::pay(std::unordered_map<ItemEntity::Item, int> requiredItems) {
 		auto inv_clone = m_inventory;
@@ -59,6 +63,8 @@ namespace Scriptable::Entities {
 
 	void PlayerEntity::beforeRender(const Scriptable::EventData* data) {
 
+		handleGun(data);
+
 		handleDash(data);
 		handleDummy();
 
@@ -72,22 +78,22 @@ namespace Scriptable::Entities {
 		// wasd movement
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
+			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
 			pc->velocity.direction = rc->getRotation();
 		}
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
+			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
 			pc->velocity.direction = rc->getRotation() - 180;
 		}
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
+			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
 			pc->velocity.direction = rc->getRotation() - 90;
 		}
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
 			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = 5 + dashValue;
+			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
 			pc->velocity.direction = rc->getRotation() + 90;
 		}
 		else {
@@ -110,14 +116,7 @@ namespace Scriptable::Entities {
 			requestPlacement(data);
 		}
 		if(data->sfmlEvent.mouseButton.button == sf::Mouse::Button::Left) {
-			static uint32_t proj_ID = 0;
-
-			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
-
-			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>("bullet_" + std::to_string(proj_ID), rc->getRotation(), bulletStartPosition, 20);
-
-			proj_ID++;
+			requestFiring();
 		}
 	}
 
@@ -141,12 +140,35 @@ namespace Scriptable::Entities {
 			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 			sf::Vector2f enemyStartPosition = Util::movePoint(rc->getPosition(), 500, rc->getRotation());
 
-			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::normal);
+			Scipp::globalGame->stateManager.currentState->addEntity<EnemyEntity>("enemy" + std::to_string(enemy_ID), enemyStartPosition, EnemyEntity::Type::normal, 1);
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 			enemy_ID++;
 		}
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
 			dash();
+		}
+	}
+
+	void PlayerEntity::handleGun(const Scriptable::EventData* data) {
+		if(m_bulletCooldown > sf::seconds(0)) {
+			m_bulletCooldown -= data->deltaTime;
+		}
+	}
+
+	void PlayerEntity::requestFiring() {
+		if(m_bulletCooldown <= sf::seconds(0)) {
+			static uint32_t proj_ID = 0;
+
+			auto* rc = getComponent<Scriptable::Components::RenderComponent>();
+			sf::Vector2f bulletStartPosition = Util::movePoint(rc->getPosition(), bulletDistance, rc->getRotation());
+
+			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::BulletEntity>("bullet_" + std::to_string(proj_ID), rc->getRotation(), bulletStartPosition, GUN_DAMAGE);
+
+			proj_ID++;
+
+			m_bulletCooldown = GUN_COOLDOWN;
+
+			explosion(bulletStartPosition, 3, 50, 2, 300, sf::Color(200,200,0,20));
 		}
 	}
 

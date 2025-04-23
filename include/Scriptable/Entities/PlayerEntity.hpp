@@ -14,9 +14,15 @@
 
 #include <vector>
 
+#define PLAYER_SPEED 2
+
 namespace Scriptable::Entities {
 
     class PlayerEntity : public Scriptable::Entity {
+
+        static const sf::Time GUN_COOLDOWN;
+        static const int GUN_DAMAGE;
+        
         // --------------------
         // PLACEMENT SYSTEM
         // defined in the .cpp file
@@ -24,8 +30,6 @@ namespace Scriptable::Entities {
         static const sf::Color    DUMMY_COLOR_FORBIDDEN;
         static const short        DUMMY_COLOR_ALPHA;
         static const short        DUMMY_ZINDEX;
-        
-        
 
         enum m_dummy_type {
             turret,
@@ -84,6 +88,8 @@ namespace Scriptable::Entities {
         float regenDelaySeconds = 5;
         float bulletDistance = 50;
 
+        sf::Time m_bulletCooldown = sf::seconds(0);
+
         // dashing system variables
         bool m_isDashing = false;
         sf::Time m_dashDuration = sf::seconds(0.1);
@@ -115,7 +121,10 @@ public:
         void onKeyPressed(const Scriptable::EventData* data);
         void onMouseMoved(const Scriptable::EventData* data);
         void onMouseButtonPressed(const Scriptable::EventData* data);
-        
+    
+        void handleGun(const Scriptable::EventData* data);
+        void requestFiring();
+
         // placement system
         void requestDummy(m_dummy_type type);
         void handleDummy();

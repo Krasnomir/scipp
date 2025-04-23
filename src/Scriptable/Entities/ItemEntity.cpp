@@ -2,8 +2,6 @@
 
 #include <Scriptable/Components/RenderComponent.hpp>
 
-#include <Game.hpp>
-
 #include <iostream>
 
 namespace Scriptable::Entities {
@@ -21,6 +19,8 @@ namespace Scriptable::Entities {
         {ItemEntity::Item::steel, sf::Color(190, 200, 210)},
         {ItemEntity::Item::electronic_components, sf::Color(84, 201, 68)}
     };
+
+    const sf::Time ItemEntity::ITEM_LIFETIME = sf::seconds(10);
 
     const int ItemEntity::MIN_ALPHA = 155;
     const int ItemEntity::MAX_ALPHA = 255;
@@ -43,6 +43,7 @@ namespace Scriptable::Entities {
         }
 
         addComponent<Scriptable::Components::RenderComponent>(vertices);
+        addComponent<Scriptable::Components::LifetimeComponent>(ITEM_LIFETIME, deleteItemCallback);
 
         auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 

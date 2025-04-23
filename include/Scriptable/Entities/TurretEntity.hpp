@@ -14,8 +14,8 @@ namespace Scriptable::Entities {
 
         float m_health = 100;
 
-        float m_damage = 100;
-        sf::Time m_firerate = sf::seconds(2);
+        float m_damage = 200;
+        sf::Time m_firerate = sf::seconds(1);
 
         sf::Time m_cooldownTracker = sf::microseconds(0);
 

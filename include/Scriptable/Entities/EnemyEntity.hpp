@@ -53,7 +53,7 @@ namespace Scriptable::Entities {
 
     public:
 
-        EnemyEntity(sf::Vector2f pos, Type type);
+        EnemyEntity(sf::Vector2f pos, Type type, float healthMultiplier);
         virtual ~EnemyEntity() = default;
     };
 }

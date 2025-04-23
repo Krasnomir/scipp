@@ -50,14 +50,12 @@ namespace Scriptable::Entities {
         if(target_rc == nullptr || target_hc == nullptr) return;
 
         if(target_rc->isColliding(bullet_rc)) {
-            using namespace Scipp::ExplosionPresets;
 
             int particleCount = 5;
-            int size = 30;
-            int speed = 2;
-            float duration = 1; // in seconds
-            auto color = sf::Color(BulletHit::colorR, BulletHit::colorG, BulletHit::colorB);
-            explosion(bullet_rc->getPosition(), BulletHit::count, BulletHit::size, BulletHit::speed, BulletHit::duration, color);
+            int size = 20;
+            int speed = 4;
+            float duration = 0.7; // in seconds
+            explosion(bullet_rc->getPosition(), particleCount, size, speed, duration, sf::Color(150, 60, 60));
 
             target_hc->setHealth(target_hc->getHealth() - m_damage);
 			state->softDeleteEntity(getName());

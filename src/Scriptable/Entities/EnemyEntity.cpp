@@ -102,7 +102,7 @@ namespace Scriptable::Entities {
 		++item_id;
 	}
 
-    EnemyEntity::EnemyEntity(sf::Vector2f pos, Type type) {
+    EnemyEntity::EnemyEntity(sf::Vector2f pos, Type type, float healthMultiplier=1) {
 
 		auto vertices = TYPE_INFO.at(type).vertices;
 		auto speed = TYPE_INFO.at(type).speed;
@@ -112,7 +112,7 @@ namespace Scriptable::Entities {
         addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
 		addComponent<Scriptable::Components::EnemyComponent>(speed);
-		addComponent<Scriptable::Components::HealthComponent>(health);
+		addComponent<Scriptable::Components::HealthComponent>(health*healthMultiplier);
 
 		auto* rc = getComponent<Scriptable::Components::RenderComponent>();
 		auto* hc = getComponent<Scriptable::Components::HealthComponent>();
