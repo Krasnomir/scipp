@@ -3,6 +3,10 @@
 
 #include <Scriptable/Entity.hpp>
 
+#include <Scriptable/Components/LifetimeComponent.hpp>
+
+#include <Game.hpp>
+
 namespace Scriptable::Entities {
 
     class ItemEntity : public Scriptable::Entity {
@@ -17,12 +21,18 @@ namespace Scriptable::Entities {
 
         static const std::unordered_map<Item, sf::Color> ITEM_COLORS;
 
+        static const sf::Time ITEM_LIFETIME;
+
         static const int MIN_ALPHA;
         static const int MAX_ALPHA;
         static const int ALPHA_CHANGE; // per second
 
         float m_alpha = 0;
         bool m_alphaIncreasing = false;
+
+        static void deleteItemCallback(Scriptable::Components::LifetimeComponent* c) {
+            Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
+        }
 
     public:
 

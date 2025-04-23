@@ -27,6 +27,7 @@ class GameState : public Scriptable::State
 	static const int 		WAVE_SPAWN_AREA_MAX_OFFSET;
 	static const int		WAVE_STARTING_ENEMY_COUNT;
 	static const int 		WAVE_ENEMY_COUNT_INCREMENT;
+	static const float  	WAVE_HEALTH_MULTIPLIER_INCREMENT;
 
 	unsigned int m_waveCount = 0;
 	sf::Time m_waveCooldown = sf::seconds(0);
