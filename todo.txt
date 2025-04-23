@@ -1,7 +1,10 @@
 TODO:
 
-gui do inventory (masz w PlayerEntity),
-entycja pułapki,
-trzeba sie pospieszyć bo mamy tylko 2 tygodnie
-
-jak ty wgl commity robisz nie mając dostępu do żadnego komunikatora?
+[ ] GUI
+    [ ] wyświetlanie zawartości inventory
+    [ ] wyświetlanie sterowania po naciśnięciu jakiegoś klawisza
+[ ] tekstury
+[ ] dźwięki (np. po wystrzale, po śmierci itp.)
+[ ] niewidzialne bariery wokół spawna
+[ ] state ekranu śmierci gracza
+[ ] gdzieś użyć cameraShake
