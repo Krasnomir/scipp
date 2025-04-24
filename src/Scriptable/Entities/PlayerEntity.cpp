@@ -18,8 +18,8 @@
 #include <iostream>
 
 namespace Scriptable::Entities {
-	sf::Color const PlayerEntity::DUMMY_COLOR_ALLOWED 	= sf::Color(80, 210, 80);
-	sf::Color const PlayerEntity::DUMMY_COLOR_FORBIDDEN = sf::Color(220, 70, 70);
+	sf::Color const PlayerEntity::DUMMY_COLOR_ALLOWED 	= sf::Color(80, 210, 80, 100);
+	sf::Color const PlayerEntity::DUMMY_COLOR_FORBIDDEN = sf::Color(220, 70, 70, 100);
 	short const PlayerEntity::DUMMY_COLOR_ALPHA 		= 150;
 	short const PlayerEntity::DUMMY_ZINDEX				= 10;
 
@@ -43,7 +43,7 @@ namespace Scriptable::Entities {
 	}
 
     PlayerEntity::PlayerEntity() {
-        zindex = -1;
+        zindex = 1;
 
 		addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());

@@ -17,7 +17,6 @@ namespace Scriptable::Entities {
         rc->setOrigin(rc->center());
         rc->setRotation(direction);
         rc->setColor(color);
-        rc->setAlpha(color.a);
         m_alpha = color.a;
 
         m_direction = direction;

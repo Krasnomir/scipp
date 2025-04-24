@@ -46,6 +46,8 @@ public:
 
 	void onWindowResized(const Scriptable::EventData* data);
 
+	void initMap();
+
 	void beforeRender(const Scriptable::EventData* data);
 	void onRender(const Scriptable::EventData* data);
 

@@ -15,6 +15,7 @@
 #include <Scriptable/Entities/HealthbarEntity.hpp>
 #include <Scriptable/Entities/PlayerEntity.hpp>
 #include <Scriptable/Entities/EnemyEntity.hpp>
+#include <Scriptable/Entities/SimpleEntity.hpp>
 #include <Scriptable/UI/UI.hpp>
 #include <SoundManager.hpp>
 
@@ -115,6 +116,15 @@ void GameState::spawnBoss(const Scriptable::EventData* data) {
 	++boss_ID;
 }
 
+void GameState::initMap() {
+	// center indicator
+	std::vector<sf::Vector2f> vertices = {
+		{0,20},{20,40},{40,20},{40,20},{0,20},{20,0}
+	};
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("center_indicator", vertices);
+	Scipp::globalGame->stateManager.currentState->getEntity("center_indicator")->getComponent<Scriptable::Components::RenderComponent>()->setColor(sf::Color(85, 85, 55));
+}
+
 void GameState::onWindowClosed(const Scriptable::EventData* data)
 {
 	data->targetWindow->close();
@@ -161,6 +171,8 @@ void GameState::init()
 
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_player", "healthbar_player", Scipp::globalGame->stateManager.currentState->getEntity("player"));
+
+	initMap();
 
 }
 void GameState::shakeCamera(int minShake, int maxShake) {

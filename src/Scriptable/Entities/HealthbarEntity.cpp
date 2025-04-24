@@ -18,8 +18,7 @@ namespace Scriptable::Entities {
 
         auto* rc = getComponent<Scriptable::Components::RenderComponent>();
         rc->setOrigin(rc->center());
-        rc->setColor(sf::Color(255, 50, 50));
-        rc->setAlpha(HealthbarEntity::HEALTHBAR_OPACITY);
+        rc->setColor(sf::Color(255, 50, 50, HealthbarEntity::HEALTHBAR_OPACITY));
         rc->setPosition(pos);
     }
 
@@ -41,8 +40,7 @@ namespace Scriptable::Entities {
 
             auto* rc = getComponent<Scriptable::Components::RenderComponent>();
             rc->setOrigin(rc->center());
-            rc->setColor(sf::Color(100, 225, 50));
-            rc->setAlpha(HEALTHBAR_OPACITY);
+            rc->setColor(sf::Color(100, 225, 50, HEALTHBAR_OPACITY));
             rc->setPosition(m_trackedRenderComponent->getPosition());
 
             // finds the width of the tracked entity's RenderComponent
@@ -78,7 +76,6 @@ namespace Scriptable::Entities {
             };
 
             rc->setVertices(vertices);
-            rc->setAlpha(HEALTHBAR_OPACITY);
         }
     }
 
