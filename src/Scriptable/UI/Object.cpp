@@ -17,7 +17,21 @@ namespace Scriptable::UI{
         return m_Layer;
     }
 
+    void Object::setVisible(bool visible){
+        m_Visible = visible;
+    }
 
+    bool Object::getVisible() const{
+        return m_Visible;
+    }
+    
+    void Object::setGroup(const std::string& groupName){
+        m_Group = groupName;
+    }
+
+    const std::string& Object::getGroup(){
+        return m_Group;
+    }
 
     bool Object::setAttachmentTarget(const std::string& target, AttachmentPoint point){
         m_Point = point;
@@ -105,7 +119,7 @@ namespace Scriptable::UI{
             }
         }
 
-        if(m_RenderComponent){
+        if(m_RenderComponent && m_Visible){
             data->targetWindow->draw(*m_RenderComponent);
         }
     }

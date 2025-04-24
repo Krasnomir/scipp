@@ -93,6 +93,17 @@ namespace Scriptable{
 		return false;
 	}
 
+	std::vector<UI::Object*> State::getObjectsByGroup(const std::string& groupName){
+		std::vector<UI::Object*> grouppedObjects;
+		for(auto & [name, entity] : M_uiMap){
+			if(entity->getGroup() == groupName){
+				grouppedObjects.push_back(entity);
+			}
+		}
+
+		return grouppedObjects;
+	}
+	
 
 	bool State::deleteUIObject(const std::string& objectName){
 		std::unique_lock<std::shared_mutex> writeLock(M_uiMapLock);

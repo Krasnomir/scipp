@@ -1,7 +1,7 @@
 TODO:
 
 [ ] GUI
-    [ ] wyświetlanie zawartości inventory
+    [*] wyświetlanie zawartości inventory
     [ ] wyświetlanie sterowania po naciśnięciu jakiegoś klawisza
 [ ] tekstury
 [ ] dźwięki (np. po wystrzale, po śmierci itp.)

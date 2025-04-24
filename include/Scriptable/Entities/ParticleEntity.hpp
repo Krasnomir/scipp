@@ -23,7 +23,7 @@ namespace Scriptable::Entities {
 
         bool m_isFadingOut = false;
 
-        static void deleteParticleCallback(Scriptable::Components::LifetimeComponent* c) {
+        inline static void deleteParticleCallback(Scriptable::Components::LifetimeComponent* c) {
             ((Scriptable::Entities::ParticleEntity*)c->parentEntity)->fadeOut();
             //Scipp::globalGame->stateManager.currentState->softDeleteEntity(((Scriptable::Entity*)c->parentEntity)->getName());
         }

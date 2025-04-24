@@ -13,6 +13,7 @@
 #include <Scriptable/Entities/MudTrapEntity.hpp>
 #include <Scriptable/Entities/SpikeTrapEntity.hpp>
 #include <Misc/Explosion.hpp>
+#include <Scriptable/UI/Inventory.hpp>
 
 #include <iostream>
 
@@ -146,6 +147,18 @@ namespace Scriptable::Entities {
 		}
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
 			dash();
+		}
+		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::I){
+			/*INVENTORY*/
+			if(!Scipp::globalGame->stateManager.currentState->hasUIObject("inventory_frame")){
+				Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::InventoryFrame>("inventory_frame");
+			}
+			auto* invObj = dynamic_cast<Scriptable::UI::InventoryFrame*>(Scipp::globalGame->stateManager.currentState->getUIObject("inventory_frame"));
+			if(invObj->getVisible()) invObj->hide();
+			else invObj->show();
+			
+
+
 		}
 	}
 
