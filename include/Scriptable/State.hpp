@@ -115,6 +115,8 @@ namespace Scriptable{
 
 		void softDeleteUIObject(const std::string& objectName);
 
+		std::vector<UI::Object*> getObjectsByGroup(const std::string& groupName);
+
 		void addSound(std::string path, std::string name);
 		void removeSound(std::string name);
 		void playSound(std::string name);

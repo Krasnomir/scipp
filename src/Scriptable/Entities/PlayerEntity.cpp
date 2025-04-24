@@ -156,7 +156,7 @@ namespace Scriptable::Entities {
 			auto* invObj = dynamic_cast<Scriptable::UI::InventoryFrame*>(Scipp::globalGame->stateManager.currentState->getUIObject("inventory_frame"));
 			if(invObj->getVisible()) invObj->hide();
 			else invObj->show();
-
+			
 
 
 		}
