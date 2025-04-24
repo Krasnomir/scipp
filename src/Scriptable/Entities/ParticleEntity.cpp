@@ -33,7 +33,7 @@ namespace Scriptable::Entities {
             }
             
             auto* rc = getComponent<Scriptable::Components::RenderComponent>();
-            rc->setAlpha((int) m_alpha);
+            rc->setColor(sf::Color(rc->getColor().r, rc->getColor().g, rc->getColor().b, m_alpha));
         }
         else {
             auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();

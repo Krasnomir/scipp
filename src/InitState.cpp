@@ -2,6 +2,7 @@
 #include <Scriptable/State.hpp>
 #include <InitState.hpp>
 #include <GameState.hpp>
+#include <DeathState.hpp>
 #include <Scriptable/Entity.hpp>
 #include <Camera.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
@@ -30,6 +31,6 @@ InitState::InitState()
 
 void InitState::init()
 {
-    Scipp::globalGame->stateManager.changeState(new GameState());
+    Scipp::globalGame->stateManager.changeState(new DeathState());
     Scipp::globalGame->stateManager.currentState->init();
 }

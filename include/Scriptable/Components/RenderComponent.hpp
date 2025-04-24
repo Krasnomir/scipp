@@ -63,10 +63,6 @@ namespace Scriptable::Components{
         void addCostume(std::string name, std::string path);
         void loadCostume(std::string name);
 
-        // both setAlpha() and setColor() apply the color values to all vertices
-        void setAlpha(float alpha);
-        int getAlpha();
-
         void setColor(sf::Color color);
         void setColor(sf::Color color, int index);
         sf::Color getColor();
@@ -92,7 +88,6 @@ namespace Scriptable::Components{
         sf::VertexArray m_vertices;
         sf::Texture m_texture;
 
-        int m_alpha = 255;
         sf::Color m_color = {255, 255, 255};
 
         mutable std::shared_mutex m_costumesLock;

@@ -78,6 +78,6 @@ namespace Scriptable::Entities {
             m_alpha = MAX_ALPHA;
         }
 
-        rc->setAlpha(m_alpha);
+        rc->setColor(sf::Color(rc->getColor().r, rc->getColor().g, rc->getColor().b, m_alpha));
     }
 }

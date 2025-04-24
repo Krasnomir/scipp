@@ -3,6 +3,8 @@
 #include <Util.hpp>
 #include <Game.hpp>
 
+#include <iostream>
+
 namespace Scriptable::UI{
     extern std::shared_mutex TextObject::fontLock;
     extern std::unordered_map<std::string, sf::Font> TextObject::loadedFonts;
@@ -21,6 +23,7 @@ namespace Scriptable::UI{
     void TextObject::draw_to_screen(Scriptable::EventData* data){
 
         sf::Text* text = static_cast<sf::Text*>(this);
+
         Scipp::globalGame->window->draw(*text, sf::RenderStates::Default);
     }
 
@@ -28,6 +31,9 @@ namespace Scriptable::UI{
         std::unique_lock writeLock(fontLock);
 
         std::string fullPath = Util::getPathToResource(path);
+
+        
+        std::cout << fullPath << "\n";
 
         if(loadedFonts.contains(name)) return false;
         if(loadedFonts[name].loadFromFile(fullPath)){

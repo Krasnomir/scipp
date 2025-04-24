@@ -167,7 +167,7 @@ void GameState::init()
 {	
 	initCamera(sf::Vector2f(Scipp::globalGame->window->getSize().x, Scipp::globalGame->window->getSize().y));
 	
-	Scriptable::UI::TextObject::loadFont("FreeMono.otf", "font");
+	Scriptable::UI::TextObject::loadFont("RobotoMono.ttf", "font");
 
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_player", "healthbar_player", Scipp::globalGame->stateManager.currentState->getEntity("player"));

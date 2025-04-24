@@ -128,25 +128,11 @@ namespace Scriptable::Components
         m_texture = m_costumes[name];
     }
 
-    void RenderComponent::setAlpha(float alpha) { // values from 0 to 255
-        m_alpha = alpha;
-
-        for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
-            m_vertices[i].color.a = alpha;
-        }
-    }
-
-    int RenderComponent::getAlpha() {
-        return m_alpha;
-    }
-
     void RenderComponent::setColor(sf::Color color) {
         m_color = color;
-        m_alpha = color.a; // jakis smieszek nie dodal tej lini i myslalem ze renderstates sa zepsute !!!
 
         for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
             m_vertices[i].color = color;
-            m_vertices[i].color.a = m_alpha;
         }
     }
 

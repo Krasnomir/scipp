@@ -7,6 +7,7 @@
 #include <Scriptable/Components/HealthComponent.hpp>
 
 #include <GameState.hpp>
+#include <DeathState.hpp>
 
 #include <Game.hpp>
 
@@ -110,7 +111,7 @@ namespace Scriptable::Entities {
         };
 
         static void playerDeathCallback(Scriptable::Components::HealthComponent* c) {
-            Scipp::globalGame->stateManager.scheduleStateChange(new GameState());
+            Scipp::globalGame->stateManager.scheduleStateChange(new DeathState());
         }
 
 public:

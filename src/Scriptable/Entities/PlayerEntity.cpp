@@ -48,10 +48,10 @@ namespace Scriptable::Entities {
 		addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
 		addComponent<Scriptable::Components::HealthComponent>(health, health, regenPerSecond, regenDelaySeconds);
-
+		
 		getComponent<Scriptable::Components::RenderComponent>()->setOrigin(getComponent<Scriptable::Components::RenderComponent>()->center());
-		//getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", Util::getPathToResource("test.png"), sf::IntRect({0,0, 398, 273}));
-		//getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
+		getComponent<Scriptable::Components::RenderComponent>()->addCostume("test", Util::getPathToResource("test.png"), sf::IntRect({0,0, 398, 273}));
+		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 		getComponent<Scriptable::Components::RenderComponent>()->setColor(sf::Color(62, 75, 76));
 
 		getComponent<Scriptable::Components::PhysicsComponent>()->collidable = true;
@@ -203,7 +203,6 @@ namespace Scriptable::Entities {
 
 			auto* rc = m_dummy->getComponent<Scriptable::Components::RenderComponent>();
 
-			rc->setAlpha(100);
 			rc->setColor(DUMMY_COLOR_FORBIDDEN);
 
 			m_hasDummy = true;
