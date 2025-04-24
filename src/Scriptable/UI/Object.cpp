@@ -17,7 +17,13 @@ namespace Scriptable::UI{
         return m_Layer;
     }
 
+    void Object::setVisible(bool visible){
+        m_Visible = visible;
+    }
 
+    bool Object::getVisible() const{
+        return m_Visible;
+    }
 
     bool Object::setAttachmentTarget(const std::string& target, AttachmentPoint point){
         m_Point = point;
@@ -105,7 +111,7 @@ namespace Scriptable::UI{
             }
         }
 
-        if(m_RenderComponent){
+        if(m_RenderComponent && m_Visible){
             data->targetWindow->draw(*m_RenderComponent);
         }
     }

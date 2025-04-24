@@ -93,7 +93,9 @@ namespace Scriptable::Components
     void RenderComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
         
-        states.texture = &m_texture;
+        if(m_texture.getSize().x != 0 && m_texture.getSize().y != 0){
+            states.texture = &m_texture;
+        }
 
         target.draw(m_vertices, states);
     }
@@ -140,6 +142,7 @@ namespace Scriptable::Components
 
     void RenderComponent::setColor(sf::Color color) {
         m_color = color;
+        m_alpha = color.a; // jakis smieszek nie dodal tej lini i myslalem ze renderstates sa zepsute !!!
 
         for (std::size_t i = 0; i < m_vertices.getVertexCount(); ++i) {
             m_vertices[i].color = color;

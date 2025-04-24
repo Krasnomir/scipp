@@ -59,7 +59,7 @@ namespace Scriptable{
 
 		template<Scriptable::DerivedEntity T, class ... Args>
 		inline bool addEntity(const std::string& entityName, Args ... args){
-			// std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock); temporary disabled
+			// std::unique_lock<std::shared_mutex> writeLock(M_entityMapLock);
 			
 			if(M_entityMap.contains(entityName)) return false; // fails if there is already a entity with specified name
 
@@ -96,7 +96,7 @@ namespace Scriptable{
 
 		template<Scriptable::UI::DerivedUIObject T>
 		inline bool addUIObject(const std::string& objectName){
-			std::unique_lock<std::shared_mutex> writeLock(M_uiMapLock);
+			// std::unique_lock<std::shared_mutex> writeLock(M_uiMapLock);
 
 			if(M_uiMap.contains(objectName)) return false;
 
