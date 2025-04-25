@@ -9,6 +9,7 @@ TODO:
 [ ] state ekranu śmierci gracza
 [ ] gdzieś użyć cameraShake
 [*] Dodac klase gameText w ktorej text nie rozszerza sie razem z ekranem, text z ui zostaje taki sam
+[ ] Zoptymalizować sprawdzanie kolizji podczas ruchu
 
 Gracz ma m_inventory w którym ma itemy różne i trzeba zrobić żeby sie wyświetlały.
 I jest decyzja do podjęcia. Bo ty to gui zrobiłeś tak że podajesz jako rozmiar część okna jaką ma zajmować, żeby było dynamicznie w zależności od tego jakie wymiary ma okno. Ale jak jest tekst i sie zmieni okno to sie kurwi, bo sie rozszerza. I teraz czy jakoś to spróbujemy naprawić żeby zamiast części zajmowanego ekranu były piksele (z constraintami) czy zrobimy jakiś stały rozmiar okna z grą np. 800x600?
