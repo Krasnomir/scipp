@@ -29,6 +29,8 @@ namespace Scriptable{
 
 		Camera M_camera;
 
+		Camera getCamera();
+
 		void addEntityToGroup(Entity* entity, std::string group);
 		void removeEntityFromGroup(Entity* entity, std::string group);
 		Entity* findClosestEntityFromGroup(Entity* finder, std::string group);

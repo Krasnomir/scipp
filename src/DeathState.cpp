@@ -15,11 +15,22 @@ struct test_uiobj : public Scriptable::UI::TextObject {
     }
 };
 
+
+#include <Scriptable/Components/TextComonent.hpp>
+
+
+struct testentity : public Scriptable::Entity{
+    testentity() {
+        addComponent<Scriptable::Components::TextComponent>();
+    }
+};
+
 void DeathState::init() {
     Scriptable::UI::TextObject::loadFont("RobotoMono.ttf", "font");
 
     initCamera(sf::Vector2f(Scipp::globalGame->window->getSize().x, Scipp::globalGame->window->getSize().y));
     Scipp::globalGame->stateManager.currentState->addUIObject<test_uiobj>("texttest");
+    Scipp::globalGame->stateManager.currentState->addEntity<testentity>("b");
 }
 
 void DeathState::onWindowClosed(const Scriptable::EventData* data)

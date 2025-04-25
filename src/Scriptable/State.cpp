@@ -205,6 +205,10 @@ namespace Scriptable{
 		m_groups[group].push_back(entity);
 	}
 
+	Camera State::getCamera(){
+		return M_camera;
+	}
+
 	void State::removeEntityFromGroup(Entity* entity, std::string group) {
 		std::unique_lock<std::shared_mutex> writeLock(m_groupsLock);
 		std::string entityName = entity->getName();
