@@ -16,3 +16,5 @@ I jest decyzja do podjęcia. Bo ty to gui zrobiłeś tak że podajesz jako rozmi
 
 UI Jest skalowane razem z oknem, ustawia sie tam wielkosc bazujac na wielkosci okna
 Entity, TextComponent nie jest, jak zwiekszasz view to sie nie skaluja.
+
+A co w przypadku tekstu w gui, np. liczby itemów w inventory, albo jakichkolwiek tekstur np. ikonek itemów, przecież jak sie będzie zmieniał rozmiar okna to wszystko sie będzie psuło.
