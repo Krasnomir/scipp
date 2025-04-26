@@ -18,7 +18,6 @@ namespace Scriptable::Entities {
 
         addComponent<Scriptable::Components::PhysicsComponent>(rc);
         auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-        pc->collidable = true;
 
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteTurretCallback);
 
@@ -50,7 +49,7 @@ namespace Scriptable::Entities {
 
                 turretProj_ID++;
 
-                explosion(bulletStartPosition, 3, 50, 2, 300, sf::Color(200,200,0,20));
+                explosion(bulletStartPosition, 3, 50, 100, 300, sf::Color(200,200,0,20));
             }
         }
     }

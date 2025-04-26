@@ -54,12 +54,11 @@ namespace Scriptable::Entities {
 		getComponent<Scriptable::Components::RenderComponent>()->loadCostume("test");
 		getComponent<Scriptable::Components::RenderComponent>()->setColor(sf::Color(62, 75, 76));
 
-		getComponent<Scriptable::Components::PhysicsComponent>()->collidable = true;
-
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(playerDeathCallback);
 
+		getComponent<Scriptable::Components::PhysicsComponent>()->set_collidable(true);
+
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "friendly");
-		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, "collidable");
     }
 
 	void PlayerEntity::beforeRender(const Scriptable::EventData* data) {
@@ -151,7 +150,7 @@ namespace Scriptable::Entities {
 
 			m_bulletCooldown = GUN_COOLDOWN;
 
-			explosion(bulletStartPosition, 3, 50, 2, 300, sf::Color(200,200,0,20));
+			explosion(bulletStartPosition, 3, 50, 100, 300, sf::Color(200,200,0,20));
 		}
 	}
 
@@ -312,6 +311,7 @@ namespace Scriptable::Entities {
 		
 		auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
 		direction = Util::vec_normalize(direction);
-		pc->velocity = sf::Vector2f(direction.x * PLAYER_SPEED + m_dash_vec.x, direction.y * PLAYER_SPEED + m_dash_vec.y);
+		auto dash_value = m_dash_vec * (m_dashDurationTrack / m_dashDuration);
+		pc->velocity = sf::Vector2f(direction.x * PLAYER_SPEED + dash_value.x, direction.y * PLAYER_SPEED + dash_value.y);
 	}
 }

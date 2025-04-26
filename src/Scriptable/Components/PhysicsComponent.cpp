@@ -11,6 +11,9 @@ namespace Scriptable::Components {
     }
 
     void PhysicsComponent::beforeRender(const EventData* data) {
+
+        if(velocity.x == 0 && velocity.y == 0) return;
+
         float dt_seconds = data->deltaTime.asSeconds();
 
         sf::Vector2f previous_position = m_renderComponent->getPosition();
@@ -18,29 +21,36 @@ namespace Scriptable::Components {
 
         m_renderComponent->setPosition(new_position);
 
-        /*
-        if(collidable) {
-            auto collidableEntities = Scipp::globalGame->stateManager.currentState->getEntitiesFromGroup("collidable");
+        // movement collission (prevent walking through certain entities)
+        if(m_collidable) {
+            auto* current_state = Scipp::globalGame->stateManager.currentState;
+            auto collidable_entities = current_state->getEntitiesFromGroup("collidable");
 
-            auto entity = (Entity*)parentEntity;
-            auto* rc = entity->getComponent<Scriptable::Components::RenderComponent>();
+            for(auto* entity : collidable_entities) {
+                if(entity == parentEntity) continue;
 
-            auto entities = Scipp::globalGame->stateManager.currentState->getEntities();
+                auto* entity_rc = entity->getComponent<Scriptable::Components::RenderComponent>();
 
-            for(auto& entity : entities) {
-                if(entity->hasComponent<Scriptable::Components::PhysicsComponent>() && entity != parentEntity) {
-                    auto* entity_pc = entity->getComponent<Scriptable::Components::PhysicsComponent>();
-                    auto* entity_rc = entity->getComponent<Scriptable::Components::RenderComponent>();
-
-                    if(entity_pc->collidable) {
-                        if(entity_rc->isColliding(rc)) {
-                            std::cout << "COLLISSION" << "\n";
-                            m_renderComponent->setPosition(previous_position);
-                        }
-                    }
+                if(entity_rc->isColliding(m_renderComponent)) {
+                    m_renderComponent->setPosition(previous_position);
+                    break;
                 }
             }
         }
-        */
+    }
+
+    void PhysicsComponent::set_collidable(bool collidable) {
+        auto* current_state = Scipp::globalGame->stateManager.currentState;
+        auto* parent_entity = (Scriptable::Entity*) parentEntity;
+
+        if(collidable && !m_collidable) {
+            current_state->addEntityToGroup(parent_entity, "collidable");
+            m_collidable = true;
+            std::cout << "ADDED TO COLLIDABLE" << "\n";
+        }
+        else if(!collidable && collidable) {
+            current_state->removeEntityFromGroup(parent_entity, "collidable");
+            m_collidable = false;
+        }
     }
 }

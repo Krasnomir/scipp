@@ -93,8 +93,8 @@ namespace Scriptable::Entities {
 
         // dashing system variables
         bool m_isDashing = false;
-        sf::Time m_dashDuration = sf::seconds(0.1);
-        sf::Time m_dashCooldown = sf::seconds(2);
+        sf::Time m_dashDuration = sf::seconds(0.2);
+        sf::Time m_dashCooldown = sf::seconds(1);
         sf::Time m_dashDurationTrack = sf::seconds(0);
         sf::Time m_dashCooldownTrack = sf::seconds(0);
         float m_dashSpeed = 2000;

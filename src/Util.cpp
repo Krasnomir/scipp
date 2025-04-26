@@ -110,12 +110,12 @@ namespace Util {
     }
 
     float deg_to_rad(float angle) {
-        constexpr float DEG_TO_RAD = 3.14159265f / 180.0f;
+        static constexpr float DEG_TO_RAD = 3.14159265f / 180.0f;
         return angle * DEG_TO_RAD;
     }
 
     float rad_to_deg(float angle) {
-        constexpr float DEG_TO_RAD = 3.14159265f / 180.0f;
+        static constexpr float DEG_TO_RAD = 3.14159265f / 180.0f;
         return angle / DEG_TO_RAD;
     }
 }

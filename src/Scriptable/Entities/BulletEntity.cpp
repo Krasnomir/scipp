@@ -54,7 +54,7 @@ namespace Scriptable::Entities {
 
             int particleCount = 5;
             int size = 20;
-            int speed = 4;
+            int speed = 300;
             float duration = 0.7; // in seconds
             explosion(bullet_rc->getPosition(), particleCount, size, speed, duration, sf::Color(150, 60, 60));
 

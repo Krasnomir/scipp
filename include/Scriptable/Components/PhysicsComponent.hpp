@@ -9,6 +9,8 @@ namespace Scriptable::Components {
     class PhysicsComponent : public Component {
         RenderComponent* m_renderComponent;
 
+        bool m_collidable = false;
+
     public:
 
         bool collidable = false;
@@ -17,6 +19,8 @@ namespace Scriptable::Components {
 
         PhysicsComponent(RenderComponent* renderComponent);
         virtual ~PhysicsComponent() = default;
+
+        void set_collidable(bool collidable);
 
         void beforeRender(const EventData* data);
     };

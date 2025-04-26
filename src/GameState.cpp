@@ -117,12 +117,28 @@ void GameState::spawnBoss(const Scriptable::EventData* data) {
 }
 
 void GameState::initMap() {
+	/*
 	// center indicator
 	std::vector<sf::Vector2f> vertices = {
 		{0,20},{20,40},{40,20},{40,20},{0,20},{20,0}
 	};
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("center_indicator", vertices);
 	Scipp::globalGame->stateManager.currentState->getEntity("center_indicator")->getComponent<Scriptable::Components::RenderComponent>()->setColor(sf::Color(85, 85, 55));
+	*/
+
+	// center indicator
+	std::vector<sf::Vector2f> vertices = {
+		{0,0},{1000,0},{1000,30},{0,0},{1000,30},{0,30}
+	};
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("center_indicator", vertices);
+	auto* entity = Scipp::globalGame->stateManager.currentState->getEntity("center_indicator");
+	auto* rc = entity->getComponent<Scriptable::Components::RenderComponent>();
+	rc->setColor(sf::Color(85, 85, 55));
+	rc->setPosition(sf::Vector2f(300,300));
+
+	entity->addComponent<Scriptable::Components::PhysicsComponent>(rc);
+	auto* pc = entity->getComponent<Scriptable::Components::PhysicsComponent>();
+	pc->set_collidable(true);
 }
 
 void GameState::onWindowClosed(const Scriptable::EventData* data)
@@ -148,13 +164,12 @@ void GameState::cameraFollow() {
 }
 
 void GameState::beforeRender(const Scriptable::EventData* data) {
-
+	handleCameraShake(data->deltaTime);
+	//handleWaves(data);
 }
 
 void GameState::onRender(const Scriptable::EventData* data) {
 	cameraFollow();
-	handleCameraShake(data->deltaTime);
-	handleWaves(data);
 }
 
 GameState::GameState()
