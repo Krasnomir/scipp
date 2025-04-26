@@ -92,5 +92,30 @@ namespace Util {
         return std::vector<sf::Vector2f>{a.a, a.b, a.c, b.a, b.b, b.c};
     }
 
+    float vec_magnitude(const sf::Vector2f& vec) {
+        return sqrt(vec.x * vec.x + vec.y * vec.y);
+    }
 
+    sf::Vector2f vec_normalize(sf::Vector2f vec) {
+        float len = vec_magnitude(vec);
+
+        if(len == 0)
+            return sf::Vector2f(0,0);
+        
+        return sf::Vector2f(vec.x / len, vec.y / len);
+    }
+
+    sf::Vector2f vec_from_mag_and_dir(float magnitude, float direction) {
+        return sf::Vector2f(cosf(Util::deg_to_rad(direction)) * magnitude, sinf(Util::deg_to_rad(direction)) * magnitude);
+    }
+
+    float deg_to_rad(float angle) {
+        constexpr float DEG_TO_RAD = 3.14159265f / 180.0f;
+        return angle * DEG_TO_RAD;
+    }
+
+    float rad_to_deg(float angle) {
+        constexpr float DEG_TO_RAD = 3.14159265f / 180.0f;
+        return angle / DEG_TO_RAD;
+    }
 }

@@ -13,7 +13,7 @@ namespace Scriptable::Entities {
     {
         float m_lifetimeSeconds = 3;
         float m_damage = 20;
-        float m_speed = 30;
+        float m_speed = 2000;
         std::string m_group = "bullets";
         std::string m_targetGroup = "hostile";
 

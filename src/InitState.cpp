@@ -31,6 +31,6 @@ InitState::InitState()
 
 void InitState::init()
 {
-    Scipp::globalGame->stateManager.changeState(new DeathState());
+    Scipp::globalGame->stateManager.changeState(new GameState());
     Scipp::globalGame->stateManager.currentState->init();
 }

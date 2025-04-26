@@ -71,37 +71,7 @@ namespace Scriptable::Entities {
 
 		handleItems(data);
 
-		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
-
-		float dashValue = 0;
-		if(m_isDashing) dashValue = m_dashSpeed;
-
-		// wasd movement
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
-			pc->velocity.direction = rc->getRotation();
-		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
-			pc->velocity.direction = rc->getRotation() - 180;
-		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
-			pc->velocity.direction = rc->getRotation() - 90;
-		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = PLAYER_SPEED + dashValue;
-			pc->velocity.direction = rc->getRotation() + 90;
-		}
-		else {
-			auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-			pc->velocity.magnitude = dashValue;
-			pc->velocity.direction = rc->getRotation();
-		}
+		handleMovement();
 	}
 
 	void PlayerEntity::onMouseMoved(const Scriptable::EventData* data) {
@@ -283,6 +253,7 @@ namespace Scriptable::Entities {
 			if(m_dashDurationTrack >= m_dashDuration) {
 				m_dashDurationTrack = sf::seconds(0);
 				m_isDashing = false;
+				m_dash_vec = sf::Vector2f(0,0);
 			}
 			else {
 				m_dashDurationTrack += data->deltaTime;	
@@ -294,8 +265,11 @@ namespace Scriptable::Entities {
 
 	void PlayerEntity::dash() {
 		if(m_dashCooldownTrack >= m_dashCooldown) {
+			float direction = getComponent<Scriptable::Components::RenderComponent>()->getRotation();
+
 			m_isDashing = true;
 			m_dashCooldownTrack = sf::seconds(0);
+			m_dash_vec = Util::vec_from_mag_and_dir(m_dashSpeed, direction);
 		}
 	}
 
@@ -315,5 +289,29 @@ namespace Scriptable::Entities {
 				data->currentState->softDeleteEntity(item->getName());
 			}
 		}
+	}
+
+	void PlayerEntity::handleMovement() {
+		auto* rc = this->getComponent<Scriptable::Components::RenderComponent>();
+
+		sf::Vector2f direction = {0,0};
+
+		bool w_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
+		bool a_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
+		bool s_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
+		bool d_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
+
+		if(w_pressed)
+			direction.y -= 1.f;
+		if(s_pressed)
+			direction.y += 1.f;
+		if(a_pressed)
+			direction.x -= 1.f;
+		if(d_pressed)
+			direction.x += 1.f;
+		
+		auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+		direction = Util::vec_normalize(direction);
+		pc->velocity = sf::Vector2f(direction.x * PLAYER_SPEED + m_dash_vec.x, direction.y * PLAYER_SPEED + m_dash_vec.y);
 	}
 }

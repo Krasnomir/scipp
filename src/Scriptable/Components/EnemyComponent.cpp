@@ -19,10 +19,9 @@ namespace Scriptable::Components {
             auto* target_rc = m_target->getComponent<Scriptable::Components::RenderComponent>();
 
             entity_rc->setRotation(Util::getAngleBetweenPoints(entity_rc->getPosition(), target_rc->getPosition()));
-            entity_pc->velocity.direction = Util::getAngleBetweenPoints(entity_rc->getPosition(), target_rc->getPosition());
 
             if(Util::getDistanceBetweenPoints(entity_rc->getPosition(), target_rc->getPosition()) <= reach) {
-                entity_pc->velocity.magnitude = 0;
+                entity_pc->velocity = sf::Vector2f(0,0);
 
                 if(m_cooldownTracker <= sf::seconds(0)) {
                     m_cooldownTracker = m_cooldown;
@@ -35,7 +34,7 @@ namespace Scriptable::Components {
                 }
             }
             else {
-                entity_pc->velocity.magnitude = m_speed;
+                entity_pc->velocity = Util::vec_normalize(target_rc->getPosition() - entity_rc->getPosition()) * m_speed;
             }
         }
     }

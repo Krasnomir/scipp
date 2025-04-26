@@ -35,5 +35,10 @@ namespace Util {
     typedef std::vector<sf::Vector2f> shape_t;
     shape_t CreateRectangle(sf::FloatRect rect);
 
+    float vec_magnitude(const sf::Vector2f& vec);
+    sf::Vector2f vec_normalize(sf::Vector2f vec);
+    sf::Vector2f vec_from_mag_and_dir(float mag, float direction); // direction in radians
 
+    float deg_to_rad(float angle);
+    float rad_to_deg(float angle);
 }

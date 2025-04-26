@@ -12,12 +12,8 @@ namespace Scriptable::Components {
     public:
 
         bool collidable = false;
-        
-        struct Velocity {
-            float magnitude = 0;
-            float direction = 0;
-        };
-        Velocity velocity;
+
+        sf::Vector2f velocity;
 
         PhysicsComponent(RenderComponent* renderComponent);
         virtual ~PhysicsComponent() = default;

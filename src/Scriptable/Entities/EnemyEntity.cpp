@@ -21,7 +21,7 @@ namespace Scriptable::Entities {
 					{25,25}, {25,50}, {40,40}
 				},
 				100, // health
-				2, // speed
+				150, // speed
 				20, // damage
 				{139, 204, 75}
 			}
@@ -40,7 +40,7 @@ namespace Scriptable::Entities {
 					{25,25}, {25,50}, {40,40}
 				},
 				50,
-				4,
+				200,
 				20,
 				{98, 186, 110}
 			}
@@ -59,7 +59,7 @@ namespace Scriptable::Entities {
 					{37.5f, 37.5f}, {37.5f, 75.0f}, {60.0f, 60.0f}
 				},
 				300,
-				1,
+				125,
 				20,
 				{183, 211, 107}
 			}
@@ -78,7 +78,7 @@ namespace Scriptable::Entities {
 					{100,100}, {100,200}, {160,160}
 				},
 				2000,
-				0.5,
+				100,
 				200,
 				{178, 155, 62}
 			}

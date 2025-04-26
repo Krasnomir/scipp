@@ -6,6 +6,7 @@
 #include <Misc/Explosion.hpp>
 
 #include <iostream>
+#include <cmath>
 
 namespace Scriptable::Entities {
     BulletEntity::BulletEntity(float angle, sf::Vector2f pos, int damage) {
@@ -22,6 +23,9 @@ namespace Scriptable::Entities {
 		rc->setRotation(angle);
         rc->setColor(sf::Color(255, 189, 58));
 
+        auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+        pc->velocity = Util::vec_from_mag_and_dir(m_speed, angle);
+
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, m_group);
 
         zindex = 3;
@@ -32,9 +36,6 @@ namespace Scriptable::Entities {
         // update the physics component
         auto* bullet_pc = getComponent<Scriptable::Components::PhysicsComponent>();
         auto* bullet_rc = getComponent<Scriptable::Components::RenderComponent>();
-
-        bullet_pc->velocity.magnitude = m_speed;
-        bullet_pc->velocity.direction = bullet_rc->getRotation();
 
         // checks if the bullet is colliding with the closest target from a targetGroup
         // if it is, deal damage to the target and delete the bullet

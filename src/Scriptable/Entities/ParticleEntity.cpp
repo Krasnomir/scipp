@@ -21,6 +21,9 @@ namespace Scriptable::Entities {
 
         m_direction = direction;
         m_speed = speed;
+
+        auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
+        pc->velocity = sf::Vector2f(cos(m_direction * 0.017) * m_speed, sin(m_direction * 0.017) * m_speed);
     }
 
     void ParticleEntity::beforeRender(const EventData* data) {
@@ -34,12 +37,6 @@ namespace Scriptable::Entities {
             
             auto* rc = getComponent<Scriptable::Components::RenderComponent>();
             rc->setColor(sf::Color(rc->getColor().r, rc->getColor().g, rc->getColor().b, m_alpha));
-        }
-        else {
-            auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
-
-            pc->velocity.direction = m_direction;
-            pc->velocity.magnitude = m_speed;
         }
     }
 }

@@ -15,7 +15,7 @@
 
 #include <vector>
 
-#define PLAYER_SPEED 2
+#define PLAYER_SPEED 150
 
 namespace Scriptable::Entities {
 
@@ -97,7 +97,8 @@ namespace Scriptable::Entities {
         sf::Time m_dashCooldown = sf::seconds(2);
         sf::Time m_dashDurationTrack = sf::seconds(0);
         sf::Time m_dashCooldownTrack = sf::seconds(0);
-        float m_dashSpeed = 20;
+        float m_dashSpeed = 2000;
+        sf::Vector2f m_dash_vec;
 
         std::vector<sf::Vector2f> vertices = {
             {25,25}, {25,50}, {10,40}, 
@@ -136,6 +137,8 @@ public:
         void dash();
 
         void handleItems(const Scriptable::EventData* data);
+
+        void handleMovement();
     };
     
 }

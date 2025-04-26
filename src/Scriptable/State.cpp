@@ -230,10 +230,12 @@ namespace Scriptable{
 		for(auto& entity : m_groups[group]) {
 			auto* entityRC = entity->getComponent<Scriptable::Components::RenderComponent>();
 			
-			float distance = Util::getDistanceBetweenPoints(finderRC->getPosition(), entityRC->getPosition());
+			// we don't actually have to calculate the exact distance between entities
+			// this won't give us the exact distance but we will be able to tell if something is closer using this
+			float distance_approx = abs(finderRC->getPosition().x - entityRC->getPosition().x) + abs(finderRC->getPosition().y - entityRC->getPosition().y);
 
-			if(distance < closestDistanceYet) {
-				closestDistanceYet = distance;
+			if(distance_approx < closestDistanceYet) {
+				closestDistanceYet = distance_approx;
 				closestEntityYet = entity;
 			}
 		}

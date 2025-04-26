@@ -49,10 +49,10 @@ namespace Scriptable::Entities {
                     trap_hc->setHealth(trap_hc->getHealth() - 1);
                 }
 
-                enemy_pc->velocity.magnitude = enemy_ec->getMaxSpeed() / M_SLOWDOWN_RATE;
+                //enemy_pc->velocity.magnitude = enemy_ec->getMaxSpeed() / M_SLOWDOWN_RATE;
             }
             else {
-                enemy_pc->velocity.magnitude = enemy_ec->getMaxSpeed();
+                //enemy_pc->velocity.magnitude = enemy_ec->getMaxSpeed();
             }
         }
     }

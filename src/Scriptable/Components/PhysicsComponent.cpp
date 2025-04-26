@@ -11,12 +11,14 @@ namespace Scriptable::Components {
     }
 
     void PhysicsComponent::beforeRender(const EventData* data) {
-        sf::Vector2f previousPosition = m_renderComponent->getPosition();
+        float dt_seconds = data->deltaTime.asSeconds();
 
-        // calculate the correct (fps independent) distance to move the entity using delta time and velocity
-        float distance = velocity.magnitude * data->deltaTime.asMilliseconds();
-        m_renderComponent->setPosition(Util::movePoint(m_renderComponent->getPosition(), velocity.magnitude, velocity.direction));
+        sf::Vector2f previous_position = m_renderComponent->getPosition();
+        sf::Vector2f new_position = sf::Vector2f(previous_position.x + (velocity.x * dt_seconds), previous_position.y + (velocity.y * dt_seconds));
 
+        m_renderComponent->setPosition(new_position);
+
+        /*
         if(collidable) {
             auto collidableEntities = Scipp::globalGame->stateManager.currentState->getEntitiesFromGroup("collidable");
 
@@ -33,11 +35,12 @@ namespace Scriptable::Components {
                     if(entity_pc->collidable) {
                         if(entity_rc->isColliding(rc)) {
                             std::cout << "COLLISSION" << "\n";
-                            m_renderComponent->setPosition(previousPosition);
+                            m_renderComponent->setPosition(previous_position);
                         }
                     }
                 }
             }
         }
+        */
     }
 }
