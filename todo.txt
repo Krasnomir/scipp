@@ -19,3 +19,4 @@ UI Jest skalowane razem z oknem, ustawia sie tam wielkosc bazujac na wielkosci o
 Entity, TextComponent nie jest, jak zwiekszasz view to sie nie skaluja.
 
 A co w przypadku tekstu w gui, np. liczby itemów w inventory, albo jakichkolwiek tekstur np. ikonek itemów, przecież jak sie będzie zmieniał rozmiar okna to wszystko sie będzie psuło.
+Zwieksza sie z oknem, pokaz przyklad tego co nie pasuje bo nie rozumiem zbytnio co masz na mysli, UI jest dopasowane do okna. gra nie ale mozna ustawic to wszystko za pomoca kamery jesli chcesz cos zmienic.
