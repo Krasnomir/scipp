@@ -24,3 +24,6 @@ Zwieksza sie z oknem, pokaz przyklad tego co nie pasuje bo nie rozumiem zbytnio 
 No ale jak zmienisz rozmiar okna, i proporcja wysokości i szerokości ulegnie zmianie to np. element z jakąś teksturą będzie zdeformowany. Jakbyś chciał dodać jakąś kwadratową ikonkę z jakąś teksturą to po zmianie wymiarów okna ta tekstura sie rozjebie bo nie będzie już kwadratowa tylko rozszerzona horyzontalnie albo wertykalnie. Tak samo tekst.
 Ja bym gui zrobił w taki sposób żeby rozmiary były w pikselach, a pozycja dostosowywała się według constraintów i offsetów (tak jak jest teraz, tylko z rozmiarem w pikselach). 
 Btw nie masz żadnej innej lepszej formy komunikacji dostępnej?
+
+no jakby rozmiary byly w pixelach to albo gui by zostawalo gdy deformujesz okno i bylby jescze wiekszy problem albo blokujesz rozciaganie okna i dodajesz ustawienia na rozdzielcoznsci tylko 16:9 i problem znika bo sie nic nie bedzie rozciagac
+no na razie nie mam ale moge sprobowac omowic kontakt jakis w srode xd bo wiesz tu sa takie osoby co w 1 lepszej okazji wypily plyn do mycia okien
