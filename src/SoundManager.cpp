@@ -1,7 +1,7 @@
 #include <SoundManager.hpp>
 #include <thread>
 
-extern std::unordered_map<std::string, sf::SoundBuffer>SoundManager::S_loadedSounds;        
+extern std::unordered_map<std::string, sf::SoundBuffer>SoundManager::S_loadedSounds;
 extern std::shared_mutex SoundManager::S_loadedSoundsLock;
 
 bool SoundManager::loadBuffer(const std::string& resPath, const std::string& soundName){

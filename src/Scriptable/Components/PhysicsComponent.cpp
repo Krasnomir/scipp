@@ -32,6 +32,7 @@ namespace Scriptable::Components {
                 auto* entity_rc = entity->getComponent<Scriptable::Components::RenderComponent>();
 
                 if(entity_rc->isColliding(m_renderComponent)) {
+                    std::cout << "collission" << "\n";
                     m_renderComponent->setPosition(previous_position);
                     break;
                 }

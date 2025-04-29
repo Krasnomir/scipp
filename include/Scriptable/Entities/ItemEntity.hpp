@@ -13,11 +13,14 @@ namespace Scriptable::Entities {
     public:
         enum Item {
             steel,
-            electronic_components
+            electronic_components,
+            essence,
+            null // this is used for dropping items on enemy death
         };
     private:
         static const std::vector<sf::Vector2f> STEEL_VERTICES;
         static const std::vector<sf::Vector2f> ELECTRONIC_COMPONENTS_VERTICES;
+        static const std::vector<sf::Vector2f> ESSENCE_VERTICES;
 
         static const std::unordered_map<Item, sf::Color> ITEM_COLORS;
 

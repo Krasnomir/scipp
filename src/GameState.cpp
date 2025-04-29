@@ -116,31 +116,6 @@ void GameState::spawnBoss(const Scriptable::EventData* data) {
 	++boss_ID;
 }
 
-void GameState::initMap() {
-	/*
-	// center indicator
-	std::vector<sf::Vector2f> vertices = {
-		{0,20},{20,40},{40,20},{40,20},{0,20},{20,0}
-	};
-	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("center_indicator", vertices);
-	Scipp::globalGame->stateManager.currentState->getEntity("center_indicator")->getComponent<Scriptable::Components::RenderComponent>()->setColor(sf::Color(85, 85, 55));
-	*/
-
-	// center indicator
-	std::vector<sf::Vector2f> vertices = {
-		{0,0},{1000,0},{1000,30},{0,0},{1000,30},{0,30}
-	};
-	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("center_indicator", vertices);
-	auto* entity = Scipp::globalGame->stateManager.currentState->getEntity("center_indicator");
-	auto* rc = entity->getComponent<Scriptable::Components::RenderComponent>();
-	rc->setColor(sf::Color(85, 85, 55));
-	rc->setPosition(sf::Vector2f(300,300));
-
-	entity->addComponent<Scriptable::Components::PhysicsComponent>(rc);
-	auto* pc = entity->getComponent<Scriptable::Components::PhysicsComponent>();
-	pc->set_collidable(true);
-}
-
 void GameState::onWindowClosed(const Scriptable::EventData* data)
 {
 	data->targetWindow->close();
@@ -193,6 +168,52 @@ void GameState::init()
 	initMap();
 
 }
+
+void GameState::initMap() {
+	std::vector<sf::Vector2f> vertices = {
+		{0, 0}, {1600, 0}, {1600, 30}, {0, 0}, {1600, 30}, {0, 30}
+	};
+	
+	// Top wall (above center by 500px)
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("wall_top", vertices);
+	auto* wallTop = Scipp::globalGame->stateManager.currentState->getEntity("wall_top");
+	auto* rcTop = wallTop->getComponent<Scriptable::Components::RenderComponent>();
+	rcTop->setColor(sf::Color(85, 85, 55));
+	rcTop->setPosition(sf::Vector2f(0, -800));
+	wallTop->addComponent<Scriptable::Components::PhysicsComponent>(rcTop);
+	wallTop->getComponent<Scriptable::Components::PhysicsComponent>()->set_collidable(true);
+	
+	// Bottom wall (below center by 500px)
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("wall_bottom", vertices);
+	auto* wallBottom = Scipp::globalGame->stateManager.currentState->getEntity("wall_bottom");
+	auto* rcBottom = wallBottom->getComponent<Scriptable::Components::RenderComponent>();
+	rcBottom->setColor(sf::Color(85, 85, 55));
+	rcBottom->setPosition(sf::Vector2f(0, 800));
+	wallBottom->addComponent<Scriptable::Components::PhysicsComponent>(rcBottom);
+	wallBottom->getComponent<Scriptable::Components::PhysicsComponent>()->set_collidable(true);
+	
+	// Left wall (left of center by 500px, vertical wall)
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("wall_left", vertices);
+	auto* wallLeft = Scipp::globalGame->stateManager.currentState->getEntity("wall_left");
+	auto* rcLeft = wallLeft->getComponent<Scriptable::Components::RenderComponent>();
+	rcLeft->setColor(sf::Color(85, 85, 55));
+	rcLeft->setPosition(sf::Vector2f(-800, 0));
+	rcLeft->setRotation(90.f);
+	wallLeft->addComponent<Scriptable::Components::PhysicsComponent>(rcLeft);
+	wallLeft->getComponent<Scriptable::Components::PhysicsComponent>()->set_collidable(true);
+	
+	// Right wall (right of center by 500px, vertical wall)
+	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::SimpleEntity>("wall_right", vertices);
+	auto* wallRight = Scipp::globalGame->stateManager.currentState->getEntity("wall_right");
+	auto* rcRight = wallRight->getComponent<Scriptable::Components::RenderComponent>();
+	rcRight->setColor(sf::Color(85, 85, 55));
+	rcRight->setPosition(sf::Vector2f(800, 0));
+	rcRight->setRotation(90.f);
+	wallRight->addComponent<Scriptable::Components::PhysicsComponent>(rcRight);
+	wallRight->getComponent<Scriptable::Components::PhysicsComponent>()->set_collidable(true);
+
+}
+
 void GameState::shakeCamera(int minShake, int maxShake) {
 	if(m_isGoingBack || m_isTilting) return; // prevents two shakes from happening at the same time
 

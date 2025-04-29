@@ -59,14 +59,23 @@ namespace Util {
     float getTriangleArea(const Triangle& t) {
         return abs((t.a.x * (t.b.y - t.c.y) + t.b.x * (t.c.y - t.a.y) + t.c.x * (t.a.y - t.b.y)) / 2.0);
     }
+    
+    bool isInTriangle(const Triangle& triangle, const sf::Vector2f& point)
+    {
+        auto sign = [](const sf::Vector2f& p1, const sf::Vector2f& p2, const sf::Vector2f& p3) {
+            return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+        };
 
-    bool isInTriangle(const Triangle& triangle, const sf::Vector2f& point) {
-        float abc = Util::getTriangleArea(triangle);
-        float pbc = Util::getTriangleArea(Triangle(point, triangle.b, triangle.c));
-        float pac = Util::getTriangleArea(Triangle(point, triangle.a, triangle.c));
-        float pab = Util::getTriangleArea(Triangle(point, triangle.a, triangle.b));
-
-        return fabs(abc - pab - pac - pbc) < 0.001;
+        float d1, d2, d3;
+    
+        d1 = sign(point, triangle.a, triangle.b);
+        d2 = sign(point, triangle.b, triangle.c);
+        d3 = sign(point, triangle.c, triangle.a);
+    
+        bool has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+        bool has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+    
+        return !(has_neg && has_pos);
     }
 
     shape_t CreateRectangle(sf::FloatRect rect){

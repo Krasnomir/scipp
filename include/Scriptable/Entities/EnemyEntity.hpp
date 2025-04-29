@@ -12,6 +12,7 @@
 #include <iostream>
 
 namespace Scriptable::Entities {
+
     struct EnemyTypeInfo {
         std::vector<sf::Vector2f> vertices;
         int health;
@@ -23,7 +24,7 @@ namespace Scriptable::Entities {
     class EnemyEntity : public Scriptable::Entity {
 
     public:
-        void randomItemDrop();
+        void drop_item();
 
         enum Type {
             normal,
@@ -32,9 +33,15 @@ namespace Scriptable::Entities {
             boss
         };
 
+        typedef std::map<ItemEntity::Item, short> item_drop_info; 
+
     private:
 
+        static const std::map<Type, item_drop_info> TYPE_DROP_INFO;
+
         static const std::map<Type, EnemyTypeInfo> TYPE_INFO;
+
+        Type m_type;
 
         std::string groupName = "hostile";
 
@@ -48,7 +55,7 @@ namespace Scriptable::Entities {
 
             currentState->softDeleteEntity(entity->getName());
 
-            entity->randomItemDrop();
+            entity->drop_item();
         }
 
     public:

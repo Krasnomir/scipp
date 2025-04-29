@@ -94,21 +94,15 @@ namespace Scriptable::Entities {
         // dashing system variables
         bool m_isDashing = false;
         sf::Time m_dashDuration = sf::seconds(0.2);
-        sf::Time m_dashCooldown = sf::seconds(1);
+        sf::Time m_dashCooldown = sf::seconds(5);
         sf::Time m_dashDurationTrack = sf::seconds(0);
         sf::Time m_dashCooldownTrack = sf::seconds(0);
         float m_dashSpeed = 2000;
         sf::Vector2f m_dash_vec;
 
         std::vector<sf::Vector2f> vertices = {
-            {25,25}, {25,50}, {10,40}, 
-            {25,25}, {0,25}, {10,40},
-            {25,25}, {0,25}, {10,10},
-            {25,25}, {25,0}, {10,10},
-            {25,25}, {25,0}, {40,10},
-            {25,25}, {50,25}, {40,10},
-            {25,25}, {50,25}, {40,40},
-            {25,25}, {25,50}, {40,40}
+            {0,0},{40,0},{40,40},
+            {0,0},{40,40},{0,40}
         };
 
         static void playerDeathCallback(Scriptable::Components::HealthComponent* c) {

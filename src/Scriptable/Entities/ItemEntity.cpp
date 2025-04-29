@@ -15,9 +15,15 @@ namespace Scriptable::Entities {
         {0.f, 0.f}, {20.f, 20.f}, {0.f, 20.f}
     };
 
+    const std::vector<sf::Vector2f> ItemEntity::ESSENCE_VERTICES = {
+        {0.f,0.f}, {20.f, 0.f}, {20.f, 20.f},
+        {0.f, 0.f}, {20.f, 20.f}, {0.f, 20.f}
+    };
+
     const std::unordered_map<ItemEntity::Item, sf::Color> ItemEntity::ITEM_COLORS = {
         {ItemEntity::Item::steel, sf::Color(190, 200, 210)},
-        {ItemEntity::Item::electronic_components, sf::Color(84, 201, 68)}
+        {ItemEntity::Item::electronic_components, sf::Color(84, 201, 68)},
+        {ItemEntity::Item::essence, sf::Color(202, 23, 78)}
     };
 
     const sf::Time ItemEntity::ITEM_LIFETIME = sf::seconds(10);
