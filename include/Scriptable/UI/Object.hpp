@@ -32,7 +32,10 @@ namespace Scriptable::UI
         //if objectName is null or invalid returns false and sets the global window as a constraint target.
         bool setAttachmentTarget(const std::string& objectName, AttachmentPoint point = {AttachmentPoint::CENTER, {0,0}});
 
-        void setAttachmentSource(AttachmentPoint point);
+        void set_attachment_point(const AttachmentPoint::AttachmentPlace& point);
+        void set_attachment_offset(const sf::Vector2f& offset);
+
+        sf::Vector2f update_position(const sf::Vector2f& size);
 
         virtual void draw_to_screen(Scriptable::EventData* e);
 

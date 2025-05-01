@@ -47,7 +47,6 @@ namespace Scriptable::Components {
         if(collidable && !m_collidable) {
             current_state->addEntityToGroup(parent_entity, "collidable");
             m_collidable = true;
-            std::cout << "ADDED TO COLLIDABLE" << "\n";
         }
         else if(!collidable && collidable) {
             current_state->removeEntityFromGroup(parent_entity, "collidable");

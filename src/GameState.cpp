@@ -152,12 +152,18 @@ GameState::GameState()
 	
 }
 
-
+struct test_uiobj : public Scriptable::UI::TextObject {
+    test_uiobj() : TextObject("font") {
+        setPosition({100,100});
+        setString("hello world");
+        setVisible(true);
+    }
+};
 
 void GameState::init()
 {	
 	initCamera(sf::Vector2f(Scipp::globalGame->window->getSize().x, Scipp::globalGame->window->getSize().y));
-	
+
 	Scriptable::UI::TextObject::loadFont("RobotoMono.ttf", "font");
 
 	Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::PlayerEntity>("player");

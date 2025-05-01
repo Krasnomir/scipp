@@ -106,14 +106,11 @@ void Game::run()
 
 		//ui render
 
-		sf::View current_view = this->window->getView();
-		this->window->setView(this->window->getDefaultView());
+		this->window->setView(this->window->getView());
 
 		{
 			stateManager.currentState->evokeUIDraw(this->window);
 		}
-
-		this->window->setView(current_view);
 
 
 		window->display();

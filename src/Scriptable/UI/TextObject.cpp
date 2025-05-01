@@ -23,8 +23,13 @@ namespace Scriptable::UI{
     void TextObject::draw_to_screen(Scriptable::EventData* data){
 
         sf::Text* text = static_cast<sf::Text*>(this);
+        sf::FloatRect bounds = text->getLocalBounds();
+        sf::Vector2f size(bounds.width, bounds.height);
+        sf::Vector2f pos = update_position(size);
+        text->setPosition(pos - sf::Vector2f(bounds.left, bounds.top));
 
-        Scipp::globalGame->window->draw(*text, sf::RenderStates::Default);
+
+        data->targetWindow->draw(*text);
     }
 
     bool TextObject::loadFont(const std::string& path, const std::string& name){
