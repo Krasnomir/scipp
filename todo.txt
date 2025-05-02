@@ -26,7 +26,11 @@ Ja bym gui zrobił w taki sposób żeby rozmiary były w pikselach, a pozycja do
 Btw nie masz żadnej innej lepszej formy komunikacji dostępnej?
 
 no jakby rozmiary byly w pixelach to albo gui by zostawalo gdy deformujesz okno i bylby jescze wiekszy problem albo blokujesz rozciaganie okna i dodajesz ustawienia na rozdzielcoznsci tylko 16:9 i problem znika bo sie nic nie bedzie rozciagac
-no na razie nie mam ale moge sprobowac omowic kontakt jakis w srode xd bo wiesz tu sa takie osoby co w 1 lepszej okazji wypily plyn do mycia okien
 
 Ale teraz literalnie nie ma możliwości dodania tekstu ani tekstur które nie będą się deformowały podczas zmiany rozmiaru okna. Nawet jeśli proporcje będą takie same to tekst będzie sie zwiększał a powinien zostać taki sam. Nawet teraz żeby zrobić element gui który będzie kwadratowy to musiałbyś sobie przeliczyć na kalkulatorku jakie wymiary musisz dać (element przestanie być kwadratem jak tylko zmienisz proporcje okna).
+
 GUI będzie zmieniało swoją pozycje podczas eventu windowResized według constraintów i offsetów, więc wszystko będzie ok działać. Zaraz wyśle jakieś infografiki bo chyba nie ogarniasz.
+
+"no jakby rozmiary byly w pixelach to albo gui by zostawalo gdy deformujesz okno i bylby jescze wiekszy problem albo blokujesz rozciaganie okna i dodajesz ustawienia na rozdzielcoznsci tylko 16:9 i problem znika "
+
+gry nie maja rozszerzania okien z wlasnie tego powodu
