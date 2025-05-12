@@ -51,7 +51,17 @@ namespace Scriptable::Components {
         return m_maxSpeed;
     }
 
-    EnemyComponent::EnemyComponent(float speed) {
+    EnemyComponent::EnemyComponent(float speed, Util::shape_t vertices) {
+
+        // find height
+        float max_y = std::numeric_limits<float>::min();
+        float min_y = std::numeric_limits<float>::max();
+        for(size_t i = 0; i < vertices.size(); i++) {
+            if(vertices[i].x > max_y) max_y = vertices[i].x;
+            if(vertices[i].x < min_y) min_y = vertices[i].x;
+        }
+        reach = (max_y - min_y);
+
         m_maxSpeed = speed;
         m_speed = speed;
     }

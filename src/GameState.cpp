@@ -28,7 +28,7 @@ const sf::Time GameState::WAVE_INTERVAL 				= sf::seconds(10);
 const sf::Time GameState::WAVE_SPAWN_INTERVAL			= sf::milliseconds(500);
 const int GameState::WAVE_SPAWN_AREA_OFFSET 			= 1000;
 const int GameState::WAVE_SPAWN_AREA_MAX_OFFSET 		= 500;
-const int GameState::WAVE_STARTING_ENEMY_COUNT 			= 1;
+const int GameState::WAVE_STARTING_ENEMY_COUNT 			= 4;
 const int GameState::WAVE_ENEMY_COUNT_INCREMENT 		= 1;
 const float GameState::WAVE_HEALTH_MULTIPLIER_INCREMENT = 0.5;
 
@@ -40,6 +40,10 @@ void GameState::handleWaves(const Scriptable::EventData* data) {
 		m_isSpawningEnemies = true;
 		m_enemiesLeftToSpawn = WAVE_STARTING_ENEMY_COUNT + m_waveCount * WAVE_ENEMY_COUNT_INCREMENT - WAVE_ENEMY_COUNT_INCREMENT;
 		m_waveCooldown = WAVE_INTERVAL;
+
+		std::string s = "Wave: " + std::to_string(m_waveCount);
+
+		((Scriptable::UI::TextObject*)wave_text)->setString(s);
 	}
 	else if(m_isSpawningEnemies) {
 
@@ -84,6 +88,7 @@ void GameState::spawnEnemy(const Scriptable::EventData* data) {
 	float healthMultiplier = 1 + (m_waveCount * WAVE_HEALTH_MULTIPLIER_INCREMENT) - WAVE_HEALTH_MULTIPLIER_INCREMENT;
 
 	if(randomType == 1) {
+		shakeCamera(5,5);
 		data->currentState->addEntity<EnemyEntity>(enemyName, spawn_position, EnemyEntity::Type::tank, healthMultiplier);
 		data->currentState->addEntity<HealthbarEntity>("healthbar_enemy" + enemyName, "healthbar_enemy" + enemyName, data->currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 	}
@@ -101,6 +106,8 @@ void GameState::spawnEnemy(const Scriptable::EventData* data) {
 
 void GameState::spawnBoss(const Scriptable::EventData* data) {
 	
+	shakeCamera(10,10);
+
 	using namespace Scriptable::Entities;
 
 	int randomX = rand() % WAVE_SPAWN_AREA_MAX_OFFSET - (WAVE_SPAWN_AREA_MAX_OFFSET / 2);
@@ -140,11 +147,11 @@ void GameState::cameraFollow() {
 
 void GameState::beforeRender(const Scriptable::EventData* data) {
 	handleCameraShake(data->deltaTime);
-	//handleWaves(data);
+	handleWaves(data);
 }
 
 void GameState::onRender(const Scriptable::EventData* data) {
-	cameraFollow();
+	cameraFollow(); // has to be onRender in order to make camera movement smooth (reposition camera after everything has already moved)
 }
 
 GameState::GameState()
@@ -160,9 +167,23 @@ struct test_uiobj : public Scriptable::UI::TextObject {
     }
 };
 
+struct wave_text_struct : public Scriptable::UI::TextObject {
+    wave_text_struct() : TextObject("font") {
+        setString("Wave: 1");
+        setVisible(true);
+        set_attachment_offset(sf::Vector2f(10, 10));
+        set_attachment_point(Scriptable::UI::Object::AttachmentPoint::TOPLEFT);
+    }
+};
+
 void GameState::init()
 {	
+	Scriptable::UI::TextObject::loadFont("RobotoMono.ttf", "font");
+
 	initCamera(sf::Vector2f(Scipp::globalGame->window->getSize().x, Scipp::globalGame->window->getSize().y));
+
+	Scipp::globalGame->stateManager.currentState->addUIObject<wave_text_struct>("ui_wave_text");
+	wave_text = (Scriptable::UI::TextObject*)Scipp::globalGame->stateManager.currentState->getUIObject("ui_wave_text");
 
 	Scriptable::UI::TextObject::loadFont("RobotoMono.ttf", "font");
 
@@ -223,7 +244,13 @@ void GameState::initMap() {
 void GameState::shakeCamera(int minShake, int maxShake) {
 	if(m_isGoingBack || m_isTilting) return; // prevents two shakes from happening at the same time
 
-	int randomRotation = rand() % (maxShake-minShake) + minShake;
+	int randomRotation;
+	if(maxShake-minShake <= 0) {
+		randomRotation = maxShake;
+	}
+	else {
+		randomRotation = rand() % (maxShake-minShake) + minShake;
+	}
 	if(rand() % 2 == 1) {
 		randomRotation = -randomRotation;
 		m_isReverse = true;

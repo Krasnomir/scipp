@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include <Scriptable/UI/TextObject.hpp>
+
 #include <vector>
 
 class GameState : public Scriptable::State
@@ -13,7 +15,7 @@ class GameState : public Scriptable::State
 	void cameraFollow();
 
 	// camera shake variables
-	float m_shakeIncrement = 200; // degrees per seond
+	float m_shakeIncrement = 100; // degrees per seond
 	float m_currentRotation; // has to be stored in seperate variable as normal rotation is in (0-360) range which fucks up everything
 	float m_startingRotation;
 	float m_endingRotation;
@@ -36,6 +38,8 @@ class GameState : public Scriptable::State
 	sf::Time m_spawnEnemyCooldown = sf::seconds(0);
 	unsigned int m_enemiesLeftToSpawn = 0;
 	bool m_bossSpawned = false;
+
+	Scriptable::UI::TextObject* wave_text = nullptr;
 
 public:
 	GameState();

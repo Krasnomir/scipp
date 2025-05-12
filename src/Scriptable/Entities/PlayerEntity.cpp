@@ -104,6 +104,7 @@ namespace Scriptable::Entities {
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::Q) {
 			cancelDummy();
 		}
+		/*
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::G) {
 			static uint32_t enemy_ID = 0;
 
@@ -114,11 +115,13 @@ namespace Scriptable::Entities {
 			Scipp::globalGame->stateManager.currentState->addEntity<Scriptable::Entities::HealthbarEntity>("healthbar_enemy" + std::to_string(enemy_ID), "healthbar_enemy" + std::to_string(enemy_ID), Scipp::globalGame->stateManager.currentState->getEntity("enemy" + std::to_string(enemy_ID)));
 			enemy_ID++;
 		}
+		*/
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::F) {
 			dash();
 		}
+		/*
 		else if(data->sfmlEvent.key.scancode == sf::Keyboard::Scancode::I){
-			/*INVENTORY*/
+			// INVENTORY
 			if(!Scipp::globalGame->stateManager.currentState->hasUIObject("inventory_frame")){
 				Scipp::globalGame->stateManager.currentState->addUIObject<Scriptable::UI::InventoryFrame>("inventory_frame");
 			}
@@ -129,6 +132,7 @@ namespace Scriptable::Entities {
 
 
 		}
+		*/
 	}
 
 	void PlayerEntity::handleGun(const Scriptable::EventData* data) {

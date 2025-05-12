@@ -3,6 +3,8 @@
 
 #include <Scriptable/Component.hpp>
 #include <Scriptable/Entity.hpp>
+#include <Util.hpp>
+
 
 namespace Scriptable::Components {
 
@@ -21,7 +23,7 @@ namespace Scriptable::Components {
         float damage = 20;
         float reach = 50;
 
-        EnemyComponent(float speed);
+        EnemyComponent(float speed, Util::shape_t vertices);
         virtual ~EnemyComponent() = default;
 
         void setCooldown(float cooldownSeconds);

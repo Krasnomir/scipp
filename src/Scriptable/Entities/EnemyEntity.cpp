@@ -12,7 +12,7 @@ namespace Scriptable::Entities {
 			{
 				{ ItemEntity::Item::steel, 1 },
 				{ ItemEntity::Item::electronic_components, 1 },
-				{ ItemEntity::Item::null, 4 }
+				{ ItemEntity::Item::null, 2 }
 			}
 		},
 		{ 
@@ -42,14 +42,8 @@ namespace Scriptable::Entities {
 			EnemyEntity::Type::normal,
 			{
 				{
-					{25,25}, {25,50}, {10,40}, 
-					{25,25}, {0,25}, {10,40},
-					{25,25}, {0,25}, {10,10},
-					{25,25}, {25,0}, {10,10},
-					{25,25}, {25,0}, {40,10},
-					{25,25}, {50,25}, {40,10},
-					{25,25}, {50,25}, {40,40},
-					{25,25}, {25,50}, {40,40}
+					{0,0},{50,0},{50,50},
+            		{0,0},{50,50},{0,50}
 				},
 				100, // health
 				150, // speed
@@ -61,16 +55,10 @@ namespace Scriptable::Entities {
 			EnemyEntity::Type::speedy,
 			{
 				{
-					{25,25}, {25,50}, {10,40}, 
-					{25,25}, {0,25}, {10,40},
-					{25,25}, {0,25}, {10,10},
-					{25,25}, {25,0}, {10,10},
-					{25,25}, {25,0}, {40,10},
-					{25,25}, {50,25}, {40,10},
-					{25,25}, {50,25}, {40,40},
-					{25,25}, {25,50}, {40,40}
+					{0,0},{40,0},{40,40},
+            		{0,0},{40,40},{0,40}
 				},
-				50,
+				80,
 				200,
 				20,
 				{98, 186, 110}
@@ -80,14 +68,8 @@ namespace Scriptable::Entities {
 			EnemyEntity::Type::tank,
 			{
 				{
-					{37.5f, 37.5f}, {37.5f, 75.0f}, {15.0f, 60.0f},
-					{37.5f, 37.5f}, {0.0f, 37.5f}, {15.0f, 60.0f},
-					{37.5f, 37.5f}, {0.0f, 37.5f}, {15.0f, 15.0f},
-					{37.5f, 37.5f}, {37.5f, 0.0f}, {15.0f, 15.0f},
-					{37.5f, 37.5f}, {37.5f, 0.0f}, {60.0f, 15.0f},
-					{37.5f, 37.5f}, {75.0f, 37.5f}, {60.0f, 15.0f},
-					{37.5f, 37.5f}, {75.0f, 37.5f}, {60.0f, 60.0f},
-					{37.5f, 37.5f}, {37.5f, 75.0f}, {60.0f, 60.0f}
+					{0,0},{60,0},{60,60},
+            		{0,0},{60,60},{0,60}
 				},
 				300,
 				125,
@@ -99,16 +81,10 @@ namespace Scriptable::Entities {
 			EnemyEntity::Type::boss,
 			{
 				{
-					{100,100}, {100,200}, {40,160}, 
-					{100,100}, {0,100}, {40,160},
-					{100,100}, {0,100}, {40,40},
-					{100,100}, {100,0}, {40,40},
-					{100,100}, {100,0}, {160,40},
-					{100,100}, {200,100}, {160,40},
-					{100,100}, {200,100}, {160,160},
-					{100,100}, {100,200}, {160,160}
+					{0,0},{120,0},{120,120},
+            		{0,0},{120,120},{0,120}
 				},
-				1200,
+				1000,
 				100,
 				200,
 				{178, 155, 62}
@@ -176,7 +152,7 @@ namespace Scriptable::Entities {
 
         addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());
-		addComponent<Scriptable::Components::EnemyComponent>(speed);
+		addComponent<Scriptable::Components::EnemyComponent>(speed, vertices);
 		addComponent<Scriptable::Components::HealthComponent>(health*healthMultiplier);
 
 		auto* rc = getComponent<Scriptable::Components::RenderComponent>();

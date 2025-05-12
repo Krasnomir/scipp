@@ -58,13 +58,13 @@ namespace Scriptable::Entities {
         std::map<m_dummy_type, std::unordered_map<ItemEntity::Item, int>> m_dummy_recipes {
             {m_dummy_type::turret,  {
                 { ItemEntity::Item::steel, 1 },
-                { ItemEntity::Item::electronic_components, 3 }
+                { ItemEntity::Item::electronic_components, 2 }
             }},
             {m_dummy_type::mud_trap, {
                 { ItemEntity::Item::steel, 1 }
             }},
             {m_dummy_type::spike_trap, {
-                { ItemEntity::Item::steel, 2 }
+                { ItemEntity::Item::steel, 1 }
             }}
         };
         std::vector<m_dummy_type> m_placementPanel = {

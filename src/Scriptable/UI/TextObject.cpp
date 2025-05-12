@@ -16,7 +16,6 @@ namespace Scriptable::UI{
         if(font){
             M_currentFont = *font;
             setFont(M_currentFont);
-
         }
     }
 
@@ -27,7 +26,7 @@ namespace Scriptable::UI{
         sf::Vector2f size(bounds.width, bounds.height);
         sf::Vector2f pos = update_position(size);
         text->setPosition(pos - sf::Vector2f(bounds.left, bounds.top));
-
+        text->setRotation(data->currentState->getCamera().getRotation());
 
         data->targetWindow->draw(*text);
     }
