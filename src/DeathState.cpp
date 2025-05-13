@@ -3,8 +3,11 @@
 
 #include <Scriptable/Entities/SimpleEntity.hpp>
 
+#include <GameState.hpp>
 #include <DeathState.hpp>
 #include <Game.hpp>
+
+#include <iostream>
 
 DeathState::DeathState() {
 
@@ -25,6 +28,24 @@ struct testbtn : public Scriptable::UI::Rect {
         setVisible(true);
         m_RenderComponent->setColor(sf::Color(255, 255, 255, 150));
         setLayer(2);
+    }
+
+    void onMouseButtonPressed(const Scriptable::EventData* data) {
+        auto mouse_pos = data->currentState->getCamera().getMousePositionRelativeToCamera();
+        auto vertices = this->m_RenderComponent->getVertices();
+
+        for(size_t i=0; i+2<vertices.getVertexCount(); ++i) {
+            auto pos1 = sf::Vector2f(vertices[i].position.x, vertices[i].position.y);
+            auto pos2 = sf::Vector2f(vertices[i+1].position.x, vertices[i+1].position.y);
+            auto pos3 = sf::Vector2f(vertices[i+2].position.x, vertices[i+2].position.y);
+
+            auto triangle = Util::Triangle(pos1, pos2, pos3);
+
+            if(Util::isInTriangle(triangle, mouse_pos)) {
+                Scipp::globalGame->stateManager.scheduleStateChange(new GameState());
+                return;
+            }
+        }
     }
 };
 

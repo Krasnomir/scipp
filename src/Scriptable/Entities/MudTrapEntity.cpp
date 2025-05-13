@@ -14,8 +14,8 @@ namespace Scriptable::Entities {
         {100,0},{100,100},{0,100}
     };
 
-    const int MudTrapEntity::M_DURABILITY = 20;
-    const int MudTrapEntity::M_SLOWDOWN_RATE = 4;
+    const int MudTrapEntity::M_DURABILITY = 50;
+    const int MudTrapEntity::M_SLOWDOWN_RATE = 5;
 
     MudTrapEntity::MudTrapEntity(sf::Vector2f pos) {
         addComponent<Scriptable::Components::RenderComponent>(M_VERTICES);
@@ -49,10 +49,7 @@ namespace Scriptable::Entities {
                     trap_hc->setHealth(trap_hc->getHealth() - 1);
                 }
 
-                //enemy_pc->velocity.magnitude = enemy_ec->getMaxSpeed() / M_SLOWDOWN_RATE;
-            }
-            else {
-                //enemy_pc->velocity.magnitude = enemy_ec->getMaxSpeed();
+                enemy_pc->velocity = Util::vec_normalize(enemy_pc->velocity) * (enemy_ec->get_max_speed() / M_SLOWDOWN_RATE);
             }
         }
     }

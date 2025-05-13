@@ -43,7 +43,7 @@ namespace Scriptable::Entities {
 	}
 
     PlayerEntity::PlayerEntity() {
-        zindex = 1;
+        zindex = 2;
 
 		addComponent<Scriptable::Components::RenderComponent>(vertices);
 		addComponent<Scriptable::Components::PhysicsComponent>(getComponent<Scriptable::Components::RenderComponent>());

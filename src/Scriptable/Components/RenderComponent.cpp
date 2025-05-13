@@ -91,8 +91,9 @@ namespace Scriptable::Components
     }
 
     void RenderComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+
         states.transform *= getTransform();
-        
+
         if(m_texture.getSize().x != 0 && m_texture.getSize().y != 0){
             states.texture = &m_texture;
         }

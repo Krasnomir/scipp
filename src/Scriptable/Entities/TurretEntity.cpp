@@ -19,6 +19,8 @@ namespace Scriptable::Entities {
         addComponent<Scriptable::Components::PhysicsComponent>(rc);
         auto* pc = getComponent<Scriptable::Components::PhysicsComponent>();
 
+        pc->set_collidable(true);
+
 		getComponent<Scriptable::Components::HealthComponent>()->setOnDeathCallback(deleteTurretCallback);
 
 		Scipp::globalGame->stateManager.currentState->addEntityToGroup(this, m_group);

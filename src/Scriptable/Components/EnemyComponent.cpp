@@ -65,4 +65,8 @@ namespace Scriptable::Components {
         m_maxSpeed = speed;
         m_speed = speed;
     }
+
+    float EnemyComponent::get_max_speed() {
+        return m_maxSpeed;
+    }
 }

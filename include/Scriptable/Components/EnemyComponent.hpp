@@ -32,6 +32,8 @@ namespace Scriptable::Components {
         float getMaxSpeed();
 
         void beforeRender(const EventData* data);
+
+        float get_max_speed();
     };
 }
 

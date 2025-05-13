@@ -15,7 +15,7 @@ namespace Scriptable::Entities {
     };
 
     const int SpikeTrapEntity::M_DURABILITY = 20;
-    const int SpikeTrapEntity::M_DAMAGE = 20;
+    const int SpikeTrapEntity::M_DAMAGE = 100;
     const sf::Time SpikeTrapEntity::M_DAMAGE_COOLDOWN = sf::milliseconds(500);
 
     SpikeTrapEntity::SpikeTrapEntity(sf::Vector2f pos) {

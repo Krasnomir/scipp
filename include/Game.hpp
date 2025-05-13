@@ -27,7 +27,7 @@ public:
 	void initWindow();							// Tworzenie okna
 
 	Game();
-	
+
 	friend class Camera;
 private:
 	void handleEvent(sf::Event event); 
