@@ -123,6 +123,8 @@ namespace Scriptable{
 		void removeSound(std::string name);
 		void playSound(std::string name);
 
+		sf::Vector2f translateRatioToPixels(sf::Vector2f ratio);
+
 protected: 
 
 		bool m_scheduledStateChange = false;

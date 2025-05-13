@@ -32,8 +32,6 @@ namespace Scriptable::UI
         //if objectName is null or invalid returns false and sets the global window as a constraint target.
         bool setAttachmentTarget(const std::string& objectName, AttachmentPoint point = {AttachmentPoint::CENTER, {0,0}});
 
-        void setAttachmentSource(AttachmentPoint point);
-
         virtual void draw_to_screen(Scriptable::EventData* e);
 
         int getLayer() const;
@@ -48,7 +46,6 @@ namespace Scriptable::UI
     protected:
         Components::RenderComponent* m_RenderComponent = 0;
         AttachmentPoint m_Point;
-        AttachmentPoint m_Source = {AttachmentPoint::CENTER, {0,0}};
 
         std::string m_Group = "";
 

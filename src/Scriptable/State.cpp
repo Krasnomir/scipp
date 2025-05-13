@@ -1,5 +1,6 @@
 #include <Scriptable/State.hpp>
 #include <StateManager.hpp>
+#include <Game.hpp>
 
 #include <Scriptable/Components/PhysicsComponent.hpp>
 
@@ -214,6 +215,10 @@ namespace Scriptable{
 		std::string entityName = entity->getName();
 
 		m_groups[group].erase(std::find(m_groups[group].begin(), m_groups[group].end(), entity));
+	}
+
+	sf::Vector2f State::translateRatioToPixels(sf::Vector2f ratio){
+		return {ratio.x * Scipp::globalGame->window->getSize().x, ratio.y * Scipp::globalGame->window->getSize().y};
 	}
 
 	// returns a nullptr when there are no entities in the specified group

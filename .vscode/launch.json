@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/out/scipp",
-            "args": [],
+            "args": ["/home/yesnt/Documents/Projects/scipp/res"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -35,8 +35,9 @@ namespace Scriptable::UI{
 
     bool Object::setAttachmentTarget(const std::string& target, AttachmentPoint point){
         m_Point = point;
+        m_Target = target;
+
         if(target == "" || !Scipp::globalGame->stateManager.currentState->hasUIObject(target)){
-            m_Target = "";
             return false;
         }
         else{

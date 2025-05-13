@@ -3,6 +3,8 @@
 #include <InitState.hpp>
 #include <GameState.hpp>
 #include <DeathState.hpp>
+#include <MenuState.hpp>
+
 #include <Scriptable/Entity.hpp>
 #include <Camera.hpp>
 #include <Scriptable/Components/RenderComponent.hpp>
@@ -31,6 +33,10 @@ InitState::InitState()
 
 void InitState::init()
 {
-    Scipp::globalGame->stateManager.changeState(new GameState());
+	Scriptable::UI::TextObject::loadFont("RobotoMono.ttf", "font");
+
+    // Scipp::globalGame->stateManager.changeState(new GameState());
+
+    Scipp::globalGame->stateManager.changeState(new MenuState());
     Scipp::globalGame->stateManager.currentState->init();
 }
