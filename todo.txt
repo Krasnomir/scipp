@@ -10,27 +10,4 @@ TODO:
 [ ] gdzieś użyć cameraShake
 [*] Dodac klase gameText w ktorej text nie rozszerza sie razem z ekranem, text z ui zostaje taki sam
 [*] Zrobic sprawdzanie kolzji podczas ruchu
-
-Gracz ma m_inventory w którym ma itemy różne i trzeba zrobić żeby sie wyświetlały.
-I jest decyzja do podjęcia. Bo ty to gui zrobiłeś tak że podajesz jako rozmiar część okna jaką ma zajmować, żeby było dynamicznie w zależności od tego jakie wymiary ma okno. Ale jak jest tekst i sie zmieni okno to sie kurwi, bo sie rozszerza. I teraz czy jakoś to spróbujemy naprawić żeby zamiast części zajmowanego ekranu były piksele (z constraintami) czy zrobimy jakiś stały rozmiar okna z grą np. 800x600?
-
-
-UI Jest skalowane razem z oknem, ustawia sie tam wielkosc bazujac na wielkosci okna
-Entity, TextComponent nie jest, jak zwiekszasz view to sie nie skaluja.
-
-A co w przypadku tekstu w gui, np. liczby itemów w inventory, albo jakichkolwiek tekstur np. ikonek itemów, przecież jak sie będzie zmieniał rozmiar okna to wszystko sie będzie psuło.
-Zwieksza sie z oknem, pokaz przyklad tego co nie pasuje bo nie rozumiem zbytnio co masz na mysli, UI jest dopasowane do okna. gra nie ale mozna ustawic to wszystko za pomoca kamery jesli chcesz cos zmienic.
-
-No ale jak zmienisz rozmiar okna, i proporcja wysokości i szerokości ulegnie zmianie to np. element z jakąś teksturą będzie zdeformowany. Jakbyś chciał dodać jakąś kwadratową ikonkę z jakąś teksturą to po zmianie wymiarów okna ta tekstura sie rozjebie bo nie będzie już kwadratowa tylko rozszerzona horyzontalnie albo wertykalnie. Tak samo tekst.
-Ja bym gui zrobił w taki sposób żeby rozmiary były w pikselach, a pozycja dostosowywała się według constraintów i offsetów (tak jak jest teraz, tylko z rozmiarem w pikselach). 
-Btw nie masz żadnej innej lepszej formy komunikacji dostępnej?
-
-no jakby rozmiary byly w pixelach to albo gui by zostawalo gdy deformujesz okno i bylby jescze wiekszy problem albo blokujesz rozciaganie okna i dodajesz ustawienia na rozdzielcoznsci tylko 16:9 i problem znika bo sie nic nie bedzie rozciagac
-
-Ale teraz literalnie nie ma możliwości dodania tekstu ani tekstur które nie będą się deformowały podczas zmiany rozmiaru okna. Nawet jeśli proporcje będą takie same to tekst będzie sie zwiększał a powinien zostać taki sam. Nawet teraz żeby zrobić element gui który będzie kwadratowy to musiałbyś sobie przeliczyć na kalkulatorku jakie wymiary musisz dać (element przestanie być kwadratem jak tylko zmienisz proporcje okna).
-
-GUI będzie zmieniało swoją pozycje podczas eventu windowResized według constraintów i offsetów, więc wszystko będzie ok działać. Zaraz wyśle jakieś infografiki bo chyba nie ogarniasz.
-
-"no jakby rozmiary byly w pixelach to albo gui by zostawalo gdy deformujesz okno i bylby jescze wiekszy problem albo blokujesz rozciaganie okna i dodajesz ustawienia na rozdzielcoznsci tylko 16:9 i problem znika "
-
-gry nie maja rozszerzania okien z wlasnie tego powodu
+[ ] Zrobic menu ustawien
