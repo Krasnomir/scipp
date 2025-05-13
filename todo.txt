@@ -11,3 +11,5 @@ TODO:
 [*] Dodac klase gameText w ktorej text nie rozszerza sie razem z ekranem, text z ui zostaje taki sam
 [*] Zrobic sprawdzanie kolzji podczas ruchu
 [ ] Zrobic menu ustawien
+
+Olaf bo ja dzisiaj prezentacje projektu robie 💀
